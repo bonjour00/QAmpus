@@ -1,11 +1,12 @@
 <template>
   <q-input
-    v-model="search"
     borderless
     dense
     debounce="300"
     placeholder="Search"
     filled
+    :modelValue="search"
+    @update:model-value="(value) => $emit('update:search', value)"
   >
     <template v-slot:prepend>
       <q-icon name="search" />
@@ -14,6 +15,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-const search = ref('');
+const props = defineProps<{
+  search: string;
+}>();
+defineEmits(['update:search']);
 </script>

@@ -1,8 +1,9 @@
 <template>
   <q-select
     filled
-    v-model="orderArr"
-    :options="options"
+    :modelValue="orderArr"
+    @update:model-value="(value) => $emit('update:orderArr', value)"
+    :options="optionsFilter"
     class="q-ml-sm"
     dense
     options-dense
@@ -15,8 +16,22 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-const orderArr = ref('最新');
-const options = computed(() => {
-  return orderArr.value == '最新' ? ['最舊'] : ['最新'];
+
+interface OrderArr {
+  label: string;
+  value: string;
+}
+
+const props = defineProps<{
+  orderArr: OrderArr;
+}>();
+defineEmits(['update:orderArr']);
+
+const options = [
+  { label: '最新', value: 'desc' },
+  { label: '最舊', value: 'asc' },
+];
+const optionsFilter = computed(() => {
+  return options.filter((x) => x.value !== props.orderArr.value);
 });
 </script>

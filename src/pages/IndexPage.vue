@@ -10,8 +10,8 @@
       hide-pagination
     >
       <template v-slot:top-right>
-        <Search />
-        <OrderSelect />
+        <Search v-model:search="search" />
+        <OrderSelect v-model:orderArr="orderArr" />
       </template>
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
@@ -104,6 +104,10 @@ import OrderSelect from './Components/Table/OrderTable.vue';
 import { columns } from './Components/Table/Columns';
 import Swal from 'sweetalert2';
 import { useRouter, useRoute } from 'vue-router';
+
+//子組件order/search
+const search = ref('123');
+const orderArr = ref({ label: '最新', value: 'desc' });
 
 type SelectRow = {
   qa_id: number;
