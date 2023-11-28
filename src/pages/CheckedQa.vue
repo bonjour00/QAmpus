@@ -23,11 +23,10 @@
       :options="options"
     />
   </div>
-  <button @click="test">fetch</button>
 </template>
 
 <script setup lang="ts">
-import { ref, Ref } from 'vue';
+import { ref, Ref, watch } from 'vue';
 import EditDialog from './Components/Table/Dialog/EditDialog.vue';
 import Table from './Components/Table/QaTable.vue';
 import EditBtn from './Components/Table/ActionBtn/EditBtn.vue';
@@ -58,15 +57,28 @@ const pageNow = ref(paginationInitial);
 const searchNow = ref('');
 const orderNow = ref({ label: '最新', value: 'desc' });
 //fetch data
-const test = () => {
+const test = (type: boolean) => {
   console.log({
-    search: searchNow.value,
+    query: searchNow.value,
     startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-    pageNum: pageNow.value.rowsPerPage,
+    perPage: pageNow.value.rowsPerPage,
     officeId: testInitialOffice.value,
     order: orderNow.value.value,
+    type,
   });
 };
+watch(pageNow, () => {
+  console.log(1);
+  test(true);
+});
+watch(searchNow, () => {
+  console.log(2);
+  test(true);
+});
+watch(orderNow, () => {
+  console.log(3);
+  test(true);
+});
 const rows = [
   {
     qaId: 1,

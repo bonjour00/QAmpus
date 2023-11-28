@@ -23,11 +23,10 @@
       :options="options"
     />
   </div>
-  <button @click="test">fetch</button>
 </template>
 
 <script setup lang="ts">
-import { ref, Ref } from 'vue';
+import { ref, Ref, watch } from 'vue';
 import EditDialog from './Components/Table/Dialog/EditDialog.vue';
 import Table from './Components/Table/QaTable.vue';
 import EditBtn from './Components/Table/ActionBtn/EditBtn.vue';
@@ -38,6 +37,8 @@ import {
   testInitialOffice,
   paginationInitial,
 } from './Components/Table/data ';
+import { idText } from 'typescript';
+import { Z_ASCII } from 'zlib';
 
 //editPop
 const open = ref(false);
@@ -52,20 +53,33 @@ const options = [
   { label: '統資', value: 2 },
   { label: '圖資', value: 3 },
 ];
-
 const pageNow = ref(paginationInitial);
 const searchNow = ref('');
 const orderNow = ref({ label: '最新', value: 'desc' });
 //fetch data
-const test = () => {
+const test = (type: boolean) => {
   console.log({
-    search: searchNow.value,
+    query: searchNow.value,
     startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-    pageNum: pageNow.value.rowsPerPage,
+    perPage: pageNow.value.rowsPerPage,
     officeId: testInitialOffice.value,
     order: orderNow.value.value,
+    type,
   });
 };
+console.log('mana');
+watch(pageNow, () => {
+  console.log(1);
+  test(false);
+});
+watch(searchNow, () => {
+  console.log(2);
+  test(false);
+});
+watch(orderNow, () => {
+  console.log(3);
+  test(false);
+});
 const rows = [
   {
     qaId: 1,

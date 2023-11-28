@@ -9,7 +9,7 @@
     hide-pagination
   >
     <template v-slot:top-right>
-      <SearchTable v-model:search="search" />
+      <SearchTable @update-search="(value) => (search = value)" />
       <OptionSelect
         v-model:currentOption="orderArr"
         :options="options"
