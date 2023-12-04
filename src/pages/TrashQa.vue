@@ -2,19 +2,22 @@
   <div class="q-pa-md">
     <Table
       :rows="rows"
-      v-model:pageNow="pageNow"
-      v-model:searchNow="searchNow"
-      v-model:orderNow="orderNow"
+      :columns="columns"
+      v-model:page-now="pageNow"
+      v-model:search-now="searchNow"
+      v-model:order-now="orderNow"
+      :loading="loading"
+      :tableTitle="tableTitle"
     >
-      <template v-slot:btnAction="slotProps">
-        <RecoverBtn :selectRow="slotProps" />
+      <template v-slot:btnAction="slotProps"
+        ><RecoverBtn :selectRow="slotProps" />
         <DeleteBtn :selectRow="slotProps" />
       </template>
     </Table>
     <EditDialog
       v-model:open="open"
-      v-model:selectRow="selectRow"
-      v-model:currentOffice="currentOffice"
+      :selectRow="selectRow"
+      :currentOffice="currentOffice"
       :title="title"
       :options="options"
     />
@@ -22,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, watch } from 'vue';
+import { ref, Ref, watch, computed } from 'vue';
 import EditDialog from './Components/Table/Dialog/EditDialog.vue';
 import Table from './Components/Table/QaTable.vue';
 import RecoverBtn from './Components/Table/ActionBtn/RecoverBtn.vue';
@@ -31,86 +34,62 @@ import {
   QA,
   initialQASelect,
   testInitialOffice,
-  Option,
   paginationInitial,
+  orderInitial,
 } from './Components/Table/data ';
+import { columns, rowsData } from './Components/Table/Columns';
 
 //editPop
 const open = ref(false);
-const selectRow: Ref<QA> = ref(initialQASelect);
+const selectRow = ref(initialQASelect);
 
 //optionSelect
-const currentOffice = ref(testInitialOffice);
+const currentOffice = ref(testInitialOffice); //之後用auth fetch?
 const title = '指派單位';
-//fetch
+
+//fetch offices
 const options = [
   { label: '資管', value: 1 },
   { label: '統資', value: 2 },
   { label: '圖資', value: 3 },
 ];
 
+//table
+//toolValue
+const tableTitle = '資源回收桶';
 const pageNow = ref(paginationInitial);
 const searchNow = ref('');
-const orderNow = ref({ label: '最新', value: 'desc' });
+const orderNow = ref(orderInitial);
+const toolValue = computed(() => {
+  return {
+    page: pageNow.value,
+    search: searchNow.value,
+    order: orderNow.value,
+  };
+});
+
+//rows
+const rows: Ref<QA[]> = ref([]);
+const loading = ref(false);
 //fetch data
-const test = () => {
+const fetchRows = (type: boolean) => {
+  loading.value = true;
   console.log({
     query: searchNow.value,
     startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
     perPage: pageNow.value.rowsPerPage,
     officeId: testInitialOffice.value,
     order: orderNow.value.value,
-    delete: 1,
+    type,
   });
+  setTimeout(() => {
+    rows.value = rowsData;
+    loading.value = false;
+  }, 1000);
 };
-watch(pageNow, () => {
-  console.log(1);
-  test();
+fetchRows(true);
+
+watch(toolValue, () => {
+  fetchRows(true);
 });
-watch(searchNow, () => {
-  console.log(2);
-  test();
-});
-watch(orderNow, () => {
-  console.log(3);
-  test();
-});
-const rows = [
-  {
-    qaId: 1,
-    qaQuestion: 'Frozen Yogurt',
-    qaAnswer: 'answer',
-    userId: '121',
-    qaAsktime: new Date(),
-    qaChecktime: null,
-    qaCheck: false,
-  },
-  {
-    qaId: 2,
-    qaQuestion: 'Frozen Yogurt',
-    qaAnswer: 'answer',
-    userId: '121',
-    qaAsktime: new Date(),
-    qaChecktime: null,
-    qaCheck: false,
-  },
-  {
-    qaId: 3,
-    qaQuestion: 'Frozen Yogurt',
-    qaAnswer: 'answer',
-    userId: '121',
-    qaAsktime: new Date(),
-    qaChecktime: null,
-    qaCheck: false,
-  },
-  {
-    qaId: 4,
-    qaQuestion: 'Frozen Yogurt',
-    qaAnswer: 'answer',
-    userId: '121',
-    qaAsktime: new Date(),
-    qaChecktime: null,
-    qaCheck: false,
-  },
-];
 </script>

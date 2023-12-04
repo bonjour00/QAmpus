@@ -9,10 +9,10 @@ export type QA = {
 };
 
 export const initialQASelect: QA = {
-  qaId: 1,
-  qaQuestion: 'Frozen Yogurt',
-  qaAnswer: 'answer',
-  userId: '121',
+  qaId: -1,
+  qaQuestion: '發生錯誤',
+  qaAnswer: '發生錯誤',
+  userId: '-1',
   qaAsktime: new Date(),
   qaChecktime: null,
   qaCheck: false,
@@ -33,15 +33,9 @@ export const paginationInitial = {
   rowsPerPage: 3,
   rowLength: 0,
 };
+export const orderInitial = { label: '最新', value: 'desc' };
+export const orderOptions = [
+  { label: '最新', value: 'desc' },
+  { label: '最舊', value: 'asc' },
+];
 export const testInitialOffice = { label: '資管', value: 1 };
-// export type QA = {
-//   qa_id: number;
-//   qa_question: string;
-//   qa_answer: string;
-//   office_id: number;
-//   office_name: string; //不確定
-//   user_id: string;
-//   qa_asktime: Date;
-//   qa_checktime: Date | null;
-//   qa_check: boolean;
-// };

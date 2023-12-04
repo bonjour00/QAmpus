@@ -1,16 +1,20 @@
 <template>
-  <q-dialog :modelValue="open" @update:model-value="closePopup">
+  <q-dialog
+    :modelValue="open"
+    @update:model-value="closePopup"
+    v-if="currentRow"
+  >
     <q-card>
       <q-card-section class="row items-center q-pb-none">
         <q-input
-          :model-value="selectRow.qaQuestion"
+          :model-value="currentRow.qaQuestion"
           @update:model-value="
-            (value) =>
-              $emit('update:selectRow', { ...selectRow, qaQuestion: value })
+            (value) => (currentRow = { ...currentRow, qaQuestion: value })
           "
           dense
           type="textarea"
           autogrow
+          :disable="disable"
           ><template v-slot:prepend>
             <span class="text-subtitle1">Q:&nbsp;</span>
           </template>
@@ -21,14 +25,14 @@
 
       <q-card-section>
         <q-input
-          :model-value="selectRow.qaAnswer"
+          :model-value="currentRow.qaAnswer"
           @update:model-value="
-            (value) =>
-              $emit('update:selectRow', { ...selectRow, qaAnswer: value })
+            (value) => (currentRow = { ...currentRow, qaAnswer: value })
           "
           dense
           type="textarea"
           autogrow
+          :disable="disable"
           ><template v-slot:prepend>
             <span class="text-subtitle1">A:&nbsp;</span>
           </template>
@@ -41,57 +45,60 @@
           :title="title"
         />
         <q-btn flat label="取消" color="primary" @click="closePopup" />
-        <q-btn flat label="修改" color="primary" @click="editSubmit" />
+        <q-btn
+          flat
+          :label="btnName ? btnName : '修改'"
+          color="primary"
+          @click="editSubmit"
+        />
       </q-card-actions>
     </q-card>
   </q-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import { QA, Option, testInitialOffice } from '../data ';
+import { ref, watch, Ref } from 'vue';
+import { QA, Option } from '../data ';
 import { successs } from '../ActionBtn/AnimateAction';
 import OptionSelect from '../Toolbar/OptionSelect.vue';
 
 const props = defineProps<{
-  selectRow: QA;
   open: boolean;
+  selectRow: QA;
   currentOffice: Option;
   options: Option[];
   title: string;
+  btnName?: string;
+  disable?: boolean;
 }>();
 
-const emit = defineEmits([
-  'update:open',
-  'update:currentOffice',
-  'update:selectRow',
-]);
+const emit = defineEmits(['update:open']);
+const currentRow: Ref<any> = ref(props.selectRow); //暫時不管
 const currentOption = ref(props.currentOffice);
-watch(currentOption, () => {
-  emit('update:currentOffice', currentOption.value);
-});
+watch(
+  () => props.selectRow,
+  () => {
+    console.log('fetch');
+    return (currentRow.value = props.selectRow);
+  }
+);
+watch(
+  () => props.currentOffice,
+  () => (currentOption.value = props.currentOffice)
+);
 const closePopup = () => {
   emit('update:open', false);
-  emit('update:currentOffice', testInitialOffice); //初始化(利用auth?)
-  currentOption.value = testInitialOffice;
+  currentRow.value = props.selectRow;
+  currentOption.value = props.currentOffice;
 };
 
 const editSubmit = () => {
-  // emit('update:selectRow', {
-  //   ...props.selectRow,
-  //   officeId: props.currentOffice.value,
-  // });
   console.log({
-    ...props.selectRow,
-    officeId: props.currentOffice.value,
+    ...currentRow.value,
+    officeId: currentOption.value.value,
   });
-
+  console.log(currentOption.value.value == props.currentOffice.value);
   successs('修改成功');
   closePopup();
-
-  // const officeId = offices.filter(
-  //   (x) => x.office_name === selectRow.value.office_name
-  // )[0].office_id;
-  // const editData = { ...selectRow.value, office_id: officeId };
 };
 </script>
