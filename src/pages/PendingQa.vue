@@ -15,7 +15,7 @@
           @dialogOpen="(value) => (open = value)"
           @setSelectRow="(value) => (selectRow = value)"
         />
-        <DeleteBtn :selectRow="slotProps" />
+        <DeleteBtn :selectRow="slotProps" @updated = "updated++"/>
       </template>
     </Table>
     <EditDialog
@@ -24,6 +24,7 @@
       :currentOffice="currentOffice"
       :title="title"
       :options="options"
+      @updated = "updated++"
     />
   </div>
 </template>
@@ -64,11 +65,13 @@ const tableTitle = '待審核問題';
 const pageNow = ref(paginationInitial);
 const searchNow = ref('');
 const orderNow = ref(orderInitial);
-const toolValue = computed(() => {
+const updated = ref(0)
+const updatedFetch = computed(() => {
   return {
     page: pageNow.value,
     search: searchNow.value,
     order: orderNow.value,
+    updated:updated.value
   };
 });
 
@@ -93,7 +96,7 @@ const fetchRows = (type: boolean) => {
 };
 fetchRows(true);
 
-watch(toolValue, () => {
+watch(updatedFetch, () => {
   fetchRows(true);
 });
 </script>

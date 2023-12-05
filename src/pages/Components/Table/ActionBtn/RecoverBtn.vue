@@ -13,8 +13,16 @@ import { successs } from './AnimateAction';
 const props = defineProps<{
   selectRow: any;
 }>();
+const emit = defineEmits(['updated']);
 const recoverSubmit = (qaId: number) => {
-  console.log(props.selectRow.props.row.qaId);
+  emit('updated')
+  console.log({
+    ...props.selectRow.props.row,
+    qaStatus: 'pending',
+    qaLastUpdaterId:'111',
+    qaUpdatetime: new Date(),
+    qaDaletetime: null,
+  });
   //刪除邏輯
   successs('已復原');
 };

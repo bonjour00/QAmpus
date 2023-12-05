@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, Ref } from 'vue';
+import { ref, watch, Ref,computed } from 'vue';
 import { QA, Option } from '../data ';
 import { successs } from '../ActionBtn/AnimateAction';
 import OptionSelect from '../Toolbar/OptionSelect.vue';
@@ -72,13 +72,12 @@ const props = defineProps<{
   disable?: boolean;
 }>();
 
-const emit = defineEmits(['update:open']);
+const emit = defineEmits(['update:open','updated']);
 const currentRow: Ref<any> = ref(props.selectRow); //暫時不管
 const currentOption = ref(props.currentOffice);
 watch(
   () => props.selectRow,
   () => {
-    console.log('fetch');
     return (currentRow.value = props.selectRow);
   }
 );
@@ -96,8 +95,11 @@ const editSubmit = () => {
   console.log({
     ...currentRow.value,
     officeId: currentOption.value.value,
+    qaStatus:currentOption.value.value == props.currentOffice.value?'checked':'pending'
   });
   console.log(currentOption.value.value == props.currentOffice.value);
+  emit('update:open', false);
+  emit('updated');
   successs('修改成功');
   closePopup();
 };

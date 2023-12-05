@@ -2,20 +2,24 @@ export type QA = {
   qaId: number;
   qaQuestion: string;
   qaAnswer: string;
-  userId: string;
+  qaCreateId: string;
+  qaLastUpdaterId: string | null;
   qaAsktime: Date;
-  qaChecktime: Date | null;
-  qaCheck: boolean;
+  qaUpdatetime: Date | null;
+  qaDaletetime: Date | null;
+  qaStatus: string;
 };
 
 export const initialQASelect: QA = {
   qaId: -1,
   qaQuestion: '發生錯誤',
   qaAnswer: '發生錯誤',
-  userId: '-1',
+  qaCreateId: '-1',
+  qaLastUpdaterId:'-1',
   qaAsktime: new Date(),
-  qaChecktime: null,
-  qaCheck: false,
+  qaUpdatetime: null,
+  qaDaletetime: null,
+  qaStatus: 'pending',
 };
 
 export type Option = {

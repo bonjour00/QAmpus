@@ -13,8 +13,10 @@ import { successs } from './AnimateAction';
 const props = defineProps<{
   selectRow: any;
 }>();
+const emit = defineEmits(['updated']);
 const deleteSubmit = (qaId: number) => {
-  console.log(props.selectRow.props.row.qaId);
+  emit('updated')
+  console.log({qaId:props.selectRow.props.row.qaId,qaStatus:props.selectRow.props.row.qaStatus=='delete'? 'completeDel':'delete'});
   //刪除邏輯
   successs('刪除成功');
 };

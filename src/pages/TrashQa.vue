@@ -10,23 +10,15 @@
       :tableTitle="tableTitle"
     >
       <template v-slot:btnAction="slotProps"
-        ><RecoverBtn :selectRow="slotProps" />
-        <DeleteBtn :selectRow="slotProps" />
+        ><RecoverBtn :selectRow="slotProps" @updated = "updated++"/>
+        <DeleteBtn :selectRow="slotProps" @updated = "updated++"/>
       </template>
     </Table>
-    <EditDialog
-      v-model:open="open"
-      :selectRow="selectRow"
-      :currentOffice="currentOffice"
-      :title="title"
-      :options="options"
-    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, Ref, watch, computed } from 'vue';
-import EditDialog from './Components/Table/Dialog/EditDialog.vue';
 import Table from './Components/Table/QaTable.vue';
 import RecoverBtn from './Components/Table/ActionBtn/RecoverBtn.vue';
 import DeleteBtn from './Components/Table/ActionBtn/DeleteBtn.vue';
@@ -39,20 +31,6 @@ import {
 } from './Components/Table/data ';
 import { columns, rowsData } from './Components/Table/Columns';
 
-//editPop
-const open = ref(false);
-const selectRow = ref(initialQASelect);
-
-//optionSelect
-const currentOffice = ref(testInitialOffice); //之後用auth fetch?
-const title = '指派單位';
-
-//fetch offices
-const options = [
-  { label: '資管', value: 1 },
-  { label: '統資', value: 2 },
-  { label: '圖資', value: 3 },
-];
 
 //table
 //toolValue
@@ -60,11 +38,13 @@ const tableTitle = '資源回收桶';
 const pageNow = ref(paginationInitial);
 const searchNow = ref('');
 const orderNow = ref(orderInitial);
-const toolValue = computed(() => {
+const updated = ref(0)
+const updatedFetch = computed(() => {
   return {
     page: pageNow.value,
     search: searchNow.value,
     order: orderNow.value,
+    updated:updated.value
   };
 });
 
@@ -89,7 +69,7 @@ const fetchRows = (type: boolean) => {
 };
 fetchRows(true);
 
-watch(toolValue, () => {
+watch(updatedFetch, () => {
   fetchRows(true);
 });
 </script>
