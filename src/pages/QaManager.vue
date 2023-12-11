@@ -15,7 +15,7 @@
           @dialogOpen="(value) => (open = value)"
           @setSelectRow="(value) => (selectRow = value)"
         />
-        <DeleteBtn :selectRow="slotProps" @updated = "updated++"/>
+        <DeleteBtn :selectRow="slotProps" @updated="updated++" />
       </template>
     </Table>
     <EditDialog
@@ -26,7 +26,7 @@
       :options="options"
       btnName="指派"
       :disable="disable"
-      @updated = "updated++"
+      @updated="updated++"
     />
   </div>
 </template>
@@ -70,13 +70,13 @@ const tableTitle = '指派系所管理';
 const pageNow = ref(paginationInitial);
 const searchNow = ref('');
 const orderNow = ref(orderInitial);
-const updated = ref(0)
+const updated = ref(0);
 const updatedFetch = computed(() => {
   return {
     page: pageNow.value,
     search: searchNow.value,
     order: orderNow.value,
-    updated:updated.value
+    updated: updated.value,
   };
 });
 
@@ -84,7 +84,7 @@ const updatedFetch = computed(() => {
 const rows: Ref<QA[]> = ref([]);
 const loading = ref(false);
 //fetch data
-const fetchRows = (type: boolean) => {
+const fetchRows = (qaStatus: string) => {
   loading.value = true;
   console.log({
     query: searchNow.value,
@@ -92,16 +92,16 @@ const fetchRows = (type: boolean) => {
     perPage: pageNow.value.rowsPerPage,
     officeId: testInitialOffice.value,
     order: orderNow.value.value,
-    type,
+    qaStatus,
   });
   setTimeout(() => {
     rows.value = rowsData;
     loading.value = false;
   }, 1000);
 };
-fetchRows(true);
+fetchRows('noAssign');
 
 watch(updatedFetch, () => {
-  fetchRows(true);
+  fetchRows('noAssign');
 });
 </script>
