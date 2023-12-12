@@ -1,73 +1,105 @@
 <template>
-  <q-layout view="hHh Lpr lff">
-    <q-drawer
-      v-model="drawer"
-      show-if-above
-      :mini="miniState"
-      @mouseover="miniState = false"
-      @mouseout="miniState = true"
-      :width="200"
-      :breakpoint="500"
-      bordered
-    >
-      <q-list padding>
-        <q-item v-ripple>
-          <q-item-section avatar>
-            <q-icon name="chat" />
-          </q-item-section>
+  <div class="custom-layout">
+    <div class="sidebar" :class="{ expanded: isSidebarExpanded }">
+      <div class="sidebar-list">
+        <div class="expand-button-container">
+          <button
+            class="expand-button"
+            @click="toggleSidebar"
+            align="right"
+            :class="{ 'rotate-icon': isSidebarExpanded }"
+          >
+            <q-icon size="20px" name="arrow_forward_ios" class="chevron-icon" />
+          </button>
+        </div>
+        <div class="logo-container">
+          <img
+            class="logo"
+            :src="logoSource"
+            :class="{
+              'expanded-logo': isSidebarExpanded,
+              'collapsed-logo': !isSidebarExpanded,
+            }"
+          />
+        </div>
 
-          <q-item-section> QAmpus </q-item-section>
-        </q-item>
-        <q-item
+        <q-btn
+          align="left"
+          flat
+          class="sidebar-button"
+          :class="{
+            expanded: isSidebarExpanded,
+            active: isMenuActive(menu.label),
+          }"
           v-for="menu in menus"
           :key="menu.title"
-          :active="menu.title == current"
-          active-class="bg-light-blue-13 text-grey-1"
-          v-ripple
-          clickable
-          @click="currentChange(menu.title)"
-          :to="menu.label"
+          @click="currentChange(menu.label)"
         >
-          <q-item-section avatar>
-            <q-icon :name="menu.icon" />
-          </q-item-section>
+          <div class="button-content">
+            <q-icon
+              :name="menu.icon"
+              :class="{ expanded: isSidebarExpanded }"
+              class="sidebar-icon"
+            />
 
-          <q-item-section> {{ menu.title }} </q-item-section>
-        </q-item>
-      </q-list>
-    </q-drawer>
+            <p
+              v-show="isSidebarExpanded"
+              :class="{ expanded: isSidebarExpanded }"
+              class="sidebar-title"
+            >
+              {{ menu.title }}
+            </p>
+          </div>
+        </q-btn>
+      </div>
+    </div>
 
-    <q-page-container>
+    <div class="content">
       <router-view />
-    </q-page-container>
-  </q-layout>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router';
 import { ref } from 'vue';
-// import { useRouter, useRoute } from 'vue-router';
+import { computed } from 'vue';
+import expandedLogo from './expanded-logo.png';
+import collapsedLogo from './collapsed-logo.png';
+import './layout.css';
 
-const drawer = ref(false);
-const miniState = ref(true);
-const current = ref('待確認問題');
-const currentChange = (title: string) => {
-  current.value = title;
+const router = useRouter();
+const isSidebarExpanded = ref(true);
+
+const currentChange = (label: string) => {
+  router.push({ path: label.toLowerCase() });
 };
+
+const toggleSidebar = () => {
+  isSidebarExpanded.value = !isSidebarExpanded.value;
+};
+
+const isMenuActive = (label: string) => {
+  return router.currentRoute.value.path === `/${label.toLowerCase()}`;
+};
+const logoSource = computed(() => {
+  return isSidebarExpanded.value ? expandedLogo : collapsedLogo;
+});
 
 const menus = [
   {
     title: '待確認問題',
-    icon: 'chat',
+    icon: 'pending_actions',
     label: 'pending',
   },
   {
     title: '問答集',
-    icon: 'chat',
+    icon: 'question_answer',
     label: 'QA',
   },
   {
     title: '垃圾桶',
-    icon: 'chat',
+    icon: 'delete',
     label: 'trash',
   },
 ];

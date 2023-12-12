@@ -15,7 +15,7 @@
           @dialogOpen="(value) => (open = value)"
           @setSelectRow="(value) => (selectRow = value)"
         />
-        <DeleteBtn :selectRow="slotProps" @updated="updated++" />
+        <DeleteBtn :selectRow="slotProps" @updated = "updated++"/>
       </template>
     </Table>
     <EditDialog
@@ -24,7 +24,7 @@
       :currentOffice="currentOffice"
       :title="title"
       :options="options"
-      @updated="updated++"
+      @updated = "updated++"
     />
   </div>
 </template>
@@ -65,13 +65,13 @@ const tableTitle = '待審核問題';
 const pageNow = ref(paginationInitial);
 const searchNow = ref('');
 const orderNow = ref(orderInitial);
-const updated = ref(0);
+const updated = ref(0)
 const updatedFetch = computed(() => {
   return {
     page: pageNow.value,
     search: searchNow.value,
     order: orderNow.value,
-    updated: updated.value,
+    updated:updated.value
   };
 });
 
@@ -79,7 +79,7 @@ const updatedFetch = computed(() => {
 const rows: Ref<QA[]> = ref([]);
 const loading = ref(false);
 //fetch data
-const fetchRows = (qaStatus: string) => {
+const fetchRows = (type: boolean) => {
   loading.value = true;
   console.log({
     query: searchNow.value,
@@ -87,16 +87,16 @@ const fetchRows = (qaStatus: string) => {
     perPage: pageNow.value.rowsPerPage,
     officeId: testInitialOffice.value,
     order: orderNow.value.value,
-    qaStatus,
+    type,
   });
   setTimeout(() => {
     rows.value = rowsData;
     loading.value = false;
   }, 1000);
 };
-fetchRows('pending');
+fetchRows(true);
 
 watch(updatedFetch, () => {
-  fetchRows('pending');
+  fetchRows(true);
 });
 </script>

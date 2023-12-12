@@ -13,7 +13,11 @@
     "build": "quasar build"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mdi/js": "^7.3.67",
     "@quasar/extras": "^1.16.4",
+    "bootstrap-icons": "^1.11.2",
     "quasar": "^2.6.0",
     "sweetalert2": "^11.9.0",
     "vue": "^3.0.0",

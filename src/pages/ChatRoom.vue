@@ -15,19 +15,13 @@
       v-for="(message, index) in messageList"
       :key="index"
     >
-      <q-chat-message :text="[message.qaQuestion]" sent />
-      <q-chat-message style="max-width: 45%">
-        <div>
-          {{ message.qaAnswer }}
-        </div>
-        <div>來源: {{ message.source }}</div>
-        <template v-slot:stamp>信心度:{{ message.confidenceScore }}</template>
-      </q-chat-message>
+      <q-chat-message :text="[message.question]" sent />
+      <q-chat-message :text="[message.answer]" style="max-width: 45%" />
     </div>
     <q-footer elevated>
       <q-toolbar>
         <q-form @submit="sendMessage" class="full-width q-ma-md"
-          ><q-input rounded outlined bg-color="white" v-model="qaQuestion">
+          ><q-input rounded outlined bg-color="white" v-model="message">
             <q-btn round dense flat icon="send" type="submit" />
           </q-input>
         </q-form>
@@ -61,7 +55,7 @@ const QAs = ref([
   { Q: '輔大校長？', A: '藍易振', time: '6 hour ago' },
 ]);
 const messageList: any = ref([]);
-const qaQuestion = ref('');
+const message = ref('');
 const sendMessage = async () => {
   const res = await fetch(
     'https://fju-test3.cognitiveservices.azure.com/language/:query-knowledgebases?projectName=shelly-search-test&api-version=2021-10-01',
@@ -72,32 +66,17 @@ const sendMessage = async () => {
         'Ocp-Apim-Subscription-Key': 'fde6fc08d2e14a71b844af69aeea65f7',
       },
       body: JSON.stringify({
-        question: qaQuestion.value,
+        question: message.value,
       }),
     }
   );
-  //confidenceScore source
   const result = await res.json();
-  console.log(result);
-  const qaAnswer = result.answers[0].answer;
-  const source = result.answers[0].source;
-  const confidenceScore = result.answers[0].confidenceScore;
+  const answer = result.answers[0].answer;
+
   messageList.value.push({
-    qaQuestion: qaQuestion.value,
-    qaAnswer,
-    source,
-    confidenceScore,
+    question: message.value,
+    answer,
   });
-  ///api/Qna
-  if (confidenceScore < 0.7) {
-    console.log({
-      confidenceScore,
-      qaQuestion: qaQuestion.value,
-      qaAnswer,
-      qaCreaterId: '001',
-      officeId: 0,
-    });
-  }
-  qaQuestion.value = '';
+  message.value = '';
 };
 </script>

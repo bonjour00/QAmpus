@@ -15,9 +15,8 @@ const props = defineProps<{
 }>();
 const emit = defineEmits(['updated']);
 const deleteSubmit = (qaId: number) => {
-  emit('updated');
-  // console.log({qaId:props.selectRow.props.row.qaId,qaStatus:props.selectRow.props.row.qaStatus=='delete'? 'completeDel':'delete'});
-  console.log('/api/Qna/', props.selectRow.props.row.qaId);
+  emit('updated')
+  console.log({qaId:props.selectRow.props.row.qaId,qaStatus:props.selectRow.props.row.qaStatus=='delete'? 'completeDel':'delete'});
   //刪除邏輯
   successs('刪除成功');
 };
