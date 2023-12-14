@@ -13,6 +13,7 @@
     color="secondary"
     text-color="black"
     active-text-color="white"
+    ripple="false"
   />
 </template>
 

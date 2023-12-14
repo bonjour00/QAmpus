@@ -10,6 +10,7 @@
     </div>
   </div>
   <div v-if="tab == 'chatroom'">
+    <q-input v-model="message"></q-input>
     <div
       class="q-pa-md column col"
       v-for="(message, index) in messageList"
