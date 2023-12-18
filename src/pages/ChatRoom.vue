@@ -18,6 +18,7 @@
 
       <div class="input-container">
         <input
+          id="messageQ"
           v-model="message"
           placeholder="輸入訊息"
           @keydown.enter.prevent="sendMessage"

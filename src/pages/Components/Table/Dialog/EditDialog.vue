@@ -47,6 +47,7 @@
         />
         <q-btn flat label="取消" color="primary" @click="closePopup" />
         <q-btn
+          id="editOK"
           flat
           :label="btnName ? btnName : '修改'"
           color="primary"

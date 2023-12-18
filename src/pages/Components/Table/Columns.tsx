@@ -32,9 +32,9 @@ export const rowsData = [
     qaCreateId: '121',
     qaLastUpdaterId: null,
     qaAsktime: new Date(),
-    qaUpdatetime:null,
+    qaUpdatetime: null,
     qaDaletetime: null,
-    qaStatus:'pending'
+    qaStatus: 'pending',
   },
   {
     qaId: 2,
@@ -43,9 +43,9 @@ export const rowsData = [
     qaCreateId: '121',
     qaLastUpdaterId: null,
     qaAsktime: new Date(),
-    qaUpdatetime:null,
+    qaUpdatetime: null,
     qaDaletetime: null,
-    qaStatus:'pending'
+    qaStatus: 'pending',
   },
   {
     qaId: 3,
@@ -54,9 +54,9 @@ export const rowsData = [
     qaCreateId: '121',
     qaLastUpdaterId: null,
     qaAsktime: new Date(),
-    qaUpdatetime:null,
+    qaUpdatetime: null,
     qaDaletetime: null,
-    qaStatus:'pending'
+    qaStatus: 'pending',
   },
   {
     qaId: 4,
@@ -65,8 +65,8 @@ export const rowsData = [
     qaCreateId: '121',
     qaLastUpdaterId: null,
     qaAsktime: new Date(),
-    qaUpdatetime:null,
+    qaUpdatetime: null,
     qaDaletetime: null,
-    qaStatus:'pending'
+    qaStatus: 'pending',
   },
 ];
