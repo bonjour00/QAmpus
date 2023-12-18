@@ -10,8 +10,8 @@
       :tableTitle="tableTitle"
     >
       <template v-slot:btnAction="slotProps"
-        ><RecoverBtn :selectRow="slotProps" @updated = "updated++"/>
-        <DeleteBtn :selectRow="slotProps" @updated = "updated++"/>
+        ><RecoverBtn :selectRow="slotProps" @updated="updated++" />
+        <DeleteBtn :selectRow="slotProps" @updated="updated++" />
       </template>
     </Table>
   </div>
@@ -31,20 +31,19 @@ import {
 } from './Components/Table/data ';
 import { columns, rowsData } from './Components/Table/Columns';
 
-
 //table
 //toolValue
 const tableTitle = '資源回收桶';
 const pageNow = ref(paginationInitial);
 const searchNow = ref('');
 const orderNow = ref(orderInitial);
-const updated = ref(0)
+const updated = ref(0);
 const updatedFetch = computed(() => {
   return {
     page: pageNow.value,
     search: searchNow.value,
     order: orderNow.value,
-    updated:updated.value
+    updated: updated.value,
   };
 });
 

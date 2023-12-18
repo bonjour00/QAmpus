@@ -15,7 +15,7 @@
           @dialogOpen="(value) => (open = value)"
           @setSelectRow="(value) => (selectRow = value)"
         />
-        <DeleteBtn :selectRow="slotProps" @updated = "updated++"/>
+        <DeleteBtn :selectRow="slotProps" @updated="updated++" />
       </template>
     </Table>
     <EditDialog
@@ -24,7 +24,7 @@
       :currentOffice="currentOffice"
       :title="title"
       :options="options"
-      @updated = "updated++"
+      @updated="updated++"
     />
   </div>
 </template>
@@ -40,7 +40,8 @@ import {
   initialQASelect,
   testInitialOffice,
   paginationInitial,
-  orderInitial,Option
+  orderInitial,
+  Option,
 } from './Components/Table/data ';
 import { columns, rowsData } from './Components/Table/Columns';
 
@@ -53,15 +54,14 @@ const currentOffice = ref(testInitialOffice); //之後用auth fetch?
 const title = '指派單位';
 
 //fetch offices
-const options :Ref<Option[]> = ref([])
+const options: Ref<Option[]> = ref([]);
 setTimeout(() => {
   options.value = [
-  { label: '資管', value: 1 },
-  { label: '統資', value: 2 },
-  { label: '圖資', value: 3 },
-];
-  }, 2000);
-  
+    { label: '資管', value: 1 },
+    { label: '統資', value: 2 },
+    { label: '圖資', value: 3 },
+  ];
+}, 2000);
 
 //table
 //toolValue
@@ -69,13 +69,13 @@ const tableTitle = '已確認問答集';
 const pageNow = ref(paginationInitial);
 const searchNow = ref('');
 const orderNow = ref(orderInitial);
-const updated = ref(0)
+const updated = ref(0);
 const updatedFetch = computed(() => {
   return {
     page: pageNow.value,
     search: searchNow.value,
     order: orderNow.value,
-    updated:updated.value
+    updated: updated.value,
   };
 });
 
