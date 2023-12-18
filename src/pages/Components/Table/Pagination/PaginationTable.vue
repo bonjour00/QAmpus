@@ -13,12 +13,11 @@
     color="secondary"
     text-color="black"
     active-text-color="white"
-    ripple="false"
   />
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { Pagination } from '../data ';
 
 const props = defineProps<{

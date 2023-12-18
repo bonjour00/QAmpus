@@ -83,7 +83,7 @@ const updatedFetch = computed(() => {
 const rows: Ref<QA[]> = ref([]);
 const loading = ref(false);
 //fetch data
-const fetchRows = (type: boolean) => {
+const fetchRows = (qaStatus: string) => {
   loading.value = true;
   console.log({
     query: searchNow.value,
@@ -91,16 +91,16 @@ const fetchRows = (type: boolean) => {
     perPage: pageNow.value.rowsPerPage,
     officeId: testInitialOffice.value,
     order: orderNow.value.value,
-    type,
+    qaStatus,
   });
   setTimeout(() => {
     rows.value = rowsData;
     loading.value = false;
   }, 1000);
 };
-fetchRows(true);
+fetchRows('checked');
 
 watch(updatedFetch, () => {
-  fetchRows(true);
+  fetchRows('checked');
 });
 </script>

@@ -15,7 +15,7 @@ export const initialQASelect: QA = {
   qaQuestion: '發生錯誤',
   qaAnswer: '發生錯誤',
   qaCreateId: '-1',
-  qaLastUpdaterId:'-1',
+  qaLastUpdaterId: '-1',
   qaAsktime: new Date(),
   qaUpdatetime: null,
   qaDaletetime: null,

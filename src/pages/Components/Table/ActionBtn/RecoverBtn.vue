@@ -15,11 +15,11 @@ const props = defineProps<{
 }>();
 const emit = defineEmits(['updated']);
 const recoverSubmit = (qaId: number) => {
-  emit('updated')
+  emit('updated');
   console.log({
     ...props.selectRow.props.row,
     qaStatus: 'pending',
-    qaLastUpdaterId:'111',
+    qaLastUpdaterId: '111',
     qaUpdatetime: new Date(),
     qaDaletetime: null,
   });

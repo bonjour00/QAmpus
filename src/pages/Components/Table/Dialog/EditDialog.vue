@@ -11,6 +11,7 @@
           @update:model-value="
             (value) => (currentRow = { ...currentRow, qaQuestion: value })
           "
+          for="qedit"
           dense
           type="textarea"
           autogrow
@@ -57,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, Ref,computed } from 'vue';
+import { ref, watch, Ref, computed } from 'vue';
 import { QA, Option } from '../data ';
 import { successs } from '../ActionBtn/AnimateAction';
 import OptionSelect from '../Toolbar/OptionSelect.vue';
@@ -72,7 +73,7 @@ const props = defineProps<{
   disable?: boolean;
 }>();
 
-const emit = defineEmits(['update:open','updated']);
+const emit = defineEmits(['update:open', 'updated']);
 const currentRow: Ref<any> = ref(props.selectRow); //暫時不管
 const currentOption = ref(props.currentOffice);
 watch(
@@ -92,12 +93,28 @@ const closePopup = () => {
 };
 
 const editSubmit = () => {
-  console.log({
-    ...currentRow.value,
-    officeId: currentOption.value.value,
-    qaStatus:currentOption.value.value == props.currentOffice.value?'checked':'pending'
-  });
-  console.log(currentOption.value.value == props.currentOffice.value);
+  // console.log({
+  //   ...currentRow.value,
+  //   officeId: currentOption.value.value,
+  //   qaStatus:currentOption.value.value == props.currentOffice.value?'checked':'pending'
+  // });
+  // console.log(currentOption.value.value == props.currentOffice.value);
+  if (currentOption.value.value == props.currentOffice.value) {
+    console.log({
+      qaQuestion: currentRow.value.qaQuestion,
+      qaAnswer: currentRow.value.qaAnswer,
+      qaStatus: 'checked',
+      // creatorId: 'string',
+      lastUpdaterId: 'lastUpdaterId',
+      officeId: currentOption.value.value,
+    });
+  } else {
+    console.log({
+      qaId: props.selectRow.qaId,
+      officeId: 0,
+    });
+  }
+
   emit('update:open', false);
   emit('updated');
   successs('修改成功');
