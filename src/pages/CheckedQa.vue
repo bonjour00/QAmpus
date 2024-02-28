@@ -2,18 +2,35 @@
   <div class="q-pa-md">
     <Table
       :rows="rows"
-      :columns="columns"
+      :columns="columns_1"
       v-model:page-now="pageNow"
       v-model:search-now="searchNow"
       v-model:order-now="orderNow"
       :loading="loading"
       :tableTitle="tableTitle"
     >
-      <template v-slot:btnAction="slotProps"
-        ><EditBtn
-          :selectRow="slotProps"
-          @dialogOpen="(value) => (open = value)"
-          @setSelectRow="(value) => (selectRow = value)"
+      <template v-slot:add>
+        <q-btn
+          unelevated
+          style="
+            background: #eff0f5;
+            margin-top: 110px;
+            position: absolute;
+            margin-left: 220px;
+            width: 120px;
+            border-radius: 10px;
+            font-weight: 900;
+          "
+          @click="upload = true"
+          ><q-icon name="add" />上傳檔案</q-btn
+        >
+      </template>
+      <template v-slot:btnAction="slotProps">
+        <q-btn
+          label="重新上傳"
+          style="background: #eff0f5; border-radius: 10px; font-weight: 900"
+          unelevated
+          @click="upload = true"
         />
         <DeleteBtn :selectRow="slotProps" @updated="updated++" />
       </template>
@@ -25,7 +42,9 @@
       :title="title"
       :options="options"
       @updated="updated++"
+      :where="false"
     />
+    <UploadDialog v-model:upload="upload" />
   </div>
 </template>
 
@@ -43,7 +62,8 @@ import {
   orderInitial,
   Option,
 } from './Components/Table/data ';
-import { columns, rowsData } from './Components/Table/Columns';
+import { columns_1, rowsData } from './Components/Table/Columns';
+import UploadDialog from './Components/Table/Dialog/UploadDialog.vue';
 
 //editPop
 const open = ref(false);
@@ -65,7 +85,7 @@ setTimeout(() => {
 
 //table
 //toolValue
-const tableTitle = '已確認問答集';
+const tableTitle = '問答集';
 const pageNow = ref(paginationInitial);
 const searchNow = ref('');
 const orderNow = ref(orderInitial);
@@ -103,4 +123,6 @@ fetchRows('checked');
 watch(updatedFetch, () => {
   fetchRows('checked');
 });
+//upload
+const upload = ref(false);
 </script>

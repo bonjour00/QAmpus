@@ -8,6 +8,7 @@
     hide-pagination
     :rows-per-page-options="[pagination.rowsPerPage]"
     :loading="loading"
+    style="border-radius: 25px; padding: 20px; height: 92vh"
   >
     <template v-slot:top-right>
       <SearchTable @update-search="searchReturn" />
@@ -17,6 +18,7 @@
         :options="options"
         :title="title"
       />
+      <slot name="add"></slot>
     </template>
     <template v-slot:body-cell-actions="props">
       <q-td :props="props">
@@ -35,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import SearchTable from './Toolbar/SearchTable.vue';
 import OptionSelect from './Toolbar/OptionSelect.vue';
 import PaginationTable from './Pagination/PaginationTable.vue';
@@ -80,3 +82,8 @@ const orderReturn = (value: any) => {
 //loading-label="Gimme a sec and I'll fetch ya data!"
 //no-data-label="I can't find any data 😞"
 </script>
+<style lang="sass">
+.q-table__title
+  font-weight: 900
+  font-size: 30px
+</style>

@@ -7,6 +7,7 @@
     placeholder="Search"
     filled
     @keyup.enter="$emit('updateSearch', q)"
+    bg-color="grey-1"
   >
     <template v-slot:prepend>
       <q-icon name="search" />

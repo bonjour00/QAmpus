@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <Table
       :rows="rows"
-      :columns="columns"
+      :columns="columns_2"
       v-model:page-now="pageNow"
       v-model:search-now="searchNow"
       v-model:order-now="orderNow"
@@ -27,6 +27,7 @@
       btnName="指派"
       :disable="disable"
       @updated="updated++"
+      :where="true"
     />
   </div>
 </template>
@@ -44,7 +45,7 @@ import {
   paginationInitial,
   orderInitial,
 } from './Components/Table/data ';
-import { columns, rowsData } from './Components/Table/Columns';
+import { columns_2, rowsData_1 } from './Components/Table/Columns';
 
 //editPop
 const open = ref(false);
@@ -95,7 +96,7 @@ const fetchRows = (qaStatus: string) => {
     qaStatus,
   });
   setTimeout(() => {
-    rows.value = rowsData;
+    rows.value = rowsData_1;
     loading.value = false;
   }, 1000);
 };

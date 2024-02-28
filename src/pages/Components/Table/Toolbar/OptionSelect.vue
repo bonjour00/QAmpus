@@ -7,6 +7,7 @@
     class="q-ml-sm"
     dense
     options-dense
+    bg-color="grey-1"
   >
     <template v-slot:prepend>
       <span class="text-subtitle2">{{ title }}:</span>

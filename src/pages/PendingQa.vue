@@ -9,6 +9,21 @@
       :loading="loading"
       :tableTitle="tableTitle"
     >
+      <template v-slot:add>
+        <q-btn
+          label="測試"
+          unelevated
+          style="
+            background: #eff0f5;
+            margin-top: 110px;
+            position: absolute;
+            margin-left: 280px;
+            border-radius: 10px;
+            font-weight: 900;
+          "
+          @click="testing = true"
+        ></q-btn>
+      </template>
       <template v-slot:btnAction="slotProps"
         ><EditBtn
           :selectRow="slotProps"
@@ -25,7 +40,9 @@
       :title="title"
       :options="options"
       @updated="updated++"
+      :where="false"
     />
+    <TestingDialog v-model:testing="testing" :rows="rows" />
   </div>
 </template>
 
@@ -43,6 +60,7 @@ import {
   orderInitial,
 } from './Components/Table/data ';
 import { columns, rowsData } from './Components/Table/Columns';
+import TestingDialog from './Components/Table/Dialog/TestingDialog.vue';
 
 //editPop
 const open = ref(false);
@@ -99,4 +117,6 @@ fetchRows('pending');
 watch(updatedFetch, () => {
   fetchRows('pending');
 });
+//testingPop
+const testing = ref(false);
 </script>

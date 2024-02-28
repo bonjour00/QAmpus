@@ -88,7 +88,7 @@ const logoSource = computed(() => {
 
 const menus = [
   {
-    title: '待確認問題',
+    title: '待解決問題',
     icon: 'pending_actions',
     label: 'pending',
   },
@@ -98,9 +98,14 @@ const menus = [
     label: 'QA',
   },
   {
-    title: '垃圾桶',
+    title: '近期刪除',
     icon: 'delete',
     label: 'trash',
+  },
+  {
+    title: '待分配問題',
+    icon: 'delete',
+    label: 'manage',
   },
 ];
 </script>

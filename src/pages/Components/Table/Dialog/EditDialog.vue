@@ -5,7 +5,7 @@
     v-if="currentRow"
   >
     <q-card>
-      <q-card-section class="row items-center q-pb-none">
+      <q-card-section class="row items-center q-pb-none" v-if="where">
         <q-input
           :model-value="currentRow.qaQuestion"
           @update:model-value="
@@ -24,7 +24,7 @@
         <q-btn icon="close" flat round dense @click="closePopup" />
       </q-card-section>
 
-      <q-card-section>
+      <q-card-section v-if="where">
         <q-input
           :model-value="currentRow.qaAnswer"
           @update:model-value="
@@ -72,6 +72,7 @@ const props = defineProps<{
   title: string;
   btnName?: string;
   disable?: boolean;
+  where?: boolean;
 }>();
 
 const emit = defineEmits(['update:open', 'updated']);
