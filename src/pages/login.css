@@ -28,6 +28,7 @@
   transform: translate(-50%, -25%);
   width: 25%;
 }
+
 .q-field__label {
   font-weight: 900;
 }
@@ -41,7 +42,7 @@
 }
 .login-button {
   position: absolute;
-  top: 60%;
+  top: 58%;
   left: 50%;
   transform: translate(-50%, -25%);
   width: 25%;
@@ -51,4 +52,18 @@
   font-weight: 900;
   border-radius: 10px;
   margin-top: 2rem;
+}
+.q-field__native,
+.q-field__prefix,
+.q-field__suffix,
+.q-field__input {
+  margin-top: 0.5rem;
+}
+.forget {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -25%);
+  color: black;
+  text-decoration: none;
 }

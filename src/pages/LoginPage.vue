@@ -4,12 +4,24 @@
       <img class="logo" src="./asset/expanded-logo.png" />
       <q-input
         class="account"
-        v-model="text"
+        v-model="accountText"
         label="帳號/教職員編號"
         :dense="dense"
       />
-      <q-input class="password" v-model="text" label="密碼" :dense="dense" />
+      <q-input
+        class="password"
+        v-model="passwordText"
+        label="密碼"
+        :dense="dense"
+        type="password"
+      />
       <q-btn class="login-button" text-color="white" label="登入" />
+      <a
+        class="forget"
+        href="https://whoami.fju.edu.tw/pw_forget.php"
+        target="_blank"
+        >忘記密碼？</a
+      >
 
       <svg
         class="wave"
@@ -48,5 +60,12 @@
 <script>
 import './login.css';
 
-export default {};
+export default {
+  data() {
+    return {
+      accountText: '',
+      passwordText: '',
+    };
+  },
+};
 </script>
