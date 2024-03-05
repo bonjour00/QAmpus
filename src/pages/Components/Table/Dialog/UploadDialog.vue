@@ -1,6 +1,6 @@
 <template>
   <q-dialog :modelValue="upload" @update:model-value="closePopup">
-    <q-card style="padding: 5px">
+    <q-card style="padding: 5px; border-radius: 0.5rem">
       <q-card-section class="row items-center q-pb-none" style="width: 550px">
         <div style="font-size: 25px; font-weight: 900">
           <strong>新增檔案</strong>
@@ -11,11 +11,20 @@
       <q-card-section
         class="row items-center q-pb-none"
         style="margin-bottom: 80px"
-      >
-        <div style="display: flex; justify-content: space-between; width: 100%">
-          <div style="width: 40%; margin-top: 72px">
-            <div style="font-size: 15px; font-weight: 900">資源名稱</div>
-            <q-input
+        ><q-tabs
+          class="tab-head"
+          v-model="tab"
+          indicator-color="primary"
+          dense
+          align="center"
+          :breakpoint="0"
+        >
+          <q-tab name="url" label="URL" />
+          <q-tab name="file" label="檔案" />
+        </q-tabs>
+        <div class="tab">
+          <div style="font-weight: 900">
+            資源名稱<q-input
               v-model="source"
               dense
               label-color="grey-9"
@@ -24,35 +33,37 @@
               input-style="font-weight: 700"
             />
           </div>
-          <div style="width: 60%; margin-left: 20px">
-            <q-tabs
-              v-model="tab"
-              indicator-color="primary"
-              dense
-              align="left"
-              :breakpoint="0"
-            >
-              <q-tab name="url" label="URL" />
-              <q-tab name="file" label="檔案" />
-            </q-tabs>
+
+          <div style="width: 100%">
             <q-tab-panels v-model="tab" animated>
-              <q-tab-panel
-                name="url"
-                style="padding-left: 0px; padding-right: 0px; padding-top: 36px"
-              >
-                <div style="font-size: 15px; font-weight: 500">URL</div>
-                <q-input
-                  v-model="url"
-                  dense
-                  label-color="grey-9"
-                  outlined
-                  placeholder="請輸入URL"
-                  input-style="font-weight: 700"
-                />
+              <q-tab-panel name="url">
+                <div
+                  style="
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding: 0px 0px 0px 10px;
+                  "
+                >
+                  URL
+                  <q-input
+                    v-model="url"
+                    dense
+                    label-color="grey-9"
+                    outlined
+                    placeholder="請輸入URL"
+                    input-style="font-weight: 700"
+                  />
+                </div>
               </q-tab-panel>
-              <q-tab-panel name="file" style="padding: 36px 0px 0px 0px">
-                <div style="font-size: 15px; font-weight: 900">檔案</div>
-                <div>
+              <q-tab-panel name="file">
+                <div
+                  style="
+                    padding: 0px 0px 0px 10px;
+                    font-weight: 900;
+                    font-size: 15px;
+                  "
+                >
+                  檔案
                   <input
                     type="file"
                     style="
@@ -84,7 +95,7 @@
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn flat label="取消" color="primary" @click="closePopup" />
+        <q-btn flat label="取消" style="color: #79a0bd" @click="closePopup" />
         <q-btn
           flat
           label="確認"
@@ -100,6 +111,7 @@
 <script setup lang="ts">
 import { ref, watch, Ref, computed } from 'vue';
 import { QA, Option } from '../data ';
+import './UploadDialog.css';
 
 const props = defineProps<{
   upload: boolean;

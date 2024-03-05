@@ -14,6 +14,11 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: '/login',
+    name: 'Login',
+    component: () => import('pages/LoginPage.vue'),
+  },
+  {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),
   },

@@ -1,26 +1,48 @@
 <template>
   <q-dialog :modelValue="testing" @update:model-value="closePopup">
-    <q-card style="padding: 30px 30px 20px 30px; width: 500px">
-      <q-card-section>
-        <div style="font-size: 25px; font-weight: 900">
+    <q-card style="padding: 40px; width: 40rem; height: 80%">
+      <q-card-section style="padding: 0px 0px 10px 0px">
+        <div style="font-size: 25px; font-weight: 900; padding-bottom: 1rem">
           <strong>測試結果:</strong>
         </div>
       </q-card-section>
-      <q-card-section v-for="(row, index) in rows" :key="index"
-        ><div
-          style="
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 30px;
-          "
-        >
-          <p style="font-size: 20px">
-            <b>Q:{{ row.qaQuestion }}</b>
-          </p>
-          <p style="font-size: 20px; color: #00d515"><b>通過</b></p>
-        </div></q-card-section
+      <table style="width: 100%; border-collapse: collapse">
+        <thead>
+          <tr style="background-color: #e8e8e8">
+            <th style="padding: 10px 10px 10px 20px; text-align: left">問題</th>
+            <th style="padding: 10px 20px 10px 10px; text-align: right">
+              結果
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(row, index) in rows"
+            :key="index"
+            :style="{
+              backgroundColor: index % 2 === 0 ? '#ffffff' : '#f9f9f9',
+            }"
+          >
+            <td style="padding: 10px 10px 10px 20px; font-weight: 900">
+              {{ row.qaQuestion }}
+            </td>
+            <td
+              align="right"
+              style="
+                padding: 10px 20px 10px 10px;
+                color: #00ab11;
+                font-weight: 900;
+              "
+            >
+              通過
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <q-card-actions
+        style="position: absolute; bottom: 5%; right: 5%"
+        align="right"
       >
-      <q-card-actions align="right">
         <q-btn
           flat
           label="確認"
