@@ -1,3 +1,54 @@
+.main {
+  background-color: white;
+  width: 100vw;
+  height: 100vh;
+}
+.logo-container {
+  width: 100vw;
+  height: 100vh;
+}
 .logo {
-  width: 50%;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -25%);
+  width: 35%;
+}
+.account {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -25%);
+  width: 25%;
+}
+.password {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -25%);
+  width: 25%;
+}
+.q-field__label {
+  font-weight: 900;
+}
+.q-field__native:focus {
+  border-bottom: 3px solid #2a77af;
+}
+.wave {
+  width: 100vw;
+  position: absolute;
+  bottom: 0;
+}
+.login-button {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -25%);
+  width: 25%;
+  height: 3rem;
+  background-color: #2a77af;
+  font-size: 1rem;
+  font-weight: 900;
+  border-radius: 10px;
+  margin-top: 2rem;
 }
