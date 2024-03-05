@@ -1,0 +1,54 @@
+.chatroom-container {
+  height: 100vh;
+  width: 100vw;
+  background-color: white;
+}
+.tabs-container {
+  background-color: white;
+  height: 5rem;
+}
+.tabs {
+  display: flex;
+  justify-content: center;
+}
+.chatroom {
+  max-height: 70%;
+  width: 100%;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.input-container {
+  position: absolute;
+  bottom: 10%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.message {
+  width: 50%;
+}
+.input {
+  position: relative;
+  height: 3rem;
+  width: 50%;
+  padding-right: 40px;
+  border-radius: 10px;
+  border: 1px solid gray;
+}
+.input:active {
+  border-color: aqua !important; /* Change to whatever color you want */
+}
+
+.send {
+  position: absolute;
+  cursor: pointer;
+  right: 26%;
+  margin-top: 0.65rem;
+  font-size: 25px;
+  color: #808080;
+}
+.send:hover {
+  color: #2976af;
+}

@@ -1,10 +1,13 @@
 <template>
   <div class="chatroom-container">
     <div class="tabs-container">
-      <button @click="setTab('chatroom')">Chatroom</button>
-      <button @click="setTab('mails')">
-        Mails <span class="badge" v-if="tab === 'mails'">{{ QAs.length }}</span>
-      </button>
+      <div class="tabs">
+        <button @click="setTab('chatroom')">Chatroom</button>
+        <button @click="setTab('mails')">
+          Mails
+          <span class="badge" v-if="tab === 'mails'">{{ QAs.length }}</span>
+        </button>
+      </div>
     </div>
 
     <div v-if="tab === 'chatroom'" class="chatroom">
@@ -18,12 +21,13 @@
 
       <div class="input-container">
         <input
+          class="input"
           id="messageQ"
           v-model="message"
           placeholder="輸入訊息"
           @keydown.enter.prevent="sendMessage"
         />
-        <button @click="sendMessage">傳送</button>
+        <q-icon class="send" name="send" @click="sendMessage" />
       </div>
     </div>
 
@@ -40,6 +44,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import axios from 'axios';
+import './chatroom.css';
 const tab = ref('chatroom');
 const QAs = ref([
   { Q: '聖言樓代號', A: 'SF', time: '5 min ago' },

@@ -10,13 +10,17 @@ const routes: RouteRecordRaw[] = [
       { path: 'QA', component: () => import('pages/CheckedQa.vue') },
       { path: 'trash', component: () => import('pages/TrashQa.vue') },
       { path: 'manage', component: () => import('pages/QaManager.vue') },
-      { path: 'ChatRoom', component: () => import('pages/ChatRoom.vue') },
     ],
   },
   {
     path: '/login',
     name: 'Login',
     component: () => import('pages/LoginPage.vue'),
+  },
+  {
+    path: '/Chat',
+    name: 'Chat',
+    component: () => import('pages/ChatRoom.vue'),
   },
   {
     path: '/:catchAll(.*)*',
