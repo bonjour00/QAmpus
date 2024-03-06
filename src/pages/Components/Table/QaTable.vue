@@ -82,8 +82,9 @@ const orderReturn = (value: any) => {
 //loading-label="Gimme a sec and I'll fetch ya data!"
 //no-data-label="I can't find any data 😞"
 </script>
-<style lang="sass">
-.q-table__title
-  font-weight: 900
-  font-size: 30px
+<style lang="scss">
+.q-table__title {
+  font-weight: 900;
+  font-size: 30px;
+}
 </style>

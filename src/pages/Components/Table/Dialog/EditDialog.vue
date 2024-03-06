@@ -63,6 +63,7 @@ import { ref, watch, Ref, computed } from 'vue';
 import { QA, Option } from '../data ';
 import { successs } from '../ActionBtn/AnimateAction';
 import OptionSelect from '../Toolbar/OptionSelect.vue';
+import axios from 'axios';
 
 const props = defineProps<{
   open: boolean;
@@ -94,32 +95,35 @@ const closePopup = () => {
   currentOption.value = props.currentOffice;
 };
 
-const editSubmit = () => {
+const editSubmit = async () => {
   // console.log({
   //   ...currentRow.value,
   //   officeId: currentOption.value.value,
-  //   qaStatus:currentOption.value.value == props.currentOffice.value?'checked':'pending'
   // });
-  // console.log(currentOption.value.value == props.currentOffice.value);
-  if (currentOption.value.value == props.currentOffice.value) {
-    console.log({
-      qaQuestion: currentRow.value.qaQuestion,
-      qaAnswer: currentRow.value.qaAnswer,
-      qaStatus: 'checked',
-      // creatorId: 'string',
-      lastUpdaterId: 'lastUpdaterId',
-      officeId: currentOption.value.value,
-    });
-  } else {
-    console.log({
-      qaId: props.selectRow.qaId,
-      officeId: 0,
-    });
+  try {
+    // const result = await axios.patch(
+    //   `http://140.136.202.125/api/Question/${currentRow.value.questionId}`,
+    //   {
+    //     qaStatus: 'UNCONFIRMED',
+    //     lastUpdaterId: '410402331', //抓auth
+    //     officeId: currentOption.value.value,
+    //   }
+    // );
+    const result = await axios.post(
+      `http://140.136.202.125/api/AssignedOffice
+`,
+      {
+        qaId: currentRow.value.questionId,
+        officeId: currentOption.value.value,
+      }
+    );
+    console.log(result);
+    successs('修改成功');
+  } catch (e: any) {
+    console.log(e, 'error');
   }
-
   emit('update:open', false);
   emit('updated');
-  successs('修改成功');
   closePopup();
 };
 </script>

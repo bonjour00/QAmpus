@@ -85,56 +85,16 @@ const sendMessage = async () => {
     });
     ///api/Qna
     if (confidenceScore < 0.7) {
-      // const qaAdd = async () => {
-      //   const result = await axios.post('http://140.136.202.125/api/Qna', {
-      //     qaQuestion: message.value,
-      //     qaAnswer,
-      //     qaCreaterId: '001',
-      //     officeId: 0,
-      //   });
-      //   console.log('start');
-      //   console.log(result, 'add');
-      // };
-      // qaAdd();
-      console.log({
-        qaQuestion: message.value,
-        qaAnswer,
-        qaCreaterId: '001',
-        officeId: 1,
-      });
+      const qaAdd = async () => {
+        const result = await axios.post('http://140.136.202.125/api/Question', {
+          questionQuestion: message.value,
+          questionCreaterId: '410402331',
+          officeId: 1,
+        });
+      };
+      qaAdd();
     }
     message.value = '';
   }
 };
-
-// const fetchAnswer = async (question: string): Promise<{ answer: any }> => {
-//   try {
-//     const response = await fetch(
-//       `https://fju-test3.cognitiveservices.azure.com/language/:query-knowledgebases?projectName=shelly-search-test&api-version=2021-10-01`,
-//       {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'Ocp-Apim-Subscription-Key': 'fde6fc08d2e14a71b844af69aeea65f7',
-//         },
-//         body: JSON.stringify({
-//           question: question,
-//         }),
-//       }
-//     );
-
-//     if (response.ok) {
-//       const data = await response.json();
-//       const answer = data.answers[0]?.answer;
-
-//       return { answer };
-//     } else {
-//       console.error('Failed to fetch answer.');
-//       return { answer: 'Error fetching answer.' };
-//     }
-//   } catch (error) {
-//     console.error('Error:', error);
-//     return { answer: 'Error fetching answer.' };
-//   }
-// };
 </script>

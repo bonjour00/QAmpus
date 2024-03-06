@@ -35,15 +35,6 @@
         <DeleteBtn :selectRow="slotProps" @updated="updated++" />
       </template>
     </Table>
-    <EditDialog
-      v-model:open="open"
-      :selectRow="selectRow"
-      :currentOffice="currentOffice"
-      :title="title"
-      :options="options"
-      @updated="updated++"
-      :where="false"
-    />
     <UploadDialog v-model:upload="upload" />
   </div>
 </template>
@@ -69,20 +60,6 @@ import UploadDialog from './Components/Table/Dialog/UploadDialog.vue';
 const open = ref(false);
 const selectRow = ref(initialQASelect);
 
-//optionSelect
-const currentOffice = ref(testInitialOffice); //之後用auth fetch?
-const title = '指派單位';
-
-//fetch offices
-const options: Ref<Option[]> = ref([]);
-setTimeout(() => {
-  options.value = [
-    { label: '資管', value: 1 },
-    { label: '統資', value: 2 },
-    { label: '圖資', value: 3 },
-  ];
-}, 2000);
-
 //table
 //toolValue
 const tableTitle = '問答集';
@@ -103,26 +80,34 @@ const updatedFetch = computed(() => {
 const rows: Ref<QA[]> = ref([]);
 const loading = ref(false);
 //fetch data
-const fetchRows = (qaStatus: string) => {
+const fetchRows = async () => {
+  // console.log({
+  //   query: searchNow.value,
+  //   startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
+  //   perPage: pageNow.value.rowsPerPage,
+  //   officeId: testInitialOffice.value,
+  //   order: orderNow.value.value,
+  //   qaStatus,
+  // });
   loading.value = true;
-  console.log({
+  const result = await axios.post('http://140.136.202.125/api/Blob/paged', {
     query: searchNow.value,
     startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
     perPage: pageNow.value.rowsPerPage,
-    officeId: testInitialOffice.value,
+    officeId: 1,
     order: orderNow.value.value,
-    qaStatus,
+    status: 'notdeleted',
   });
-  setTimeout(() => {
-    rows.value = rowsData;
-    loading.value = false;
-  }, 1000);
+  rows.value = result.data;
+  loading.value = false;
+  console.log(result.data, 'fetching');
 };
-fetchRows('checked');
+fetchRows();
 
 watch(updatedFetch, () => {
-  fetchRows('checked');
+  fetchRows();
 });
 //upload
 const upload = ref(false);
+import axios from 'axios';
 </script>

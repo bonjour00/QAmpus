@@ -15,7 +15,7 @@
           "
         >
           <p style="font-size: 20px">
-            <b>Q:{{ row.qaQuestion }}</b>
+            <b>Q:{{ row.questionQuestion }}</b>
           </p>
           <p style="font-size: 20px; color: #00d515"><b>通過</b></p>
         </div></q-card-section

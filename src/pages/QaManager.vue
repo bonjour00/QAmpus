@@ -46,6 +46,7 @@ import {
   orderInitial,
 } from './Components/Table/data ';
 import { columns_2, rowsData_1 } from './Components/Table/Columns';
+import axios from 'axios';
 
 //editPop
 const open = ref(false);
@@ -59,11 +60,16 @@ const currentOffice = ref(testInitialOffice); //之後用auth fetch?
 const title = '指派單位';
 
 //fetch offices
-const options = [
-  { label: '資管', value: 1 },
-  { label: '統資', value: 2 },
-  { label: '圖資', value: 3 },
-];
+const options = ref([]);
+const fetchOffices = async () => {
+  const result = await axios.get('http://140.136.202.125/api/Office');
+  const offices = result.data.map((office: any) => ({
+    label: office.officeName,
+    value: office.officeId,
+  }));
+  options.value = offices;
+};
+fetchOffices();
 
 //table
 //toolValue

@@ -64,8 +64,9 @@
                       opacity: 0;
                     "
                     @change="handleFiles"
+                    accept="application/pdf"
                   />
-                  <div class="file-drop-area" @drop="handleDrop">
+                  <div class="file-drop-area">
                     <span
                       v-if="!fileName"
                       style="color: #79a0bd; font-weight: 900; cursor: pointer"
@@ -100,6 +101,7 @@
 <script setup lang="ts">
 import { ref, watch, Ref, computed } from 'vue';
 import { QA, Option } from '../data ';
+import axios from 'axios';
 
 const props = defineProps<{
   upload: boolean;
@@ -114,15 +116,12 @@ const closePopup = () => {
   fileName.value = '';
 };
 const fileName = ref('');
-const handleFiles = (e: any) => {
+const handleFiles = async (e: any) => {
   fileName.value = e.target.files[0].name;
-  console.log('clicl');
-};
-const handleDrop = (event: any) => {
-  event.preventDefault();
-  const files = event.dataTransfer.files;
-  fileName.value = files[0].name;
-  console.log('drop');
+
+  // const response = await axios.post('http://140.136.202.125/api/Blob', {
+  //   file: binaryString,
+  // });
 };
 </script>
 <style scoped>

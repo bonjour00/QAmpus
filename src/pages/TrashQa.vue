@@ -33,7 +33,7 @@ import { columns, rowsData } from './Components/Table/Columns';
 
 //table
 //toolValue
-const tableTitle = '資源回收桶';
+const tableTitle = '近期刪除';
 const pageNow = ref(paginationInitial);
 const searchNow = ref('');
 const orderNow = ref(orderInitial);

@@ -5,20 +5,25 @@
     flat
     icon="delete"
     class="q-mx-md"
-    @click="deleteSubmit(selectRow.props.row.qaId)"
+    @click="deleteSubmit(selectRow.props.row.questionId)"
   ></q-btn>
 </template>
 <script setup lang="ts">
+import axios from 'axios';
 import { successs } from './AnimateAction';
 const props = defineProps<{
   selectRow: any;
 }>();
 const emit = defineEmits(['updated']);
-const deleteSubmit = (qaId: number) => {
-  emit('updated');
-  // console.log({qaId:props.selectRow.props.row.qaId,qaStatus:props.selectRow.props.row.qaStatus=='delete'? 'completeDel':'delete'});
-  console.log('/api/Qna/', props.selectRow.props.row.qaId);
-  //刪除邏輯
-  successs('刪除成功');
+const deleteSubmit = async (qaId: number) => {
+  try {
+    const result = await axios.delete(
+      `http://140.136.202.125/api/Question/${props.selectRow.props.row.questionId}`
+    );
+    successs('刪除成功');
+    emit('updated');
+  } catch (e: any) {
+    console.log(e, 'error');
+  }
 };
 </script>

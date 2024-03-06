@@ -61,6 +61,7 @@ import {
 } from './Components/Table/data ';
 import { columns, rowsData } from './Components/Table/Columns';
 import TestingDialog from './Components/Table/Dialog/TestingDialog.vue';
+import axios from 'axios';
 
 //editPop
 const open = ref(false);
@@ -71,12 +72,16 @@ const currentOffice = ref(testInitialOffice); //之後用auth fetch?
 const title = '指派單位';
 
 //fetch offices
-const options = [
-  { label: '資管', value: 1 },
-  { label: '統資', value: 2 },
-  { label: '圖資', value: 3 },
-];
-
+const options = ref([]);
+const fetchOffices = async () => {
+  const result = await axios.get('http://140.136.202.125/api/Office');
+  const offices = result.data.map((office: any) => ({
+    label: office.officeName,
+    value: office.officeId,
+  }));
+  options.value = offices;
+};
+fetchOffices();
 //table
 //toolValue
 const tableTitle = '待審核問題';
@@ -97,25 +102,32 @@ const updatedFetch = computed(() => {
 const rows: Ref<QA[]> = ref([]);
 const loading = ref(false);
 //fetch data
-const fetchRows = (qaStatus: string) => {
+const fetchRows = async (qaStatus: string) => {
+  // console.log({
+  //   query: searchNow.value,
+  //   startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
+  //   perPage: pageNow.value.rowsPerPage,
+  //   officeId: testInitialOffice.value,
+  //   order: orderNow.value.value,
+  //   qaStatus,
+  // });
   loading.value = true;
-  console.log({
+  const result = await axios.post('http://140.136.202.125/api/Question/paged', {
     query: searchNow.value,
     startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
     perPage: pageNow.value.rowsPerPage,
-    officeId: testInitialOffice.value,
+    officeId: 1,
     order: orderNow.value.value,
     qaStatus,
   });
-  setTimeout(() => {
-    rows.value = rowsData;
-    loading.value = false;
-  }, 1000);
+  rows.value = result.data;
+  loading.value = false;
+  console.log(result, 'fetching');
 };
-fetchRows('pending');
+fetchRows('UNCONFIRMED');
 
 watch(updatedFetch, () => {
-  fetchRows('pending');
+  fetchRows('UNCONFIRMED');
 });
 //testingPop
 const testing = ref(false);
