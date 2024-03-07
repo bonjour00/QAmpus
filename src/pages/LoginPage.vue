@@ -5,7 +5,7 @@
       <q-input
         class="account"
         v-model="accountText"
-        label="帳號/教職員編號"
+        label="帳號"
         :dense="dense"
       />
       <q-input

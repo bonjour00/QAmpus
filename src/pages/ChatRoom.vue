@@ -20,6 +20,7 @@
       </div>
 
       <div class="input-container">
+        <div></div>
         <input
           class="input"
           id="messageQ"
