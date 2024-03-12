@@ -25,16 +25,23 @@
   font-weight: 900;
   color: #484848;
 }
-.account {
+.username {
   position: absolute;
   top: 35%;
   left: 50%;
   transform: translate(-50%, -25%);
   width: 20%;
 }
-.password {
+.account {
   position: absolute;
   top: 44%;
+  left: 50%;
+  transform: translate(-50%, -25%);
+  width: 20%;
+}
+.password {
+  position: absolute;
+  top: 53%;
   left: 50%;
   transform: translate(-50%, -25%);
   width: 20%;
@@ -53,7 +60,7 @@
 }
 .login-button {
   position: absolute;
-  top: 51%;
+  top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 20%;
@@ -74,7 +81,7 @@
 .forget {
   position: absolute;
   display: flex;
-  top: 63%;
+  top: 72%;
   left: 50%;
   transform: translate(-50%, -50%);
   color: black;
