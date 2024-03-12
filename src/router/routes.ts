@@ -10,6 +10,7 @@ const routes: RouteRecordRaw[] = [
       { path: 'QA', component: () => import('pages/CheckedQa.vue') },
       { path: 'trash', component: () => import('pages/TrashQa.vue') },
       { path: 'manage', component: () => import('pages/QaManager.vue') },
+      { path: 'admin', component: () => import('pages/AdminMGMT.vue') },
     ],
   },
   {

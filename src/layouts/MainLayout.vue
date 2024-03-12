@@ -107,5 +107,10 @@ const menus = [
     icon: 'delete',
     label: 'manage',
   },
+  {
+    title: '權限管理',
+    icon: 'people',
+    label: 'admin',
+  },
 ];
 </script>

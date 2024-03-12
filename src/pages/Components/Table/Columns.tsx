@@ -93,6 +93,51 @@ export const columns_2 = [
   { name: 'actions', align: 'right', label: '', field: '' },
 ];
 
+export const columns_3 = [
+  {
+    name: 'acID',
+    label: '教職員編號',
+    align: 'left',
+    field: 'acID',
+    sortable: true,
+    headerStyle: 'font-size: medium;font-weight: 900',
+  },
+  {
+    name: 'acName',
+    label: '名稱',
+    align: 'left',
+    field: 'acName',
+    sortable: true,
+    headerStyle: 'font-size: medium;font-weight: 900',
+  },
+
+  {
+    name: 'acEMAIL',
+    align: 'left',
+    label: 'EMAIL',
+    field: 'acEmail',
+    sortable: true,
+    headerStyle: 'font-size: medium;font-weight: 900',
+  },
+  {
+    name: 'acApply',
+    align: 'left',
+    label: '申請時間',
+    field: 'acApply',
+    format: (val: Date) => `${val.toLocaleString()}`,
+    sortable: true,
+    headerStyle: 'font-size: medium;font-weight: 900',
+  },
+  {
+    name: 'permission',
+    align: 'left',
+    label: '狀態',
+    field: 'permission',
+    sortable: true,
+    headerStyle: 'font-size: medium;font-weight: 900',
+  },
+  { name: 'actions', align: 'right', label: '', field: '' },
+];
 export const rowsData = [
   {
     qaId: 1,
@@ -200,5 +245,22 @@ export const rowsData_1 = [
     qaDaletetime: null,
     qaStatus: 'pending',
     trans: 3,
+  },
+];
+//權限的
+export const rowsData_2 = [
+  {
+    acID: '123456789',
+    acName: '小明',
+    acEmail: 'a12345678@gmail.com',
+    acApply: new Date(),
+    permission: '未確認',
+  },
+  {
+    acID: '222222222',
+    acName: '大明',
+    acEmail: 'b1234123@gmail.com',
+    acApply: new Date(),
+    permission: '未確認',
   },
 ];

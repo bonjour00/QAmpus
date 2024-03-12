@@ -43,3 +43,19 @@ export const orderOptions = [
   { label: '最舊', value: 'asc' },
 ];
 export const testInitialOffice = { label: '資管', value: 1 };
+
+//權限的
+export type AC = {
+  acID: number;
+  acMember: string;
+  acEmail: string;
+  acApply: Date;
+  permission: string;
+};
+export const initialAC: AC = {
+  acID: 999999999,
+  acMember: '小明',
+  acEmail: 'a1234567@gmail.com',
+  acApply: new Date(),
+  permission: '管理者',
+};
