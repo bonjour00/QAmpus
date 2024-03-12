@@ -15,7 +15,7 @@
           v-model="idNumber"
           :dense="dense"
           maxlength="9"
-          type="tel"
+          type="number"
         />
         <q-input
           v-model="usernameText"
