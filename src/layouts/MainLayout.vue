@@ -108,7 +108,7 @@ const menus = [
     label: 'manage',
   },
   {
-    title: '權限管理',
+    title: '權限管理確認',
     icon: 'people',
     label: 'admin',
   },
