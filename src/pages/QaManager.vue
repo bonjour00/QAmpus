@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="q-pa-md">
     <Table
       :rows="rows"
@@ -105,4 +105,4 @@ fetchRows('noAssign');
 watch(updatedFetch, () => {
   fetchRows('noAssign');
 });
-</script>
+</script> -->

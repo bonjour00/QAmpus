@@ -41,10 +41,10 @@ import { computed } from 'vue';
 import SearchTable from './Toolbar/SearchTable.vue';
 import OptionSelect from './Toolbar/OptionSelect.vue';
 import PaginationTable from './Pagination/PaginationTable.vue';
-import { QA, Pagination, Option, orderOptions } from './data ';
+import { QA, Pagination, Option, orderOptions, Recource } from './data ';
 
 const props = defineProps<{
-  rows: QA[];
+  rows: QA[] | Recource[];
   columns: any;
   tableTitle: string;
   loading: boolean;

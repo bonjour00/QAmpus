@@ -72,7 +72,7 @@ const router = useRouter();
 const isSidebarExpanded = ref(true);
 
 const currentChange = (label: string) => {
-  router.push({ path: label.toLowerCase() });
+  router.push({ path: label });
 };
 
 const toggleSidebar = () => {
@@ -80,7 +80,11 @@ const toggleSidebar = () => {
 };
 
 const isMenuActive = (label: string) => {
-  return router.currentRoute.value.path === `/${label.toLowerCase()}`;
+  return (
+    router.currentRoute.value.path === `/${label.toLowerCase()}` ||
+    (router.currentRoute.value.path === '/' &&
+      `/${label.toLowerCase()}` === '/pending')
+  );
 };
 const logoSource = computed(() => {
   return isSidebarExpanded.value ? expandedLogo : collapsedLogo;
@@ -93,19 +97,19 @@ const menus = [
     label: 'pending',
   },
   {
-    title: '問答集',
-    icon: 'question_answer',
-    label: 'QA',
+    title: '資源管理',
+    icon: 'create_new_folder',
+    label: 'resource',
   },
   {
-    title: '近期刪除',
+    title: '近期刪除問題',
     icon: 'delete',
-    label: 'trash',
+    label: 'trash-qa',
   },
   {
-    title: '待分配問題',
+    title: '近期刪除資源',
     icon: 'delete',
-    label: 'manage',
+    label: 'trash-resource',
   },
 ];
 </script>

@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <Table
       :rows="rows"
-      :columns="columns"
+      :columns="pendingColumns"
       v-model:page-now="pageNow"
       v-model:search-now="searchNow"
       v-model:order-now="orderNow"
@@ -24,16 +24,20 @@
           @click="testing = true"
         ></q-btn>
       </template>
-      <template v-slot:btnAction="slotProps"
-        ><EditBtn
+      <template v-slot:btnAction="slotProps">
+        <!-- <EditBtn
           :selectRow="slotProps"
           @dialogOpen="(value) => (open = value)"
           @setSelectRow="(value) => (selectRow = value)"
+        /> -->
+        <AuctionBtn
+          :selectRow="slotProps"
+          @updated="(row) => handleAction(row, 'deleted', '刪除成功')"
+          icon="delete"
         />
-        <DeleteBtn :selectRow="slotProps" @updated="updated++" />
       </template>
     </Table>
-    <EditDialog
+    <!-- <EditDialog
       v-model:open="open"
       :selectRow="selectRow"
       :currentOffice="currentOffice"
@@ -41,7 +45,7 @@
       :options="options"
       @updated="updated++"
       :where="false"
-    />
+    /> -->
     <TestingDialog v-model:testing="testing" :rows="rows" />
   </div>
 </template>
@@ -51,35 +55,36 @@ import { ref, Ref, watch, computed } from 'vue';
 import EditDialog from './Components/Table/Dialog/EditDialog.vue';
 import Table from './Components/Table/QaTable.vue';
 import EditBtn from './Components/Table/ActionBtn/EditBtn.vue';
-import DeleteBtn from './Components/Table/ActionBtn/DeleteBtn.vue';
 import {
   QA,
-  initialQASelect,
-  testInitialOffice,
+  // initialQASelect,
+  // testInitialOffice,
   paginationInitial,
   orderInitial,
 } from './Components/Table/data ';
-import { columns, rowsData } from './Components/Table/Columns';
+import { pendingColumns } from './Components/Table/Columns';
 import TestingDialog from './Components/Table/Dialog/TestingDialog.vue';
+import axios from 'axios';
+import { successs } from './Components/Table/ActionBtn/AnimateAction';
+import AuctionBtn from './Components/Table/ActionBtn/ActionBtn.vue';
+// //editPop
+// const open = ref(false);
+// const selectRow = ref(initialQASelect);
 
-//editPop
-const open = ref(false);
-const selectRow = ref(initialQASelect);
+// //optionSelect
+// const currentOffice = ref(testInitialOffice); //之後用auth fetch?
+// const title = '指派單位';
 
-//optionSelect
-const currentOffice = ref(testInitialOffice); //之後用auth fetch?
-const title = '指派單位';
-
-//fetch offices
-const options = [
-  { label: '資管', value: 1 },
-  { label: '統資', value: 2 },
-  { label: '圖資', value: 3 },
-];
+// //fetch offices
+// const options = [
+//   { label: '資管', value: 1 },
+//   { label: '統資', value: 2 },
+//   { label: '圖資', value: 3 },
+// ];
 
 //table
 //toolValue
-const tableTitle = '待審核問題';
+const tableTitle = '待解決問題';
 const pageNow = ref(paginationInitial);
 const searchNow = ref('');
 const orderNow = ref(orderInitial);
@@ -97,26 +102,47 @@ const updatedFetch = computed(() => {
 const rows: Ref<QA[]> = ref([]);
 const loading = ref(false);
 //fetch data
-const fetchRows = (qaStatus: string) => {
+const fetchRows = async (status: string) => {
+  // console.log({
+  //   query: searchNow.value,
+  //   startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
+  //   perPage: pageNow.value.rowsPerPage,
+  //   officeId: testInitialOffice.value,
+  //   order: orderNow.value.value,
+  //   qaStatus,
+  // });
   loading.value = true;
-  console.log({
+  const result = await axios.post('http://140.136.202.125/api/Question/paged', {
     query: searchNow.value,
     startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
     perPage: pageNow.value.rowsPerPage,
-    officeId: testInitialOffice.value,
+    // officeId: 1,
     order: orderNow.value.value,
-    qaStatus,
+    status,
   });
-  setTimeout(() => {
-    rows.value = rowsData;
-    loading.value = false;
-  }, 1000);
+  rows.value = result.data;
+  loading.value = false;
+  console.log(result, 'fetching');
 };
-fetchRows('pending');
+fetchRows('UNCONFIRMED');
 
 watch(updatedFetch, () => {
-  fetchRows('pending');
+  fetchRows('UNCONFIRMED');
 });
 //testingPop
 const testing = ref(false);
+
+//handleAction(delete)
+const handleAction = async (row: QA, action: string, success: string) => {
+  try {
+    const result = await axios.patch(
+      `http://140.136.202.125/api/Question/${action}/${row.questionId}`
+    );
+    successs(success);
+    console.log(result.data);
+  } catch (e: any) {
+    console.log(e, 'error');
+  }
+  updated.value++;
+};
 </script>

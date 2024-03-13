@@ -1,62 +1,95 @@
-export const columns = [
+const headerStyle = 'font-size: medium;font-weight: 900';
+const addHours = (date: Date, hours: number) => {
+  const hoursToAdd = hours * 60 * 60 * 1000;
+  date.setTime(date.getTime() + hoursToAdd);
+  return date;
+};
+
+export const pendingColumns = [
   {
-    name: 'qaQuestion',
+    name: 'questionQuestion',
     label: '問題',
     align: 'left',
-    field: 'qaQuestion',
+    field: 'questionQuestion',
+    format: (val: string) =>
+      `${val.length > 20 ? val.substring(0, 20) + '...' : val}`,
     sortable: true,
-    headerStyle: 'font-size: medium;font-weight: 900',
+    headerStyle,
   },
   {
-    name: 'qaCreateId',
+    name: 'questionAnswer',
+    label: '答案',
+    align: 'left',
+    field: 'questionAnswer',
+    format: (val: string) =>
+      `${val.length > 20 ? val.substring(0, 20) + '...' : val}`,
+    sortable: true,
+    headerStyle,
+  },
+  {
+    name: 'questionCreaterId',
     align: 'left',
     label: '發問者學號',
-    field: 'qaCreateId',
+    field: 'questionCreaterId',
     sortable: true,
-    headerStyle: 'font-size: medium;font-weight: 900',
+    headerStyle,
   },
   {
-    name: 'qaAsktime',
+    name: 'questionAddtime',
     align: 'left',
     label: '發問時間',
-    field: 'qaAsktime',
-    format: (val: Date) => `${val.toLocaleString()}`,
+    field: 'questionAddtime',
+    format: (val: Date) =>
+      `${addHours(new Date(val), 8).toLocaleString('zh-TW')}`,
     sortable: true,
-    headerStyle: 'font-size: medium;font-weight: 900',
+    headerStyle,
   },
   { name: 'actions', align: 'right', label: '', field: '' },
 ];
 
-export const columns_1 = [
+export const resourceColumns = [
   {
-    name: 'source',
+    name: 'dataFilename',
     label: '來源',
     align: 'left',
-    field: 'source',
+    field: 'dataFilename',
+    format: (val: string) =>
+      `${val.length > 20 ? val.substring(0, 20) + '...' : val}`,
     sortable: true,
-    headerStyle: 'font-size: medium;font-weight: 900',
+    headerStyle,
   },
   {
-    name: 'sourceName',
+    name: 'dataDescription',
     align: 'left',
     label: '資源名稱',
-    field: 'sourceName',
+    format: (val: string) =>
+      `${val.length > 20 ? val.substring(0, 20) + '...' : val}`,
+    field: 'dataDescription',
     sortable: true,
-    headerStyle: 'font-size: medium;font-weight: 900',
+    headerStyle,
   },
   {
-    name: 'sourceType',
+    name: 'dataFiletype',
     align: 'left',
     label: '資源種類',
-    field: 'sourceType',
-    format: (val: Date) => `${val.toLocaleString()}`,
+    field: 'dataFiletype',
     sortable: true,
-    headerStyle: 'font-size: medium;font-weight: 900',
+    headerStyle,
+  },
+  {
+    name: 'dataUploadTime',
+    align: 'left',
+    label: '上傳時間',
+    field: 'dataUploadTime',
+    format: (val: Date) =>
+      `${addHours(new Date(val), 8).toLocaleString('zh-TW')}`,
+    sortable: true,
+    headerStyle,
   },
   { name: 'actions', align: 'right', label: '', field: '' },
 ];
 
-export const columns_2 = [
+export const assignColumn = [
   {
     name: 'qaQuestion',
     label: '問題',
@@ -91,114 +124,4 @@ export const columns_2 = [
     headerStyle: 'font-size: medium;font-weight: 900',
   },
   { name: 'actions', align: 'right', label: '', field: '' },
-];
-
-export const rowsData = [
-  {
-    qaId: 1,
-    qaQuestion: 'Frozen Yogurt',
-    qaAnswer: 'answer',
-    qaCreateId: '121',
-    qaLastUpdaterId: null,
-    qaAsktime: new Date(),
-    qaUpdatetime: null,
-    qaDaletetime: null,
-    qaStatus: 'pending',
-    source: 'http://www.im.fju.edu.tw/site/?...',
-    sourceName: '高中生問答集',
-    sourceType: 'url',
-  },
-  {
-    qaId: 2,
-    qaQuestion: 'Frozen Yogurt',
-    qaAnswer: 'answer',
-    qaCreateId: '121',
-    qaLastUpdaterId: null,
-    qaAsktime: new Date(),
-    qaUpdatetime: null,
-    qaDaletetime: null,
-    qaStatus: 'pending',
-    source: 'http://www.im.fju.edu.tw/site/?...',
-    sourceName: '高中生問答集',
-    sourceType: 'url',
-  },
-  {
-    qaId: 3,
-    qaQuestion: 'Frozen Yogurt',
-    qaAnswer: 'answer',
-    qaCreateId: '121',
-    qaLastUpdaterId: null,
-    qaAsktime: new Date(),
-    qaUpdatetime: null,
-    qaDaletetime: null,
-    qaStatus: 'pending',
-    source: '問題.pdf',
-    sourceName: '資管系問答集',
-    sourceType: 'pdf',
-  },
-  {
-    qaId: 4,
-    qaQuestion: 'Frozen Yogurt',
-    qaAnswer: 'answer',
-    qaCreateId: '121',
-    qaLastUpdaterId: null,
-    qaAsktime: new Date(),
-    qaUpdatetime: null,
-    qaDaletetime: null,
-    qaStatus: 'pending',
-    source: '問題.pdf',
-    sourceName: '資管系問答集',
-    sourceType: 'pdf',
-  },
-];
-
-export const rowsData_1 = [
-  {
-    qaId: 1,
-    qaQuestion: 'Frozen Yogurt',
-    qaAnswer: 'answer',
-    qaCreateId: '121',
-    qaLastUpdaterId: null,
-    qaAsktime: new Date(),
-    qaUpdatetime: null,
-    qaDaletetime: null,
-    qaStatus: 'pending',
-    trans: 3,
-  },
-  {
-    qaId: 2,
-    qaQuestion: 'Frozen Yogurt',
-    qaAnswer: 'answer',
-    qaCreateId: '121',
-    qaLastUpdaterId: null,
-    qaAsktime: new Date(),
-    qaUpdatetime: null,
-    qaDaletetime: null,
-    qaStatus: 'pending',
-    trans: 3,
-  },
-  {
-    qaId: 3,
-    qaQuestion: 'Frozen Yogurt',
-    qaAnswer: 'answer',
-    qaCreateId: '121',
-    qaLastUpdaterId: null,
-    qaAsktime: new Date(),
-    qaUpdatetime: null,
-    qaDaletetime: null,
-    qaStatus: 'pending',
-    trans: 3,
-  },
-  {
-    qaId: 4,
-    qaQuestion: 'Frozen Yogurt',
-    qaAnswer: 'answer',
-    qaCreateId: '121',
-    qaLastUpdaterId: null,
-    qaAsktime: new Date(),
-    qaUpdatetime: null,
-    qaDaletetime: null,
-    qaStatus: 'pending',
-    trans: 3,
-  },
 ];

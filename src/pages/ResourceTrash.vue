@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <Table
       :rows="rows"
-      :columns="pendingColumns"
+      :columns="resourceColumns"
       v-model:page-now="pageNow"
       v-model:search-now="searchNow"
       v-model:order-now="orderNow"
@@ -28,8 +28,12 @@
 <script setup lang="ts">
 import { ref, Ref, watch, computed } from 'vue';
 import Table from './Components/Table/QaTable.vue';
-import { QA, paginationInitial, orderInitial } from './Components/Table/data ';
-import { pendingColumns } from './Components/Table/Columns';
+import {
+  Recource,
+  paginationInitial,
+  orderInitial,
+} from './Components/Table/data ';
+import { resourceColumns } from './Components/Table/Columns';
 import axios from 'axios';
 import { successs } from './Components/Table/ActionBtn/AnimateAction';
 import AuctionBtn from './Components/Table/ActionBtn/ActionBtn.vue';
@@ -51,10 +55,10 @@ const updatedFetch = computed(() => {
 });
 
 //rows
-const rows: Ref<QA[]> = ref([]);
+const rows: Ref<Recource[]> = ref([]);
 const loading = ref(false);
 //fetch data
-const fetchRows = async (status: string) => {
+const fetchRows = async () => {
   // console.log({
   //   query: searchNow.value,
   //   startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
@@ -64,29 +68,29 @@ const fetchRows = async (status: string) => {
   //   qaStatus,
   // });
   loading.value = true;
-  const result = await axios.post('http://140.136.202.125/api/Question/paged', {
+  const result = await axios.post('http://140.136.202.125/api/Blob/paged', {
     query: searchNow.value,
     startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
     perPage: pageNow.value.rowsPerPage,
     // officeId: 1,
     order: orderNow.value.value,
-    status,
+    status: 'deleted',
   });
   rows.value = result.data;
   loading.value = false;
-  console.log(result, 'fetching');
+  console.log(result.data, 'fetching');
 };
-fetchRows('deleted');
+fetchRows();
 
 watch(updatedFetch, () => {
-  fetchRows('deleted');
+  fetchRows();
 });
 
 //handleAction(recover/delete)
-const handleAction = async (row: QA, action: string, success: string) => {
+const handleAction = async (row: Recource, action: string, success: string) => {
   try {
     const result = await axios.patch(
-      `http://140.136.202.125/api/Question/${action}/${row.questionId}`
+      `http://140.136.202.125/api/Blob/${action}/${row.dataFilename}`
     );
     successs(success);
     console.log(result.data);

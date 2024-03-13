@@ -7,9 +7,14 @@ const routes: RouteRecordRaw[] = [
     children: [
       { path: '', component: () => import('pages/PendingQa.vue') },
       { path: 'pending', component: () => import('pages/PendingQa.vue') },
-      { path: 'QA', component: () => import('pages/CheckedQa.vue') },
-      { path: 'trash', component: () => import('pages/TrashQa.vue') },
-      { path: 'manage', component: () => import('pages/QaManager.vue') },
+      { path: 'resource', component: () => import('pages/ResourceManage.vue') },
+      { path: 'trash-qa', component: () => import('pages/TrashQa.vue') },
+      {
+        path: 'trash-resource',
+        component: () => import('pages/ResourceTrash.vue'),
+      },
+
+      // { path: 'manage', component: () => import('pages/QaManager.vue') },
     ],
   },
   {

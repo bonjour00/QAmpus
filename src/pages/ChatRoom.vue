@@ -1,16 +1,6 @@
 <template>
   <div class="chatroom-container">
-    <div class="tabs-container">
-      <div class="tabs">
-        <button @click="setTab('chatroom')">Chatroom</button>
-        <button @click="setTab('mails')">
-          Mails
-          <span class="badge" v-if="tab === 'mails'">{{ QAs.length }}</span>
-        </button>
-      </div>
-    </div>
-
-    <div v-if="tab === 'chatroom'" class="chatroom">
+    <div class="chatroom">
       <div v-for="(message, index) in messageList" :key="index" class="message">
         <p>我：{{ message.qaQuestion }}</p>
         <p>回答：{{ message.qaAnswer }}</p>
@@ -20,7 +10,6 @@
       </div>
 
       <div class="input-container">
-        <div></div>
         <input
           class="input"
           id="messageQ"
@@ -31,14 +20,6 @@
         <q-icon class="send" name="send" @click="sendMessage" />
       </div>
     </div>
-
-    <div v-else class="q-list">
-      <div v-for="(QA, index) in QAs" :key="index" class="QA-item">
-        <p>{{ QA.Q }}</p>
-        <p>{{ QA.A }}</p>
-        <p>{{ QA.time }}</p>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -46,19 +27,10 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import './chatroom.css';
-const tab = ref('chatroom');
-const QAs = ref([
-  { Q: '聖言樓代號', A: 'SF', time: '5 min ago' },
-  { Q: '利瑪竇代號', A: 'LM', time: '5 hour ago' },
-  { Q: '輔大校長？', A: '藍易振', time: '6 hour ago' },
-]);
+
 const messageList: any = ref([]);
 
 const message = ref('');
-
-const setTab = (newTab: string) => {
-  tab.value = newTab;
-};
 
 const sendMessage = async () => {
   if (message.value.trim() !== '') {
@@ -78,10 +50,11 @@ const sendMessage = async () => {
     //confidenceScore source
     const result = await res.json();
     console.log(result);
-    const qaAnswer = result.answers[0].answer;
+    const qaAnswer = result.answers[0].answer.replace('A：', '');
     const source = result.answers[0].source;
     const sourcePhrase = result.answers[0].questions[0];
     const confidenceScore = result.answers[0].confidenceScore;
+
     messageList.value.push({
       qaQuestion: message.value,
       qaAnswer,
@@ -91,56 +64,25 @@ const sendMessage = async () => {
     });
     ///api/Qna
     if (confidenceScore < 0.7) {
-      // const qaAdd = async () => {
-      //   const result = await axios.post('http://140.136.202.125/api/Qna', {
-      //     qaQuestion: message.value,
-      //     qaAnswer,
-      //     qaCreaterId: '001',
-      //     officeId: 0,
-      //   });
-      //   console.log('start');
-      //   console.log(result, 'add');
-      // };
-      // qaAdd();
-      console.log({
-        qaQuestion: message.value,
-        qaAnswer,
-        qaCreaterId: '001',
-        officeId: 1,
-      });
+      const qaAdd = async () => {
+        const result = await axios.post(
+          'http://140.136.202.125/api/Question',
+          {
+            questionQuestion: message.value,
+            questionAnswer: qaAnswer,
+          },
+          {
+            headers: {
+              Authorization:
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MTA0MDIxNjEiLCJuYW1lIjoiTWVsb2R5IiwiZW1haWwiOiJ5OTIwNTMxQGdtYWlsLmNvbSIsImp0aSI6ImRkMTc2ODFhLTcxZmEtNGQ0My1hMmU1LWNiNzU1ZmMzOTg4MyIsInJvbGUiOiJzdHJpbmciLCJuYmYiOjE3MTAzMzc2ODcsImV4cCI6MTcxMDMzOTQ4NywiaWF0IjoxNzEwMzM3Njg3LCJpc3MiOiJKd3RBdXRoRGVtbyJ9.7se-NeJRwUHYawol8m1ESzgCUrW1D5t6udf-n-lxe3I',
+            },
+          }
+        );
+        console.log(result.data);
+      };
+      qaAdd();
     }
     message.value = '';
   }
 };
-
-// const fetchAnswer = async (question: string): Promise<{ answer: any }> => {
-//   try {
-//     const response = await fetch(
-//       `https://fju-test3.cognitiveservices.azure.com/language/:query-knowledgebases?projectName=shelly-search-test&api-version=2021-10-01`,
-//       {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'Ocp-Apim-Subscription-Key': 'fde6fc08d2e14a71b844af69aeea65f7',
-//         },
-//         body: JSON.stringify({
-//           question: question,
-//         }),
-//       }
-//     );
-
-//     if (response.ok) {
-//       const data = await response.json();
-//       const answer = data.answers[0]?.answer;
-
-//       return { answer };
-//     } else {
-//       console.error('Failed to fetch answer.');
-//       return { answer: 'Error fetching answer.' };
-//     }
-//   } catch (error) {
-//     console.error('Error:', error);
-//     return { answer: 'Error fetching answer.' };
-//   }
-// };
 </script>

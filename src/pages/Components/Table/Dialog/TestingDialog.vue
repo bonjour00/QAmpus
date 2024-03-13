@@ -24,7 +24,7 @@
             }"
           >
             <td style="padding: 10px 10px 10px 20px; font-weight: 900">
-              {{ row.qaQuestion }}
+              {{ row.questionQuestion }}
             </td>
             <td
               align="right"

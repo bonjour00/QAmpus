@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <Table
       :rows="rows"
-      :columns="columns_1"
+      :columns="resourceColumns"
       v-model:page-now="pageNow"
       v-model:search-now="searchNow"
       v-model:order-now="orderNow"
@@ -32,60 +32,34 @@
           unelevated
           @click="upload = true"
         />
-        <DeleteBtn :selectRow="slotProps" @updated="updated++" />
+        <AuctionBtn
+          :selectRow="slotProps"
+          @updated="(row) => handleAction(row, 'deleted', '刪除成功')"
+          icon="delete"
+        />
       </template>
     </Table>
-    <EditDialog
-      v-model:open="open"
-      :selectRow="selectRow"
-      :currentOffice="currentOffice"
-      :title="title"
-      :options="options"
-      @updated="updated++"
-      :where="false"
-    />
     <UploadDialog v-model:upload="upload" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, Ref, watch, computed } from 'vue';
-import EditDialog from './Components/Table/Dialog/EditDialog.vue';
 import Table from './Components/Table/QaTable.vue';
-import EditBtn from './Components/Table/ActionBtn/EditBtn.vue';
-import DeleteBtn from './Components/Table/ActionBtn/DeleteBtn.vue';
 import {
-  QA,
-  initialQASelect,
-  testInitialOffice,
+  Recource,
   paginationInitial,
   orderInitial,
-  Option,
 } from './Components/Table/data ';
-import { columns_1, rowsData } from './Components/Table/Columns';
+import { resourceColumns } from './Components/Table/Columns';
 import UploadDialog from './Components/Table/Dialog/UploadDialog.vue';
-
-//editPop
-const open = ref(false);
-const selectRow = ref(initialQASelect);
-
-//optionSelect
-const currentOffice = ref(testInitialOffice); //之後用auth fetch?
-const title = '指派單位';
-
-//fetch offices
-const options: Ref<Option[]> = ref([]);
-setTimeout(() => {
-  options.value = [
-    { label: '資管', value: 1 },
-    { label: '統資', value: 2 },
-    { label: '圖資', value: 3 },
-  ];
-}, 2000);
+import axios from 'axios';
+import { successs } from './Components/Table/ActionBtn/AnimateAction';
+import AuctionBtn from './Components/Table/ActionBtn/ActionBtn.vue';
 
 //table
 //toolValue
-const tableTitle = '問答集';
+const tableTitle = '資源管理';
 const pageNow = ref(paginationInitial);
 const searchNow = ref('');
 const orderNow = ref(orderInitial);
@@ -100,29 +74,50 @@ const updatedFetch = computed(() => {
 });
 
 //rows
-const rows: Ref<QA[]> = ref([]);
+const rows: Ref<Recource[]> = ref([]);
 const loading = ref(false);
 //fetch data
-const fetchRows = (qaStatus: string) => {
+const fetchRows = async () => {
+  // console.log({
+  //   query: searchNow.value,
+  //   startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
+  //   perPage: pageNow.value.rowsPerPage,
+  //   officeId: testInitialOffice.value,
+  //   order: orderNow.value.value,
+  //   qaStatus,
+  // });
   loading.value = true;
-  console.log({
+  const result = await axios.post('http://140.136.202.125/api/Blob/paged', {
     query: searchNow.value,
     startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
     perPage: pageNow.value.rowsPerPage,
-    officeId: testInitialOffice.value,
+    // officeId: 1,
     order: orderNow.value.value,
-    qaStatus,
+    status: 'notdeleted',
   });
-  setTimeout(() => {
-    rows.value = rowsData;
-    loading.value = false;
-  }, 1000);
+  rows.value = result.data;
+  loading.value = false;
+  console.log(result.data, 'fetching');
 };
-fetchRows('checked');
+fetchRows();
 
 watch(updatedFetch, () => {
-  fetchRows('checked');
+  fetchRows();
 });
 //upload
 const upload = ref(false);
+
+//handleAction(delete)
+const handleAction = async (row: Recource, action: string, success: string) => {
+  try {
+    const result = await axios.patch(
+      `http://140.136.202.125/api/Blob/${action}/${row.dataFilename}`
+    );
+    successs(success);
+    console.log(result.data);
+  } catch (e: any) {
+    console.log(e, 'error');
+  }
+  updated.value++;
+};
 </script>
