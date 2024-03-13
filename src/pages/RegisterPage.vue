@@ -2,30 +2,37 @@
   <div class="main">
     <div class="logo-container">
       <img class="logo" src="./asset/collapsed-logo.png" />
-      <p class="title">登入</p>
+      <p class="title">註冊您的帳戶</p>
+
+      <q-input
+        class="username"
+        v-model="usernameText"
+        label="輸入您的使用者名稱"
+        :dense="dense"
+      />
       <q-input
         class="account"
         v-model="accountText"
-        label="EMAIL"
+        label="輸入您的EMAIL"
         :dense="dense"
       />
       <q-input
         class="password"
         v-model="passwordText"
-        label="密碼"
+        label="輸入您的密碼"
         :dense="dense"
         type="password"
       />
       <q-btn
         class="login-button"
         text-color="white"
-        label="登入"
-        @click="login"
+        label="註冊"
+        @click="register"
       />
       <div class="forget">
-        <p>沒有帳號？</p>
-        <a class="alter" href="http://localhost:9000/#/register" target="_blank"
-          >註冊</a
+        <p>已經有帳號了？</p>
+        <a class="alter" href="http://localhost:9000/#/login" target="_blank"
+          >登入</a
         >
       </div>
       <!-- 最底下的波浪       -->
@@ -65,32 +72,16 @@
   </div>
 </template>
 <script>
-import './login.css';
+import './register.css';
 import { ref } from 'vue';
-import axios from 'axios';
 
 export default {
   data() {
     return {
+      usernameText: '',
       accountText: '',
       passwordText: '',
     };
-  },
-  methods: {
-    async login() {
-      try {
-        const result = await axios.post(
-          'http://140.136.202.125/api/User/signin',
-          {
-            userEmail: this.accountText,
-            userPassword: this.passwordText,
-          }
-        );
-        console.log('登錄成功', result);
-      } catch (e) {
-        console.log('登錄失敗', e);
-      }
-    },
   },
 };
 </script>

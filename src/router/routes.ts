@@ -28,6 +28,16 @@ const routes: RouteRecordRaw[] = [
     component: () => import('pages/ChatRoom.vue'),
   },
   {
+    path: '/register',
+    name: 'Register',
+    component: () => import('pages/RegisterPage.vue'),
+  },
+  {
+    path: '/registeradmin',
+    name: 'RegisterAdmin',
+    component: () => import('pages/RegisterAdmin.vue'),
+  },
+  {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),
   },
