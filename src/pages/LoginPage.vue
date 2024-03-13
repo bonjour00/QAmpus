@@ -3,17 +3,11 @@
     <div class="logo-container">
       <img class="logo" src="./asset/collapsed-logo.png" />
       <p class="title">登入</p>
-      <q-input
-        class="account"
-        v-model="accountText"
-        label="EMAIL"
-        :dense="dense"
-      />
+      <q-input class="account" v-model="accountText" label="EMAIL" />
       <q-input
         class="password"
         v-model="passwordText"
         label="密碼"
-        :dense="dense"
         type="password"
       />
       <q-btn
@@ -64,33 +58,116 @@
     </div>
   </div>
 </template>
-<script>
-import './login.css';
+<script setup lang="ts">
 import { ref } from 'vue';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 
-export default {
-  data() {
-    return {
-      accountText: '',
-      passwordText: '',
-    };
-  },
-  methods: {
-    async login() {
-      try {
-        const result = await axios.post(
-          'http://140.136.202.125/api/User/signin',
-          {
-            userEmail: this.accountText,
-            userPassword: this.passwordText,
-          }
-        );
-        console.log('登錄成功', result);
-      } catch (e) {
-        console.log('登錄失敗', e);
-      }
-    },
-  },
+const accountText = ref('');
+const passwordText = ref('');
+const router = useRouter();
+
+const login = async () => {
+  try {
+    const result = await axios.post('http://140.136.202.125/api/User/signin', {
+      userEmail: accountText.value,
+      userPassword: passwordText.value,
+    });
+    console.log('登錄成功', result);
+    localStorage.setItem('token', result.data.token);
+    router.push({ path: '/' });
+  } catch (e) {
+    console.log('登錄失敗', e);
+  }
 };
 </script>
+<style scoped>
+.main {
+  background-color: white;
+  width: 100vw;
+  height: 100vh;
+}
+.logo-container {
+  width: 100vw;
+  height: 100vh;
+}
+
+.logo {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -25%);
+  width: 6%;
+}
+.title {
+  background-color: none;
+  position: absolute;
+  font-size: 25px;
+  top: 28%;
+  left: 50%;
+  transform: translate(-50%, -25%);
+  font-weight: 900;
+  color: #484848;
+}
+.account {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -25%);
+  width: 20%;
+}
+.password {
+  position: absolute;
+  top: 44%;
+  left: 50%;
+  transform: translate(-50%, -25%);
+  width: 20%;
+}
+
+.q-field__label {
+  font-weight: 900;
+}
+.q-field__native:focus {
+  border-bottom: 3px solid #2a77af;
+}
+.wave {
+  width: 100vw;
+  position: absolute;
+  bottom: 0;
+}
+.login-button {
+  position: absolute;
+  top: 51%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20%;
+  height: 3rem;
+  background-color: #2a77af;
+  font-size: 1rem;
+  font-weight: 900;
+  border-radius: 10px;
+  margin-top: 2rem;
+}
+
+.q-field__native,
+.q-field__prefix,
+.q-field__suffix,
+.q-field__input {
+  margin-top: 0.5rem;
+}
+.forget {
+  position: absolute;
+  display: flex;
+  top: 63%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: black;
+  text-decoration: none;
+}
+
+.alter {
+  text-decoration: none;
+  color: #2a77af;
+  font-weight: 900;
+}
+</style>

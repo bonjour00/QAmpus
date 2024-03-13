@@ -26,7 +26,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import axios from 'axios';
-import './chatroom.css';
 
 const messageList: any = ref([]);
 
@@ -73,12 +72,11 @@ const sendMessage = async () => {
           },
           {
             headers: {
-              Authorization:
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MTA0MDIxNjEiLCJuYW1lIjoiTWVsb2R5IiwiZW1haWwiOiJ5OTIwNTMxQGdtYWlsLmNvbSIsImp0aSI6ImRkMTc2ODFhLTcxZmEtNGQ0My1hMmU1LWNiNzU1ZmMzOTg4MyIsInJvbGUiOiJzdHJpbmciLCJuYmYiOjE3MTAzMzc2ODcsImV4cCI6MTcxMDMzOTQ4NywiaWF0IjoxNzEwMzM3Njg3LCJpc3MiOiJKd3RBdXRoRGVtbyJ9.7se-NeJRwUHYawol8m1ESzgCUrW1D5t6udf-n-lxe3I',
+              Authorization: localStorage.getItem('token'),
             },
           }
         );
-        console.log(result.data);
+        console.log(result.data, localStorage.getItem('token'));
       };
       qaAdd();
     }
@@ -86,3 +84,59 @@ const sendMessage = async () => {
   }
 };
 </script>
+<style scoped>
+.chatroom-container {
+  height: 100vh;
+  width: 100vw;
+  background-color: white;
+}
+.tabs-container {
+  background-color: white;
+  height: 5rem;
+}
+.tabs {
+  display: flex;
+  justify-content: center;
+}
+.chatroom {
+  max-height: 70%;
+  width: 100%;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.input-container {
+  position: absolute;
+  bottom: 10%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.message {
+  width: 50%;
+}
+.input {
+  position: relative;
+  height: 3rem;
+  width: 50%;
+  padding-right: 40px;
+  border-radius: 10px;
+  border: 1px solid gray;
+}
+.input:active {
+  border-color: aqua !important; /* Change to whatever color you want */
+}
+
+.send {
+  position: absolute;
+  cursor: pointer;
+  right: 26%;
+  margin-top: 0.65rem;
+  font-size: 25px;
+  color: #808080;
+}
+.send:hover {
+  color: #2976af;
+}
+</style>

@@ -17,11 +17,7 @@ const routes: RouteRecordRaw[] = [
       // { path: 'manage', component: () => import('pages/QaManager.vue') },
     ],
   },
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import('pages/LoginPage.vue'),
-  },
+  { path: '/login', component: () => import('pages/LoginPage.vue') },
   {
     path: '/Chat',
     name: 'Chat',

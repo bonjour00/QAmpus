@@ -66,7 +66,6 @@ import { ref } from 'vue';
 import { computed } from 'vue';
 import expandedLogo from './expanded-logo.png';
 import collapsedLogo from './collapsed-logo.png';
-import './layout.css';
 
 const router = useRouter();
 const isSidebarExpanded = ref(true);
@@ -113,3 +112,126 @@ const menus = [
   },
 ];
 </script>
+<style scoped>
+.custom-layout {
+  display: flex;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+.sidebar {
+  background-color: white;
+  width: 100px;
+  transition: width 0.3s;
+  box-shadow: 5px 0px 30px 0px rgba(226, 236, 249, 0.5);
+}
+
+.sidebar-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-icon {
+  margin-left: 0.5rem;
+}
+.sidebar-button {
+  margin-top: 2rem;
+  width: 70% !important;
+  height: 3.5rem;
+  border: 0;
+  left: 15%;
+  border-radius: 8px;
+  color: #9197b3;
+}
+
+.sidebar-button:hover {
+  background-color: #79a0bd;
+  transition: 0.2s;
+  color: white;
+}
+.sidebar-button.active {
+  background-color: #79a0bd;
+  color: white;
+}
+.expanded {
+  width: 20rem;
+}
+.expanded .sidebar-icon {
+  max-width: 2rem;
+}
+
+.expanded .sidebar-title {
+  max-width: 6rem;
+  margin-left: 1rem;
+  display: flex;
+  justify-content: flex-start;
+  font-size: medium;
+  font-weight: 900;
+  align-items: center;
+}
+
+.expanded .button-content {
+  display: flex;
+}
+
+.sidebar-title {
+  margin: 0;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  transition: margin-left 0.3s;
+}
+.expand-button {
+  left: 4.5rem;
+  width: 1rem;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.expand-button-container {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  padding-right: 1rem;
+}
+.chevron-icon {
+  color: #9197b3;
+  width: 40px;
+  height: 40px;
+  font-weight: 900;
+  background-color: rgb(255, 255, 255);
+  border-radius: 50%;
+}
+.chevron-icon:hover {
+  background-color: #79a0bd;
+  transition: 0.3s;
+  color: white;
+}
+.rotate-icon .chevron-icon {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease-in-out;
+}
+.expanded .chevron-icon:hover {
+  transition: 0.3s;
+  color: white;
+}
+.expanded-logo {
+  width: 15rem;
+}
+.collapsed-logo {
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: 0.8rem;
+  transition: transform 0.3s ease-in-out;
+}
+.logo-container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+}
+</style>

@@ -25,7 +25,7 @@
         <div class="tab">
           <div style="font-weight: 900">
             資源名稱<q-input
-              v-model="source"
+              v-model="sourceName"
               dense
               label-color="grey-9"
               outlined
@@ -76,7 +76,7 @@
                     "
                     @change="handleFiles"
                   />
-                  <div class="file-drop-area" @drop="handleDrop">
+                  <div class="file-drop-area">
                     <span
                       v-if="!fileName"
                       style="color: #79a0bd; font-weight: 900; cursor: pointer"
@@ -100,7 +100,7 @@
           flat
           label="確認"
           color="white"
-          @click="closePopup"
+          @click="uploadResource"
           style="background: #79a0bd"
         />
       </q-card-actions>
@@ -112,6 +112,7 @@
 import { ref, watch, Ref, computed } from 'vue';
 import { QA, Option } from '../data ';
 import './UploadDialog.css';
+import axios from 'axios';
 
 const props = defineProps<{
   upload: boolean;
@@ -120,21 +121,43 @@ const props = defineProps<{
 const emit = defineEmits(['update:upload']);
 const tab = ref('url');
 const url = ref('');
-const source = ref('');
+const sourceName = ref('');
+const formData = ref();
 const closePopup = () => {
   emit('update:upload', false);
   fileName.value = '';
+  tab.value = 'url';
+  formData.value = '';
 };
 const fileName = ref('');
-const handleFiles = (e: any) => {
+const handleFiles = async (e: any) => {
   fileName.value = e.target.files[0].name;
-  console.log('clicl');
+
+  formData.value = new FormData();
+  formData.value.append('file', e.target.files[0]);
 };
-const handleDrop = (event: any) => {
-  event.preventDefault();
-  const files = event.dataTransfer.files;
-  fileName.value = files[0].name;
-  console.log('drop');
+const uploadResource = async () => {
+  try {
+    if (tab.value == 'file') {
+      formData.value.append('description', sourceName.value);
+      const response = await axios.post(
+        'http://140.136.202.125/api/Blob',
+        formData.value,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: localStorage.getItem('token'),
+          },
+        }
+      );
+      console.log('Upload response:', response.data);
+      // for (let [key, value] of formData.value) {
+      //   console.log(`${key}: ${value}`);
+      // }
+    }
+  } catch (error) {
+    console.error('上传文件时发生错误:', error);
+  }
 };
 </script>
 <style scoped>
