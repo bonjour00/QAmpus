@@ -40,7 +40,7 @@ import AuctionBtn from './Components/Table/ActionBtn/ActionBtn.vue';
 
 //table
 //toolValue
-const tableTitle = '近期刪除問題';
+const tableTitle = '近期刪除資源';
 const pageNow = ref(paginationInitial);
 const searchNow = ref('');
 const orderNow = ref(orderInitial);

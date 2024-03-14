@@ -47,11 +47,11 @@ import {
   Option,
   orderOptions,
   Recource,
-  memberColumns,
+  Member,
 } from './data ';
 
 const props = defineProps<{
-  rows: QA[] | Recource[] | memberColumns[];
+  rows: QA[] | Recource[] | Member[];
   columns: any;
   tableTitle: string;
   loading: boolean;
