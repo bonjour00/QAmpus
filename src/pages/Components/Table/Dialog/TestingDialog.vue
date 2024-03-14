@@ -1,5 +1,5 @@
 <template>
-  <q-dialog :modelValue="testing" @update:model-value="closePopup">
+  <q-dialog :modelValue="testing" @update:model-value="closePopup()">
     <q-card style="padding: 40px; width: 40rem; height: 80%">
       <q-card-section style="padding: 0px 0px 10px 0px">
         <div style="font-size: 25px; font-weight: 900; padding-bottom: 1rem">
@@ -46,7 +46,7 @@
         <q-btn
           flat
           label="確認"
-          @click="closePopup"
+          @click="cofirmMuti(rows)"
           style="background: #79a0bd; color: white"
         />
       </q-card-actions>
@@ -57,15 +57,34 @@
 <script setup lang="ts">
 import { ref, Ref } from 'vue';
 import { QA, Option } from '../data ';
+import axios from 'axios';
+import { successs } from '../ActionBtn/AnimateAction';
 
 const props = defineProps<{
   testing: boolean;
   rows: QA[];
 }>();
-const items = ref([{ message: 'Foo' }, { message: 'Bar' }]);
-const emit = defineEmits(['update:testing']);
+const emit = defineEmits(['update:testing', 'update']);
 // const currentRow: Ref<any> = ref(props.selectRow); //暫時不管
-
+const confirmQa = async (questionId: number) => {
+  const result = await axios.patch(
+    `http://140.136.202.125/api/Question/confirm/${questionId}`
+  );
+  console.log(result.data);
+  emit('update');
+};
+const cofirmMuti = (rows: QA[]) => {
+  try {
+    for (let i = 0; i < rows.length; i++) {
+      confirmQa(rows[i].questionId);
+    }
+    rows.length > 0 && successs('已確認，並送信');
+    emit('update');
+    closePopup();
+  } catch (e) {
+    console.log(e);
+  }
+};
 const closePopup = () => {
   emit('update:testing', false);
 };

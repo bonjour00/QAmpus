@@ -46,7 +46,7 @@
       @updated="updated++"
       :where="false"
     /> -->
-    <TestingDialog v-model:testing="testing" :rows="rows" />
+    <TestingDialog v-model:testing="testing" :rows="rows" @update="updated++" />
   </div>
 </template>
 

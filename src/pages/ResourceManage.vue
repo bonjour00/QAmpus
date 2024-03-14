@@ -39,7 +39,7 @@
         />
       </template>
     </Table>
-    <UploadDialog v-model:upload="upload" />
+    <UploadDialog v-model:upload="upload" @update="updated++" />
   </div>
 </template>
 

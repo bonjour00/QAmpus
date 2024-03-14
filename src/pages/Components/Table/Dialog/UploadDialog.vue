@@ -118,7 +118,7 @@ const props = defineProps<{
   upload: boolean;
 }>();
 
-const emit = defineEmits(['update:upload']);
+const emit = defineEmits(['update:upload', 'update']);
 const tab = ref('url');
 const url = ref('');
 const sourceName = ref('');
@@ -154,6 +154,8 @@ const uploadResource = async () => {
       // for (let [key, value] of formData.value) {
       //   console.log(`${key}: ${value}`);
       // }
+      emit('update');
+      closePopup();
     }
   } catch (error) {
     console.error('上传文件时发生错误:', error);
