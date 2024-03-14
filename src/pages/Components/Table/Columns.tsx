@@ -89,6 +89,52 @@ export const resourceColumns = [
   { name: 'actions', align: 'right', label: '', field: '' },
 ];
 
+export const memberColumns = [
+  {
+    name: 'userId',
+    label: '教職員編號',
+    align: 'left',
+    field: 'userId',
+    sortable: true,
+    headerStyle,
+  },
+  {
+    name: 'userName',
+    align: 'left',
+    label: '名稱',
+    field: 'userName',
+    sortable: true,
+    headerStyle,
+  },
+  {
+    name: 'userEmail',
+    align: 'left',
+    label: 'EMAIL',
+    field: 'userEmail',
+    sortable: true,
+    headerStyle,
+  },
+  {
+    name: 'userSignuptime',
+    align: 'left',
+    label: '申請時間',
+    field: 'userSignuptime',
+    format: (val: Date) =>
+      `${addHours(new Date(val), 8).toLocaleString('zh-TW')}`,
+    sortable: true,
+    headerStyle,
+  },
+  {
+    name: 'userPermission',
+    align: 'left',
+    label: '狀態',
+    field: 'userPermission',
+    sortable: true,
+    headerStyle,
+  },
+  { name: 'actions', align: 'right', label: '', field: '' },
+];
+
 export const assignColumn = [
   {
     name: 'qaQuestion',

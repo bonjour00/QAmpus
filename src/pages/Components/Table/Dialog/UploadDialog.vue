@@ -139,9 +139,9 @@ const handleFiles = async (e: any) => {
 const uploadResource = async () => {
   try {
     if (tab.value == 'file') {
-      formData.value.append('description', sourceName.value);
+      // formData.value.append('description', sourceName.value);
       const response = await axios.post(
-        'http://140.136.202.125/api/Blob',
+        `http://140.136.202.125/api/Blob?description=${sourceName.value}`,
         formData.value,
         {
           headers: {

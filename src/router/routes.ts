@@ -13,6 +13,7 @@ const routes: RouteRecordRaw[] = [
         path: 'trash-resource',
         component: () => import('pages/ResourceTrash.vue'),
       },
+      { path: '/member', component: () => import('pages/AdminMember.vue') },
 
       // { path: 'manage', component: () => import('pages/QaManager.vue') },
     ],

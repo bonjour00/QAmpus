@@ -17,6 +17,15 @@ export type Recource = {
   dataFiletype: string;
 };
 
+export type Member = {
+  userId: string;
+  userName: string;
+  userPassword: string;
+  userEmail: string;
+  userPermission: string; //admin
+  userSignuptime: string;
+};
+
 // export const initialQASelect: QA = {
 //   qaId: -1,
 //   qaQuestion: '發生錯誤',

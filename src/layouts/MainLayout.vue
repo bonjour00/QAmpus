@@ -110,6 +110,11 @@ const menus = [
     icon: 'delete',
     label: 'trash-resource',
   },
+  {
+    title: '權限管理',
+    icon: 'groups',
+    label: 'member',
+  },
 ];
 </script>
 <style scoped>
