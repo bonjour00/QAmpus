@@ -25,11 +25,11 @@
         ></q-btn>
       </template>
       <template v-slot:btnAction="slotProps">
-        <!-- <EditBtn
+        <EditBtn
           :selectRow="slotProps"
           @dialogOpen="(value) => (open = value)"
           @setSelectRow="(value) => (selectRow = value)"
-        /> -->
+        />
         <AuctionBtn
           :selectRow="slotProps"
           @updated="(row) => handleAction(row, 'deleted', '刪除成功')"
@@ -37,15 +37,16 @@
         />
       </template>
     </Table>
-    <!-- <EditDialog
+    <EditDialog
       v-model:open="open"
       :selectRow="selectRow"
       :currentOffice="currentOffice"
       :title="title"
       :options="options"
       @updated="updated++"
-      :where="false"
-    /> -->
+      :disable="true"
+      :where="true"
+    />
     <TestingDialog v-model:testing="testing" :rows="rows" @update="updated++" />
   </div>
 </template>
@@ -58,7 +59,7 @@ import EditBtn from './Components/Table/ActionBtn/EditBtn.vue';
 import {
   QA,
   // initialQASelect,
-  // testInitialOffice,
+  testInitialOffice,
   paginationInitial,
   orderInitial,
 } from './Components/Table/data ';
@@ -67,20 +68,25 @@ import TestingDialog from './Components/Table/Dialog/TestingDialog.vue';
 import axios from 'axios';
 import { successs } from './Components/Table/ActionBtn/AnimateAction';
 import AuctionBtn from './Components/Table/ActionBtn/ActionBtn.vue';
-// //editPop
-// const open = ref(false);
-// const selectRow = ref(initialQASelect);
+//editPop
+const open = ref(false);
+const selectRow = ref([]);
 
-// //optionSelect
-// const currentOffice = ref(testInitialOffice); //之後用auth fetch?
-// const title = '指派單位';
+//optionSelect
+const currentOffice = ref(testInitialOffice); //之後用auth fetch?
+const title = '指派單位';
 
-// //fetch offices
-// const options = [
-//   { label: '資管', value: 1 },
-//   { label: '統資', value: 2 },
-//   { label: '圖資', value: 3 },
-// ];
+//fetch offices
+const options = ref([]);
+const fetchOffices = async () => {
+  const result = await axios.get('http://140.136.202.125/api/Office');
+  const offices = result.data.map((office: any) => ({
+    label: office.officeName,
+    value: office.officeId,
+  }));
+  options.value = offices;
+};
+fetchOffices();
 
 //table
 //toolValue
@@ -121,6 +127,7 @@ const fetchRows = async (status: string) => {
     status,
   });
   rows.value = result.data;
+  // rows.value = [initialQASelect];
   loading.value = false;
   console.log(result, 'fetching');
 };

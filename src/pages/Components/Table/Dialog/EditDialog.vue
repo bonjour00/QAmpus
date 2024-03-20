@@ -6,39 +6,45 @@
   >
     <q-card>
       <q-card-section class="row items-center q-pb-none" v-if="where">
-        <q-input
-          :model-value="currentRow.qaQuestion"
-          @update:model-value="
-            (value) => (currentRow = { ...currentRow, qaQuestion: value })
-          "
-          for="qedit"
-          dense
-          type="textarea"
-          autogrow
-          :disable="disable"
-          ><template v-slot:prepend>
-            <span class="text-subtitle1">Q:&nbsp;</span>
-          </template>
-        </q-input>
+        <div class="text-h6"><b>問答</b></div>
         <q-space />
         <q-btn icon="close" flat round dense @click="closePopup" />
       </q-card-section>
+      <div style="max-height: 50vh" class="scroll">
+        <q-card-section v-if="where">
+          <q-input
+            :model-value="currentRow.questionQuestion"
+            @update:model-value="
+              (value) =>
+                (currentRow = { ...currentRow, questionQuestion: value })
+            "
+            for="qedit"
+            dense
+            type="textarea"
+            autogrow
+            :disable="disable"
+            ><template v-slot:prepend>
+              <span class="text-subtitle1">Q:&nbsp;</span>
+            </template>
+          </q-input>
+        </q-card-section>
 
-      <q-card-section v-if="where">
-        <q-input
-          :model-value="currentRow.qaAnswer"
-          @update:model-value="
-            (value) => (currentRow = { ...currentRow, qaAnswer: value })
-          "
-          dense
-          type="textarea"
-          autogrow
-          :disable="disable"
-          ><template v-slot:prepend>
-            <span class="text-subtitle1">A:&nbsp;</span>
-          </template>
-        </q-input>
-      </q-card-section>
+        <q-card-section v-if="where">
+          <q-input
+            :model-value="currentRow.questionAnswer"
+            @update:model-value="
+              (value) => (currentRow = { ...currentRow, questionAnswer: value })
+            "
+            dense
+            type="textarea"
+            autogrow
+            :disable="disable"
+            ><template v-slot:prepend>
+              <span class="text-subtitle1">A:&nbsp;</span>
+            </template>
+          </q-input>
+        </q-card-section>
+      </div>
       <q-card-actions>
         <OptionSelect
           v-model:currentOption="currentOption"
@@ -63,10 +69,11 @@ import { ref, watch, Ref, computed } from 'vue';
 import { QA, Option } from '../data ';
 import { successs } from '../ActionBtn/AnimateAction';
 import OptionSelect from '../Toolbar/OptionSelect.vue';
+import axios from 'axios';
 
 const props = defineProps<{
   open: boolean;
-  selectRow: QA;
+  selectRow: QA | never[];
   currentOffice: Option;
   options: Option[];
   title: string;
@@ -94,32 +101,27 @@ const closePopup = () => {
   currentOption.value = props.currentOffice;
 };
 
-const editSubmit = () => {
+const editSubmit = async () => {
   // console.log({
   //   ...currentRow.value,
   //   officeId: currentOption.value.value,
-  //   qaStatus:currentOption.value.value == props.currentOffice.value?'checked':'pending'
   // });
-  // console.log(currentOption.value.value == props.currentOffice.value);
-  if (currentOption.value.value == props.currentOffice.value) {
-    console.log({
-      qaQuestion: currentRow.value.qaQuestion,
-      qaAnswer: currentRow.value.qaAnswer,
-      qaStatus: 'checked',
-      // creatorId: 'string',
-      lastUpdaterId: 'lastUpdaterId',
-      officeId: currentOption.value.value,
-    });
-  } else {
-    console.log({
-      qaId: props.selectRow.qaId,
-      officeId: 0,
-    });
+  try {
+    const result = await axios.post(
+      `http://140.136.202.125/api/AssignedOffice
+`,
+      {
+        qaId: currentRow.value.questionId,
+        officeId: currentOption.value.value,
+      }
+    );
+    console.log(result);
+    successs('修改成功');
+  } catch (e: any) {
+    console.log(e, 'error');
   }
-
   emit('update:open', false);
   emit('updated');
-  successs('修改成功');
   closePopup();
 };
 </script>
