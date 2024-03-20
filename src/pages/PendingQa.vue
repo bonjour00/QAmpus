@@ -44,7 +44,7 @@
       :title="title"
       :options="options"
       @updated="updated++"
-      :disable="true"
+      :readonly="true"
       :where="true"
     />
     <TestingDialog v-model:testing="testing" :rows="rows" @update="updated++" />

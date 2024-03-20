@@ -22,7 +22,7 @@
             dense
             type="textarea"
             autogrow
-            :disable="disable"
+            :readonly="readonly"
             ><template v-slot:prepend>
               <span class="text-subtitle1">Q:&nbsp;</span>
             </template>
@@ -38,7 +38,7 @@
             dense
             type="textarea"
             autogrow
-            :disable="disable"
+            :readonly="readonly"
             ><template v-slot:prepend>
               <span class="text-subtitle1">A:&nbsp;</span>
             </template>
@@ -78,7 +78,7 @@ const props = defineProps<{
   options: Option[];
   title: string;
   btnName?: string;
-  disable?: boolean;
+  readonly?: boolean;
   where?: boolean;
 }>();
 
