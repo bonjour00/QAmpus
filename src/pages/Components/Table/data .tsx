@@ -26,17 +26,14 @@ export type Member = {
   userSignuptime: string;
 };
 
-// export const initialQASelect: QA = {
-//   qaId: -1,
-//   qaQuestion: '發生錯誤',
-//   qaAnswer: '發生錯誤',
-//   qaCreateId: '-1',
-//   qaLastUpdaterId: '-1',
-//   qaAsktime: new Date(),
-//   qaUpdatetime: null,
-//   qaDaletetime: null,
-//   qaStatus: 'pending',
-// };
+export const initialQASelect: QA = {
+  questionId: -1,
+  questionQuestion: '當我們談到生活，',
+  questionAnswer: '當我們談到生活，',
+  questionCreaterId: '-1',
+  questionAddtime: new Date(),
+  questionStatus: 'pending',
+};
 
 export type Option = {
   label: string;
