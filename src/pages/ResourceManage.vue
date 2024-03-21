@@ -31,7 +31,7 @@
           label="重新上傳"
           style="background: #eff0f5; border-radius: 10px; font-weight: 900"
           unelevated
-          @click="upload = true"
+          @click="editUpload(slotProps.props.row)"
         />
         <AuctionBtn
           :selectRow="slotProps"
@@ -40,7 +40,7 @@
         />
       </template>
     </Table>
-    <UploadDialog v-model:upload="upload" @update="updated++" />
+    <UploadDialog v-model:upload="upload" @update="updated++" :data="data" />
   </div>
 </template>
 
@@ -89,15 +89,16 @@ const fetchRows = async () => {
   //   qaStatus,
   // });
   loading.value = true;
-  // const result = await axios.post('http://140.136.202.125/api/Blob/paged', {
-  //   query: searchNow.value,
-  //   startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-  //   perPage: pageNow.value.rowsPerPage,
-  //   // officeId: 1,
-  //   order: orderNow.value.value,
-  //   status: 'notdeleted',
-  // });
-  // rows.value = result.data;
+  const result = await axios.post('http://140.136.202.125/api/Blob/paged', {
+    query: searchNow.value,
+    startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
+    perPage: pageNow.value.rowsPerPage,
+    office: 3,
+    order: orderNow.value.value,
+    status: 'notdeleted',
+  });
+  rows.value = result.data.data;
+  totalCount.value = result.data.totalCount;
   loading.value = false;
   // console.log(result.data, 'fetching');
 };
@@ -121,5 +122,11 @@ const handleAction = async (row: Recource, action: string, success: string) => {
     console.log(e, 'error');
   }
   updated.value++;
+};
+
+const data: any = ref(null);
+const editUpload = (row: Recource) => {
+  upload.value = true;
+  data.value = row;
 };
 </script>

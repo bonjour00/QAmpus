@@ -70,15 +70,16 @@ const fetchRows = async () => {
   //   qaStatus,
   // });
   loading.value = true;
-  // const result = await axios.post('http://140.136.202.125/api/Blob/paged', {
-  //   query: searchNow.value,
-  //   startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-  //   perPage: pageNow.value.rowsPerPage,
-  //   // officeId: 1,
-  //   order: orderNow.value.value,
-  //   status: 'deleted',
-  // });
-  // rows.value = result.data;
+  const result = await axios.post('http://140.136.202.125/api/Blob/paged', {
+    query: searchNow.value,
+    startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
+    perPage: pageNow.value.rowsPerPage,
+    officeId: 3,
+    order: orderNow.value.value,
+    status: 'deleted',
+  });
+  rows.value = result.data.data;
+  totalCount.value = result.data.totalCount;
   loading.value = false;
   // console.log(result.data, 'fetching');
 };

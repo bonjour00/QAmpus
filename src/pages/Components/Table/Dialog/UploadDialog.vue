@@ -3,7 +3,7 @@
     <q-card style="padding: 5px; border-radius: 0.5rem">
       <q-card-section class="row items-center q-pb-none" style="width: 550px">
         <div style="font-size: 25px; font-weight: 900">
-          <strong>新增檔案</strong>
+          <strong>上傳檔案</strong>
         </div>
         <q-space />
         <q-btn icon="close" flat round dense @click="closePopup" />
@@ -113,9 +113,11 @@ import { ref, watch, Ref, computed } from 'vue';
 import { QA, Option } from '../data ';
 import './UploadDialog.css';
 import axios from 'axios';
+import { successs } from '..//ActionBtn/AnimateAction';
 
 const props = defineProps<{
   upload: boolean;
+  data: any;
 }>();
 
 const emit = defineEmits(['update:upload', 'update']);
@@ -128,6 +130,7 @@ const closePopup = () => {
   fileName.value = '';
   tab.value = 'url';
   formData.value = '';
+  sourceName.value = '';
 };
 const fileName = ref('');
 const handleFiles = async (e: any) => {
@@ -136,6 +139,11 @@ const handleFiles = async (e: any) => {
   formData.value = new FormData();
   formData.value.append('file', e.target.files[0]);
 };
+watch(props, () => {
+  fileName.value = props.data !== null ? props.data.dataFilename : '';
+  sourceName.value = props.data !== null ? props.data.dataDescription : '';
+});
+
 const uploadResource = async () => {
   try {
     if (tab.value == 'file') {
@@ -154,6 +162,7 @@ const uploadResource = async () => {
       // for (let [key, value] of formData.value) {
       //   console.log(`${key}: ${value}`);
       // }
+      successs('上傳成功');
       emit('update');
       closePopup();
     }
