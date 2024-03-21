@@ -27,14 +27,6 @@ export const pendingColumns = [
     headerStyle,
   },
   {
-    name: 'questionCreaterId',
-    align: 'left',
-    label: '發問者學號',
-    field: 'questionCreaterId',
-    sortable: true,
-    headerStyle,
-  },
-  {
     name: 'questionAddtime',
     align: 'left',
     label: '發問時間',
@@ -137,29 +129,34 @@ export const memberColumns = [
 
 export const assignColumn = [
   {
-    name: 'qaQuestion',
+    name: 'questionQuestion',
     label: '問題',
     align: 'left',
-    field: 'qaQuestion',
+    field: 'questionQuestion',
+    format: (val: string) =>
+      `${val.length > 20 ? val.substring(0, 20) + '...' : val}`,
     sortable: true,
-    headerStyle: 'font-size: medium;font-weight: 900',
+    headerStyle,
   },
   {
-    name: 'qaCreateId',
+    name: 'questionAnswer',
+    label: '答案',
     align: 'left',
-    label: '發問者學號',
-    field: 'qaCreateId',
+    field: 'questionAnswer',
+    format: (val: string) =>
+      `${val.length > 20 ? val.substring(0, 20) + '...' : val}`,
     sortable: true,
-    headerStyle: 'font-size: medium;font-weight: 900',
+    headerStyle,
   },
   {
-    name: 'qaAsktime',
+    name: 'questionAddtime',
     align: 'left',
     label: '發問時間',
-    field: 'qaAsktime',
-    format: (val: Date) => `${val.toLocaleString()}`,
+    field: 'questionAddtime',
+    format: (val: Date) =>
+      `${addHours(new Date(val), 8).toLocaleString('zh-TW')}`,
     sortable: true,
-    headerStyle: 'font-size: medium;font-weight: 900',
+    headerStyle,
   },
   {
     name: 'trans',

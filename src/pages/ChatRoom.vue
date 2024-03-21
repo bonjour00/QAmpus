@@ -39,7 +39,7 @@
               round
               size="10px"
               v-if="qa.answer != '...'"
-              @click="handleThumbDown"
+              @click="handleThumbDown(index)"
             />
           </span>
         </div>
@@ -89,27 +89,32 @@ const sendMessage = async () => {
     qaList.value.push({ question: q, answer: '...' });
 
     try {
-      // const result = await axios.post('http://36.50.249.51/score', {
-      //   question: question.value,
-      // });
       const result = await axios.post(
-        'https://fju-test3.cognitiveservices.azure.com/language/:query-knowledgebases?projectName=shelly-search-test&api-version=2021-10-01',
+        'http://140.136.202.125/api/Question/ask',
         {
           question: q,
-        },
-        {
-          headers: {
-            'Ocp-Apim-Subscription-Key': 'fde6fc08d2e14a71b844af69aeea65f7',
-          },
         }
       );
+      qaList.value[qaList.value.length - 1].answer = result.data.answer;
+      console.log(result);
+      // const result = await axios.post(
+      //   'https://fju-test3.cognitiveservices.azure.com/language/:query-knowledgebases?projectName=shelly-search-test&api-version=2021-10-01',
+      //   {
+      //     question: q,
+      //   },
+      //   {
+      //     headers: {
+      //       'Ocp-Apim-Subscription-Key': 'fde6fc08d2e14a71b844af69aeea65f7',
+      //     },
+      //   }
+      // );
 
-      // qaList.value[qaList.value.length - 1].answer = result.data;
-      qaList.value[qaList.value.length - 1].answer = {
-        qaAnswer: result.data.answers[0].answer.replace('A：', ''),
-        source: result.data.answers[0].source,
-        sourcePhrase: result.data.answers[0].questions[0],
-      };
+      // // qaList.value[qaList.value.length - 1].answer = result.data;
+      // qaList.value[qaList.value.length - 1].answer = {
+      //   qaAnswer: result.data.answers[0].answer.replace('A：', ''),
+      //   source: result.data.answers[0].source,
+      //   sourcePhrase: result.data.answers[0].questions[0],
+      // };
 
       setTimeout(() => scrollToBottom(), 100);
     } catch (e) {
@@ -117,7 +122,24 @@ const sendMessage = async () => {
     }
   }
 };
-const handleThumbDown = () => {
+const handleThumbDown = async (index: number) => {
+  const result = await axios.post(
+    'http://140.136.202.125/api/Question',
+    {
+      questionQuestion: qaList.value[index].question,
+      questionAnswer:
+        typeof qaList.value[index].answer == 'object'
+          ? (qaList.value[index].answer as QuestionAnswering).qaAnswer
+          : qaList.value[index].answer,
+      officeId: 3,
+    },
+    {
+      headers: {
+        Authorization: localStorage.getItem('token'),
+      },
+    }
+  );
+
   successs('已幫您轉送至相關單位');
 };
 </script>

@@ -8,6 +8,7 @@
       v-model:order-now="orderNow"
       :loading="loading"
       :tableTitle="tableTitle"
+      :totalCount="totalCount"
     >
       <template v-slot:add>
         <q-btn
@@ -75,6 +76,7 @@ const updatedFetch = computed(() => {
 
 //rows
 const rows: Ref<Recource[]> = ref([]);
+const totalCount = ref(0);
 const loading = ref(false);
 //fetch data
 const fetchRows = async () => {
@@ -87,17 +89,17 @@ const fetchRows = async () => {
   //   qaStatus,
   // });
   loading.value = true;
-  const result = await axios.post('http://140.136.202.125/api/Blob/paged', {
-    query: searchNow.value,
-    startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-    perPage: pageNow.value.rowsPerPage,
-    // officeId: 1,
-    order: orderNow.value.value,
-    status: 'notdeleted',
-  });
-  rows.value = result.data;
+  // const result = await axios.post('http://140.136.202.125/api/Blob/paged', {
+  //   query: searchNow.value,
+  //   startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
+  //   perPage: pageNow.value.rowsPerPage,
+  //   // officeId: 1,
+  //   order: orderNow.value.value,
+  //   status: 'notdeleted',
+  // });
+  // rows.value = result.data;
   loading.value = false;
-  console.log(result.data, 'fetching');
+  // console.log(result.data, 'fetching');
 };
 fetchRows();
 

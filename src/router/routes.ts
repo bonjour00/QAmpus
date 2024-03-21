@@ -15,7 +15,7 @@ const routes: RouteRecordRaw[] = [
       },
       { path: '/member', component: () => import('pages/AdminMember.vue') },
 
-      // { path: 'manage', component: () => import('pages/QaManager.vue') },
+      { path: 'assign', component: () => import('pages/AssignQa.vue') },
     ],
   },
   { path: '/login', component: () => import('pages/LoginPage.vue') },

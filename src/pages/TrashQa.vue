@@ -8,6 +8,7 @@
       v-model:order-now="orderNow"
       :loading="loading"
       :tableTitle="tableTitle"
+      :totalCount="totalCount"
     >
       <template v-slot:btnAction="slotProps"
         ><AuctionBtn
@@ -17,11 +18,19 @@
         />
         <AuctionBtn
           :selectRow="slotProps"
-          @updated="(row) => handleAction(row, 'deleted', '刪除成功')"
+          @updated="(row) => needConfirm(row)"
           icon="delete"
         />
       </template>
     </Table>
+    <ConfirmDialog
+      btnName="刪除"
+      v-model:openConfirm="openConfirm"
+      title="確定刪除此問答嗎?"
+      description="這將永久刪除這則問答!"
+      @clean="data = null"
+      @confirm="handleAction(data, 'deleted', '已永久刪除')"
+    />
   </div>
 </template>
 
@@ -33,6 +42,7 @@ import { pendingColumns } from './Components/Table/Columns';
 import axios from 'axios';
 import { successs } from './Components/Table/ActionBtn/AnimateAction';
 import AuctionBtn from './Components/Table/ActionBtn/ActionBtn.vue';
+import ConfirmDialog from './Components/Table/Dialog/ConfirmDialog.vue';
 
 //table
 //toolValue
@@ -52,6 +62,7 @@ const updatedFetch = computed(() => {
 
 //rows
 const rows: Ref<QA[]> = ref([]);
+const totalCount = ref(0);
 const loading = ref(false);
 //fetch data
 const fetchRows = async (status: string) => {
@@ -68,11 +79,12 @@ const fetchRows = async (status: string) => {
     query: searchNow.value,
     startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
     perPage: pageNow.value.rowsPerPage,
-    // officeId: 1,
+    officeId: 3,
     order: orderNow.value.value,
     status,
   });
-  rows.value = result.data;
+  rows.value = result.data.data;
+  totalCount.value = result.data.totalCount;
   loading.value = false;
   console.log(result, 'fetching');
 };
@@ -83,16 +95,32 @@ watch(updatedFetch, () => {
 });
 
 //handleAction(recover/delete)
-const handleAction = async (row: QA, action: string, success: string) => {
+const handleAction = async (
+  row: QA | null,
+  action: string,
+  success: string
+) => {
   try {
-    const result = await axios.patch(
-      `http://140.136.202.125/api/Question/${action}/${row.questionId}`
-    );
-    successs(success);
-    console.log(result.data);
+    if (row !== null) {
+      const result = await axios.delete(
+        `http://140.136.202.125/api/Question/${row.questionId}`
+      );
+      successs(success);
+      console.log(result.data);
+    }
   } catch (e: any) {
     console.log(e, 'error');
   }
   updated.value++;
+};
+
+//confirmPop
+const openConfirm = ref(false);
+
+//delete need confirm
+const data = ref(null);
+const needConfirm = (row: any) => {
+  openConfirm.value = true;
+  data.value = row;
 };
 </script>

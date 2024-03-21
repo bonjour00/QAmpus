@@ -58,6 +58,7 @@ const props = defineProps<{
   pageNow: Pagination;
   searchNow: string;
   orderNow: Option;
+  totalCount: number;
 }>();
 
 //toolBar
@@ -66,7 +67,7 @@ const title = '分類'; //optionTitle(prepend前綴)
 
 //pagination
 const pagination = computed(() => {
-  return { ...props.pageNow, rowLength: props.rows ? props.rows.length : 0 };
+  return { ...props.pageNow, rowLength: props.totalCount };
 });
 
 const emit = defineEmits([

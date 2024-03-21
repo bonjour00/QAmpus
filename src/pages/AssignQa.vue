@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <Table
       :rows="rows"
-      :columns="pendingColumns"
+      :columns="assignColumn"
       v-model:page-now="pageNow"
       v-model:search-now="searchNow"
       v-model:order-now="orderNow"
@@ -10,23 +10,8 @@
       :tableTitle="tableTitle"
       :totalCount="totalCount"
     >
-      <template v-slot:add>
-        <q-btn
-          label="測試"
-          unelevated
-          style="
-            background: #eff0f5;
-            margin-top: 110px;
-            position: absolute;
-            margin-left: 280px;
-            border-radius: 10px;
-            font-weight: 900;
-          "
-          @click="testing = true"
-        ></q-btn>
-      </template>
-      <template v-slot:btnAction="slotProps">
-        <EditBtn
+      <template v-slot:btnAction="slotProps"
+        ><EditBtn
           :selectRow="slotProps"
           @dialogOpen="(value) => (open = value)"
           @setSelectRow="(value) => (selectRow = value)"
@@ -44,11 +29,11 @@
       :currentOffice="currentOffice"
       :title="title"
       :options="options"
-      @updated="updated++"
+      btnName="指派"
       :readonly="true"
+      @updated="updated++"
       :where="true"
     />
-    <TestingDialog v-model:testing="testing" :rows="rows" @update="updated++" />
     <ConfirmDialog
       btnName="刪除"
       v-model:openConfirm="openConfirm"
@@ -72,12 +57,12 @@ import {
   paginationInitial,
   orderInitial,
 } from './Components/Table/data ';
-import { pendingColumns } from './Components/Table/Columns';
-import TestingDialog from './Components/Table/Dialog/TestingDialog.vue';
+import { assignColumn } from './Components/Table/Columns';
 import axios from 'axios';
 import { successs } from './Components/Table/ActionBtn/AnimateAction';
 import AuctionBtn from './Components/Table/ActionBtn/ActionBtn.vue';
 import ConfirmDialog from './Components/Table/Dialog/ConfirmDialog.vue';
+
 //editPop
 const open = ref(false);
 const selectRow = ref([]);
@@ -105,7 +90,7 @@ const options = [
 
 //table
 //toolValue
-const tableTitle = '待解決問題';
+const tableTitle = '指派系所管理';
 const pageNow = ref(paginationInitial);
 const searchNow = ref('');
 const orderNow = ref(orderInitial);
@@ -120,7 +105,7 @@ const updatedFetch = computed(() => {
 });
 
 //rows
-const rows: Ref<QA[]> = ref([]);
+const rows = ref([]);
 const totalCount = ref(0);
 const loading = ref(false);
 //fetch data
@@ -135,27 +120,23 @@ const fetchRows = async (status: string) => {
   // });
   loading.value = true;
 
-  const result = await axios.post('http://140.136.202.125/api/Question/paged', {
-    query: searchNow.value,
-    startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-    perPage: pageNow.value.rowsPerPage,
-    officeId: 3,
-    order: orderNow.value.value,
-    status,
-  });
-  rows.value = result.data.data;
-  totalCount.value = result.data.totalCount;
-  console.log(result.data, 'fetching');
+  // const result = await axios.post('http://140.136.202.125/api/Question/paged', {
+  //   query: searchNow.value,
+  //   startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
+  //   perPage: pageNow.value.rowsPerPage,
+  //   // officeId: 1,
+  //   order: orderNow.value.value,
+  //   status,
+  // });
+  // rows.value = result.data;
   loading.value = false;
+  // console.log(result, 'fetching');
 };
-fetchRows('UNCONFIRMED');
+fetchRows('noAssign');
 
 watch(updatedFetch, () => {
-  fetchRows('UNCONFIRMED');
+  fetchRows('noAssign');
 });
-//testingPop
-const testing = ref(false);
-
 //handleAction(delete)
 const handleAction = async (
   row: QA | null,
@@ -163,15 +144,14 @@ const handleAction = async (
   success: string
 ) => {
   try {
-    if (row !== null) {
-      const result = await axios.patch(
-        `http://140.136.202.125/api/Question/${action}/${row.questionId}`
-      );
-      console.log(row, action);
-      data.value = null;
-      successs(success);
-      console.log(result.data);
-    }
+    // const result = await axios.patch(
+    //   `http://140.136.202.125/api/Question/${action}/${row.questionId}`
+    // );
+    console.log(row, action);
+    data.value = null;
+    console.log(data.value);
+    successs(success);
+    // console.log(result.data);
   } catch (e: any) {
     console.log(e, 'error');
   }

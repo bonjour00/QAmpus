@@ -71,7 +71,6 @@ const confirmQa = async (questionId: number) => {
     `http://140.136.202.125/api/Question/confirm/${questionId}`
   );
   console.log(result.data);
-  emit('update');
 };
 const cofirmMuti = (rows: QA[]) => {
   try {
