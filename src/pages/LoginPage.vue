@@ -73,9 +73,18 @@ const login = async () => {
       userEmail: accountText.value,
       userPassword: passwordText.value,
     });
-    console.log('登錄成功', result);
+    const result_analyze = await axios.post(
+      `http://140.136.202.125/api/User/analyzingPermission?token=${result.data.token}`
+    );
+    if (result_analyze.data.permission == 'admin') {
+      router.push({ path: '/' });
+    } else if (result_analyze.data.permission == 'assigner') {
+      router.push({ path: '/assign' });
+    } else {
+      router.push({ path: '/Chat' });
+    }
     localStorage.setItem('token', result.data.token);
-    router.push({ path: '/' });
+    console.log('登錄成功', result);
   } catch (e) {
     console.log('登錄失敗', e);
   }

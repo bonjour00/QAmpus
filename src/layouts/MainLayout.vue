@@ -51,6 +51,31 @@
             </p>
           </div>
         </q-btn>
+        <q-btn
+          align="left"
+          flat
+          class="sidebar-button"
+          :class="{
+            expanded: isSidebarExpanded,
+          }"
+          @click="logout"
+        >
+          <div class="button-content">
+            <q-icon
+              name="logout"
+              :class="{ expanded: isSidebarExpanded }"
+              class="sidebar-icon"
+            />
+
+            <p
+              v-show="isSidebarExpanded"
+              :class="{ expanded: isSidebarExpanded }"
+              class="sidebar-title"
+            >
+              登出
+            </p>
+          </div>
+        </q-btn>
       </div>
     </div>
 
@@ -66,6 +91,7 @@ import { ref } from 'vue';
 import { computed } from 'vue';
 import expandedLogo from './expanded-logo.png';
 import collapsedLogo from './collapsed-logo.png';
+import axios from 'axios';
 
 const router = useRouter();
 const isSidebarExpanded = ref(true);
@@ -116,6 +142,22 @@ const menus = [
     label: 'member',
   },
 ];
+const logout = async () => {
+  try {
+    const result = await axios.post(
+      'http://140.136.202.125/api/User/logout',
+      {},
+      {
+        headers: { Authorization: localStorage.getItem('token') },
+      }
+    );
+    localStorage.removeItem('token');
+    console.log(result, 'logout');
+    router.push({ path: '/login' });
+  } catch (e) {
+    console.log('error', e);
+  }
+};
 </script>
 <style scoped>
 .custom-layout {

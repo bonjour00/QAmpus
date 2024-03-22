@@ -40,7 +40,12 @@
         />
       </template>
     </Table>
-    <UploadDialog v-model:upload="upload" @update="updated++" :data="data" />
+    <UploadDialog
+      v-model:upload="upload"
+      @update="updated++"
+      :data="data"
+      @clean="data = ''"
+    />
   </div>
 </template>
 

@@ -74,6 +74,7 @@
                       position: absolute;
                       opacity: 0;
                     "
+                    accept=".pdf"
                     @change="handleFiles"
                   />
                   <div class="file-drop-area">
@@ -120,17 +121,18 @@ const props = defineProps<{
   data: any;
 }>();
 
-const emit = defineEmits(['update:upload', 'update']);
-const tab = ref('url');
+const emit = defineEmits(['update:upload', 'update', 'clean']);
+const tab = ref('file');
 const url = ref('');
 const sourceName = ref('');
 const formData = ref();
 const closePopup = () => {
   emit('update:upload', false);
   fileName.value = '';
-  tab.value = 'url';
+  tab.value = 'file';
   formData.value = '';
   sourceName.value = '';
+  emit('clean');
 };
 const fileName = ref('');
 const handleFiles = async (e: any) => {

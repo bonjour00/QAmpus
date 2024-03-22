@@ -18,7 +18,7 @@
         />
         <AuctionBtn
           :selectRow="slotProps"
-          @updated="(row) => handleAction(row, 'deleted', '刪除成功')"
+          @updated="(row) => handleActionDelete(row, 'deleted', '刪除成功')"
           icon="delete"
         />
       </template>
@@ -74,14 +74,14 @@ const fetchRows = async () => {
     query: searchNow.value,
     startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
     perPage: pageNow.value.rowsPerPage,
-    officeId: 3,
+    office: 3,
     order: orderNow.value.value,
     status: 'deleted',
   });
   rows.value = result.data.data;
   totalCount.value = result.data.totalCount;
   loading.value = false;
-  // console.log(result.data, 'fetching');
+  console.log(result.data, 'fetching');
 };
 fetchRows();
 
@@ -94,6 +94,22 @@ const handleAction = async (row: Recource, action: string, success: string) => {
   try {
     const result = await axios.patch(
       `http://140.136.202.125/api/Blob/${action}/${row.dataFilename}`
+    );
+    successs(success);
+    console.log(result.data);
+  } catch (e: any) {
+    console.log(e, 'error');
+  }
+  updated.value++;
+};
+const handleActionDelete = async (
+  row: Recource,
+  action: string,
+  success: string
+) => {
+  try {
+    const result = await axios.delete(
+      `http://140.136.202.125/api/Blob/fileName?filename=${row.dataFilename}`
     );
     successs(success);
     console.log(result.data);
