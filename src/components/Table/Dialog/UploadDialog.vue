@@ -1,7 +1,7 @@
 <template>
   <q-dialog :modelValue="upload" @update:model-value="closePopup">
     <q-card style="padding: 5px; border-radius: 0.5rem">
-      <q-card-section class="row items-center q-pb-none" style="width: 550px">
+      <q-card-section class="row items-center q-pb-none">
         <div style="font-size: 25px; font-weight: 900">
           <strong>上傳檔案</strong>
         </div>
@@ -176,7 +176,6 @@ const uploadResource = async () => {
 <style scoped>
 .file-drop-area {
   height: 40px;
-  /* border: 2px dashed #ccc; */
   background: #eaeaea;
   border-radius: 5px;
   display: flex;

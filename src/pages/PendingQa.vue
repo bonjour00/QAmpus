@@ -10,18 +10,11 @@
       :tableTitle="tableTitle"
       :totalCount="totalCount"
     >
-      <template v-slot:add>
+      <template v-slot:action>
         <q-btn
           label="測試"
           unelevated
-          style="
-            background: #eff0f5;
-            margin-top: 110px;
-            position: absolute;
-            margin-left: 280px;
-            border-radius: 10px;
-            font-weight: 900;
-          "
+          style="background: #eff0f5; font-weight: 900"
           @click="testing = true"
         ></q-btn>
       </template>
@@ -78,6 +71,7 @@ import axios from 'axios';
 import { successs } from '../components/Table/ActionBtn/AnimateAction';
 import AuctionBtn from '../components/Table/ActionBtn/ActionBtn.vue';
 import ConfirmDialog from '../components/Table/Dialog/ConfirmDialog.vue';
+
 //editPop
 const open = ref(false);
 const selectRow = ref([]);
@@ -125,28 +119,19 @@ const totalCount = ref(0);
 const loading = ref(false);
 //fetch data
 const fetchRows = async (status: string) => {
-  // console.log({
+  // loading.value = true;
+  // const result = await axios.post('http://140.136.202.125/api/Question/paged', {
   //   query: searchNow.value,
   //   startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
   //   perPage: pageNow.value.rowsPerPage,
-  //   officeId: testInitialOffice.value,
+  //   officeId: 3,
   //   order: orderNow.value.value,
-  //   qaStatus,
+  //   status,
   // });
-  loading.value = true;
-
-  const result = await axios.post('http://140.136.202.125/api/Question/paged', {
-    query: searchNow.value,
-    startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-    perPage: pageNow.value.rowsPerPage,
-    officeId: 3,
-    order: orderNow.value.value,
-    status,
-  });
-  rows.value = result.data.data;
-  totalCount.value = result.data.totalCount;
-  console.log(result.data, 'fetching');
-  loading.value = false;
+  // rows.value = result.data.data;
+  // totalCount.value = result.data.totalCount;
+  // console.log(result.data, 'fetching');
+  // loading.value = false;
 };
 fetchRows('UNCONFIRMED');
 

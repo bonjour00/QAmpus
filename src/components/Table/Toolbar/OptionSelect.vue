@@ -4,7 +4,7 @@
     :modelValue="currentOption"
     @update:model-value="(value) => $emit('update:currentOption', value)"
     :options="optionsFilter"
-    class="q-ml-sm"
+    class="q-ml-sm-sm"
     dense
     options-dense
     bg-color="grey-1"

@@ -36,7 +36,12 @@ export const pendingColumns = [
     sortable: true,
     headerStyle,
   },
-  { name: 'actions', align: 'right', label: '', field: '' },
+  {
+    name: 'actions',
+    align: 'right',
+    label: '',
+    field: '',
+  },
 ];
 
 export const resourceColumns = [

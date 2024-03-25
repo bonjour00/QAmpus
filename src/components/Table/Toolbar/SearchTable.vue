@@ -3,7 +3,6 @@
     v-model="q"
     borderless
     dense
-    debounce="300"
     placeholder="Search"
     filled
     @keyup.enter="$emit('updateSearch', q)"

@@ -10,18 +10,10 @@
       :tableTitle="tableTitle"
       :totalCount="totalCount"
     >
-      <template v-slot:add>
+      <template v-slot:action>
         <q-btn
           unelevated
-          style="
-            background: #eff0f5;
-            margin-top: 110px;
-            position: absolute;
-            margin-left: 220px;
-            width: 120px;
-            border-radius: 10px;
-            font-weight: 900;
-          "
+          style="background: #eff0f5; font-weight: 900"
           @click="upload = true"
           ><q-icon name="add" />上傳檔案</q-btn
         >

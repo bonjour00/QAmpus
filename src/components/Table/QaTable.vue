@@ -2,8 +2,7 @@
   <q-table
     :rows="rows"
     :columns="columns"
-    row-key="qa_id"
-    class="q-pt-lg"
+    row-key="id"
     :title="tableTitle"
     hide-pagination
     :rows-per-page-options="[pagination.rowsPerPage]"
@@ -20,13 +19,19 @@
       />
       <slot name="add"></slot>
     </template>
+    <template v-slot:header-cell-actions>
+      <q-th>
+        <slot name="action"></slot>
+      </q-th>
+    </template>
     <template v-slot:body-cell-actions="props">
       <q-td :props="props">
         <slot name="btnAction" :props="props"></slot>
       </q-td>
     </template>
+
     <template #bottom>
-      <div style="right: 30px; position: absolute">
+      <div style="right: 30px" class="absolute">
         <PaginationTable
           :pagination="pagination"
           @update:pagination="pageReturn"
@@ -86,9 +91,6 @@ const searchReturn = (value: any) => {
 const orderReturn = (value: any) => {
   emit('update:orderNow', value);
 };
-// :loading="true"
-//loading-label="Gimme a sec and I'll fetch ya data!"
-//no-data-label="I can't find any data 😞"
 </script>
 <style lang="sass">
 .q-table__title
