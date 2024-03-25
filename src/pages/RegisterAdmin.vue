@@ -3,7 +3,7 @@
     <!-- Logo -->
     <div class="content">
       <div class="title-container">
-        <img class="logo" src="./asset/collapsed-logo.png" />
+        <img class="logo" :src="collapsedLogo" />
         <!-- Title -->
         <p class="title">管理者註冊</p>
       </div>
@@ -94,6 +94,7 @@
 import axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import collapsedLogo from '../assets/collapsed-logo.png';
 
 const router = useRouter();
 

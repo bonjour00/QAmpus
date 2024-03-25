@@ -47,21 +47,21 @@
 
 <script setup lang="ts">
 import { ref, Ref, watch, computed } from 'vue';
-import EditDialog from './Components/Table/Dialog/EditDialog.vue';
-import Table from './Components/Table/QaTable.vue';
-import EditBtn from './Components/Table/ActionBtn/EditBtn.vue';
+import EditDialog from '../components/Table/Dialog/EditDialog.vue';
+import Table from '../components/Table/QaTable.vue';
+import EditBtn from '../components/Table/ActionBtn/EditBtn.vue';
 import {
   QA,
   initialQASelect,
   testInitialOffice,
   paginationInitial,
   orderInitial,
-} from './Components/Table/data ';
-import { assignColumn } from './Components/Table/Columns';
+} from '../components/Table/data ';
+import { assignColumn } from '../components/Table/Columns';
 import axios from 'axios';
-import { successs } from './Components/Table/ActionBtn/AnimateAction';
-import AuctionBtn from './Components/Table/ActionBtn/ActionBtn.vue';
-import ConfirmDialog from './Components/Table/Dialog/ConfirmDialog.vue';
+import { successs } from '../components/Table/ActionBtn/AnimateAction';
+import AuctionBtn from '../components/Table/ActionBtn/ActionBtn.vue';
+import ConfirmDialog from '../components/Table/Dialog/ConfirmDialog.vue';
 
 //editPop
 const open = ref(false);

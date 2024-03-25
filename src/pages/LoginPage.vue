@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="logo-container">
-      <img class="logo" src="./asset/collapsed-logo.png" />
+      <img class="logo" :src="collapsedLogo" />
       <p class="title">登入</p>
       <q-input class="account" v-model="accountText" label="EMAIL" />
       <q-input
@@ -61,6 +61,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import axios from 'axios';
+import collapsedLogo from '../assets/collapsed-logo.png';
 import { useRouter } from 'vue-router';
 
 const accountText = ref('');

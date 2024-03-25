@@ -89,8 +89,8 @@
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import { computed } from 'vue';
-import expandedLogo from './expanded-logo.png';
-import collapsedLogo from './collapsed-logo.png';
+import expandedLogo from '../assets/expanded-logo.png';
+import collapsedLogo from '../assets/collapsed-logo.png';
 import axios from 'axios';
 
 const router = useRouter();

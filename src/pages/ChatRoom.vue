@@ -62,7 +62,7 @@
 <script setup lang="ts">
 import { Ref, ref } from 'vue';
 import axios from 'axios';
-import { successs } from './Components/Table/ActionBtn/AnimateAction';
+import { successs } from '../components/Table/ActionBtn/AnimateAction';
 //暫時
 type MessageQA = {
   question: string;

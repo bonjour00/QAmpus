@@ -7,17 +7,38 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/PendingQa.vue') },
-      { path: 'pending', component: () => import('pages/PendingQa.vue') },
-      { path: 'resource', component: () => import('pages/ResourceManage.vue') },
-      { path: 'trash-qa', component: () => import('pages/TrashQa.vue') },
+      {
+        path: 'pending',
+        name: 'pending',
+        component: () => import('pages/PendingQa.vue'),
+      },
+      {
+        path: 'resource',
+        name: 'resource',
+        component: () => import('pages/ResourceManage.vue'),
+      },
+      {
+        path: 'trash-qa',
+        name: 'trash-qa',
+        component: () => import('pages/TrashQa.vue'),
+      },
       {
         path: 'trash-resource',
+        name: 'trash-resource',
         component: () => import('pages/ResourceTrash.vue'),
       },
-      { path: '/member', component: () => import('pages/AdminMember.vue') },
+      {
+        path: 'member',
+        name: 'member',
+        component: () => import('pages/AdminMember.vue'),
+      },
     ],
   },
-  { path: '/login', component: () => import('pages/LoginPage.vue') },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('pages/LoginPage.vue'),
+  },
   {
     path: '/Chat',
     name: 'Chat',
@@ -25,12 +46,12 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/register',
-    name: 'Register',
+    name: 'register',
     component: () => import('pages/RegisterPage.vue'),
   },
   {
     path: '/registeradmin',
-    name: 'RegisterAdmin',
+    name: 'registeradmin',
     component: () => import('pages/RegisterAdmin.vue'),
   },
   {

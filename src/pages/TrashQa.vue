@@ -36,13 +36,13 @@
 
 <script setup lang="ts">
 import { ref, Ref, watch, computed } from 'vue';
-import Table from './Components/Table/QaTable.vue';
-import { QA, paginationInitial, orderInitial } from './Components/Table/data ';
-import { pendingColumns } from './Components/Table/Columns';
+import Table from '../components/Table/QaTable.vue';
+import { QA, paginationInitial, orderInitial } from '../components/Table/data ';
+import { pendingColumns } from '../components/Table/Columns';
 import axios from 'axios';
-import { successs } from './Components/Table/ActionBtn/AnimateAction';
-import AuctionBtn from './Components/Table/ActionBtn/ActionBtn.vue';
-import ConfirmDialog from './Components/Table/Dialog/ConfirmDialog.vue';
+import { successs } from '../components/Table/ActionBtn/AnimateAction';
+import AuctionBtn from '../components/Table/ActionBtn/ActionBtn.vue';
+import ConfirmDialog from '../components/Table/Dialog/ConfirmDialog.vue';
 
 //table
 //toolValue

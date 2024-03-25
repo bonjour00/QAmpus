@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="logo-container">
-      <img class="logo" src="./asset/collapsed-logo.png" />
+      <img class="logo" :src="collapsedLogo" />
       <p class="title">註冊您的帳戶</p>
 
       <q-input class="username" v-model="userName" label="輸入您的使用者名稱" />
@@ -59,6 +59,7 @@
 import axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import collapsedLogo from '../assets/collapsed-logo.png';
 
 const router = useRouter();
 

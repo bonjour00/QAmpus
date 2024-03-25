@@ -51,17 +51,17 @@
 
 <script setup lang="ts">
 import { ref, Ref, watch, computed } from 'vue';
-import Table from './Components/Table/QaTable.vue';
+import Table from '../components/Table/QaTable.vue';
 import {
   Recource,
   paginationInitial,
   orderInitial,
-} from './Components/Table/data ';
-import { resourceColumns } from './Components/Table/Columns';
-import UploadDialog from './Components/Table/Dialog/UploadDialog.vue';
+} from '../components/Table/data ';
+import { resourceColumns } from '../components/Table/Columns';
+import UploadDialog from '../components/Table/Dialog/UploadDialog.vue';
 import axios from 'axios';
-import { successs } from './Components/Table/ActionBtn/AnimateAction';
-import AuctionBtn from './Components/Table/ActionBtn/ActionBtn.vue';
+import { successs } from '../components/Table/ActionBtn/AnimateAction';
+import AuctionBtn from '../components/Table/ActionBtn/ActionBtn.vue';
 
 //table
 //toolValue
