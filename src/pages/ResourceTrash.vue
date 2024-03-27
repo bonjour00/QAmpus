@@ -61,23 +61,23 @@ const totalCount = ref(0);
 const loading = ref(false);
 //fetch data
 const fetchRows = async () => {
-  // console.log({
-  //   query: searchNow.value,
-  //   startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-  //   perPage: pageNow.value.rowsPerPage,
-  //   officeId: testInitialOffice.value,
-  //   order: orderNow.value.value,
-  //   qaStatus,
-  // });
   loading.value = true;
-  const result = await axios.post('http://140.136.202.125/api/Blob/paged', {
-    query: searchNow.value,
-    startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-    perPage: pageNow.value.rowsPerPage,
-    office: 3,
-    order: orderNow.value.value,
-    status: 'deleted',
-  });
+  const result = await axios.post(
+    'http://140.136.202.125/api/Blob/paged',
+    {
+      query: searchNow.value,
+      startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
+      perPage: pageNow.value.rowsPerPage,
+      office: 3,
+      order: orderNow.value.value,
+      status: 'deleted',
+    },
+    {
+      headers: {
+        Authorization: localStorage.getItem('token'),
+      },
+    }
+  );
   rows.value = result.data.data;
   totalCount.value = result.data.totalCount;
   loading.value = false;
