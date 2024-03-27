@@ -1,5 +1,9 @@
 <template>
-  <q-dialog :modelValue="open" @update:model-value="closePopup">
+  <q-dialog
+    :modelValue="open"
+    @update:model-value="closePopup"
+    v-if="selectRow"
+  >
     <q-card>
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6"><b>問答</b></div>

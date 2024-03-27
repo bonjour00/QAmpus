@@ -41,7 +41,11 @@
       :isAssigner="true"
       :officeRecord="officeRecord"
     />
-    <TestingDialog v-model:testing="testing" :rows="rows" @update="updated++" />
+    <TestingDialog
+      v-model:testing="testing"
+      :rows="rows"
+      @updating="updated++"
+    />
     <ConfirmDialog
       btnName="刪除"
       v-model:openConfirm="openConfirm"

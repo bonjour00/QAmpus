@@ -1,7 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
-  { path: '/assign', component: () => import('pages/AssignQa.vue') },
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
@@ -12,6 +11,7 @@ const routes: RouteRecordRaw[] = [
         name: 'pending',
         component: () => import('pages/PendingQa.vue'),
       },
+      { path: 'assign', component: () => import('pages/AssignQa.vue') },
       {
         path: 'resource',
         name: 'resource',

@@ -64,7 +64,7 @@ const props = defineProps<{
   testing: boolean;
   rows: QA[];
 }>();
-const emit = defineEmits(['update:testing', 'update']);
+const emit = defineEmits(['update:testing', 'updating']);
 // const currentRow: Ref<any> = ref(props.selectRow); //暫時不管
 const confirmQa = async (questionId: number) => {
   const result = await axios.patch(
@@ -78,7 +78,7 @@ const cofirmMuti = (rows: QA[]) => {
       confirmQa(rows[i].questionId);
     }
     rows.length > 0 && successs('已確認，並送信');
-    emit('update');
+    emit('updating');
     closePopup();
   } catch (e) {
     console.log(e);
