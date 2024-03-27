@@ -31,9 +31,8 @@
     ></path>
   </svg>
 </template>
-<style scoped>
+<style>
 .wave {
-  width: 100vw;
   position: absolute;
   bottom: 0;
 }

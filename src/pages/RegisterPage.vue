@@ -1,151 +1,119 @@
 <template>
-  <div class="main">
-    <div class="logo-container">
-      <img class="logo" :src="collapsedLogo" />
-      <p class="title">註冊您的帳戶</p>
-
-      <q-input class="username" v-model="userName" label="輸入您的使用者名稱" />
-      <q-input class="account" v-model="userEmail" label="輸入您的EMAIL" />
-      <q-input class="password" v-model="userPassword" label="輸入您的密碼" />
-      <q-btn
-        class="login-button"
-        text-color="white"
-        label="註冊"
-        @click="register"
-      />
-      <div class="forget">
-        <p>已經有帳號了？</p>
-        <a class="alter" href="http://localhost:9000/#/login" target="_blank"
-          >登入</a
-        >
-      </div>
-      <AuthWave />
-    </div>
-  </div>
+  <AuthContainer
+    title="註冊您的帳戶"
+    customStyle="margin-top: 5vh"
+    btnLabel="註冊"
+    toDescription="已經有帳號了？"
+    to="/login"
+    toLinkTitle="登入"
+    @clickBtn="register"
+  >
+    <q-input
+      v-model="userName"
+      label="輸入您的使用者名稱"
+      ref="nameRef"
+      lazy-rules="ondemand"
+      :rules="[(val) => notEmpty(val) || '使用者名稱不能是空的']"
+    />
+    <q-input
+      v-model="userEmail"
+      label="輸入您的Email"
+      ref="emailRef"
+      lazy-rules="ondemand"
+      :rules="[(val) => notEmpty(val) || '信箱不能是空的']"
+    />
+    <q-input
+      v-model="userPassword"
+      label="輸入您的密碼"
+      :type="isPwd ? 'password' : 'text'"
+      ref="pwdRef"
+      lazy-rules="ondemand"
+      :rules="[
+        (val) => notEmpty(val) || '密碼不能是空的',
+        (val) =>
+          /^(?=.*[a-zA-Z])(?=.*\d).+$/.test(val) ||
+          '密碼強度不夠，須包含英文及數字',
+        (val) => val.length >= 8 || '密碼強度不夠，密碼長度需至少8個字元',
+      ]"
+      ><template v-slot:append>
+        <q-icon
+          :name="isPwd ? 'visibility_off' : 'visibility'"
+          class="cursor-pointer"
+          @click="isPwd = !isPwd"
+        />
+      </template>
+    </q-input>
+    <q-input
+      v-model="comfirmPassword"
+      label="再次輸入您的密碼"
+      :type="isConfirmPwd ? 'password' : 'text'"
+      ref="confirmPwdRef"
+      lazy-rules="ondemand"
+      :rules="[
+        (val) => notEmpty(val) || '密碼不能是空的',
+        (val) => val === userPassword || '密碼不一致',
+      ]"
+      ><template v-slot:append>
+        <q-icon
+          :name="isConfirmPwd ? 'visibility_off' : 'visibility'"
+          class="cursor-pointer"
+          @click="isConfirmPwd = !isConfirmPwd"
+        />
+      </template>
+    </q-input>
+  </AuthContainer>
 </template>
 <script setup lang="ts">
-import axios from 'axios';
 import { ref } from 'vue';
+import axios from 'axios';
 import { useRouter } from 'vue-router';
-import collapsedLogo from '../assets/collapsed-logo.png';
-import AuthWave from '../components/Auth/AuthWave.vue';
+import { successs } from '../components/Table/ActionBtn/AnimateAction';
+import AuthContainer from 'src/components/Auth/AuthContainer.vue';
 
 const router = useRouter();
 
 const userName = ref('');
-const userPassword = ref('');
 const userEmail = ref('');
+const userPassword = ref('');
+const comfirmPassword = ref('');
+
+//pwd see or not
+const isPwd = ref(true);
+const isConfirmPwd = ref(true);
+
+//rules
+const notEmpty = (val: any) => val && val.length > 0;
+const nameRef: any = ref(null);
+const emailRef: any = ref(null);
+const pwdRef: any = ref(null);
+const confirmPwdRef: any = ref(null);
 
 const register = async () => {
-  try {
-    const result = await axios.post('http://140.136.202.125/api/User', {
-      userId: `${Date.now()}`,
-      userName: userName.value,
-      userPassword: userPassword.value,
-      userEmail: userEmail.value,
-      userPermission: 'user',
-    });
-    console.log('註冊成功', result);
-    router.push({ path: '/login' });
-  } catch (e) {
-    console.log('註冊失敗', e);
+  nameRef.value?.validate();
+  emailRef.value?.validate();
+  pwdRef.value?.validate();
+  confirmPwdRef.value?.validate();
+
+  if (
+    nameRef.value.hasError ||
+    emailRef.value.hasError ||
+    pwdRef.value.hasError ||
+    confirmPwdRef.value.hasError
+  ) {
+    return;
+  } else {
+    try {
+      const result = await axios.post(`${process.env.API_URL}/api/User`, {
+        userName: userName.value,
+        userPassword: userPassword.value,
+        userEmail: userEmail.value,
+        userPermission: 'user',
+      });
+      successs('註冊成功');
+      router.push({ path: '/login' });
+    } catch (e) {
+      console.log('註冊失敗', e);
+    }
   }
 };
 </script>
-<style scoped>
-.main {
-  background-color: white;
-  width: 100vw;
-  height: 100vh;
-}
-.logo-container {
-  width: 100vw;
-  height: 100vh;
-}
-
-.logo {
-  position: absolute;
-  top: 15%;
-  left: 50%;
-  transform: translate(-50%, -25%);
-  width: 6%;
-}
-.title {
-  background-color: none;
-  position: absolute;
-  font-size: 25px;
-  top: 28%;
-  left: 50%;
-  transform: translate(-50%, -25%);
-  font-weight: 900;
-  color: #484848;
-}
-.username {
-  position: absolute;
-  top: 35%;
-  left: 50%;
-  transform: translate(-50%, -25%);
-  width: 20%;
-}
-.account {
-  position: absolute;
-  top: 44%;
-  left: 50%;
-  transform: translate(-50%, -25%);
-  width: 20%;
-}
-.password {
-  position: absolute;
-  top: 53%;
-  left: 50%;
-  transform: translate(-50%, -25%);
-  width: 20%;
-}
-
-.q-field__label {
-  font-weight: 900;
-}
-.q-field__native:focus {
-  border-bottom: 3px solid #2a77af;
-}
-.wave {
-  width: 100vw;
-  position: absolute;
-  bottom: 0;
-}
-.login-button {
-  position: absolute;
-  top: 60%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 20%;
-  height: 3rem;
-  background-color: #2a77af;
-  font-size: 1rem;
-  font-weight: 900;
-  border-radius: 10px;
-  margin-top: 2rem;
-}
-
-.q-field__native,
-.q-field__prefix,
-.q-field__suffix,
-.q-field__input {
-  margin-top: 0.5rem;
-}
-.forget {
-  position: absolute;
-  display: flex;
-  top: 72%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: black;
-  text-decoration: none;
-}
-
-.alter {
-  text-decoration: none;
-  color: #2a77af;
-  font-weight: 900;
-}
-</style>
