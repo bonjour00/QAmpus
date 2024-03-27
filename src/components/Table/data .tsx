@@ -7,6 +7,7 @@ export type QA = {
   questionStatus: string; //CONFIRMED、UNCONFIRMED 或 deleted
   officeId: number;
   officeName: string;
+  time?: number; //轉移次數
 };
 
 export type Recource = {

@@ -1,17 +1,13 @@
 <template>
-  <q-dialog
-    :modelValue="open"
-    @update:model-value="closePopup"
-    v-if="currentRow"
-  >
+  <q-dialog :modelValue="open" @update:model-value="closePopup">
     <q-card>
-      <q-card-section class="row items-center q-pb-none" v-if="where">
+      <q-card-section class="row items-center q-pb-none">
         <div class="text-h6"><b>問答</b></div>
         <q-space />
         <q-btn icon="close" flat round dense @click="closePopup" />
       </q-card-section>
       <div style="max-height: 50vh" class="scroll">
-        <q-card-section v-if="where">
+        <q-card-section>
           <q-input
             :model-value="currentRow.questionQuestion"
             @update:model-value="
@@ -29,7 +25,7 @@
           </q-input>
         </q-card-section>
 
-        <q-card-section v-if="where">
+        <q-card-section>
           <q-input
             :model-value="currentRow.questionAnswer"
             @update:model-value="
@@ -45,7 +41,24 @@
           </q-input>
         </q-card-section>
       </div>
-      <q-card-actions>
+      <q-card-section v-if="isAssigner" style="max-height: 20vh" class="scroll">
+        <q-stepper
+          color="primary"
+          animated
+          inactive-color="primary"
+          class="no-shadow"
+          v-model="stepper"
+        >
+          <q-step
+            v-for="(x, index) in officeRecord"
+            :name="index"
+            :title="x.officeId"
+            icon="error"
+            :key="index"
+          />
+        </q-stepper>
+      </q-card-section>
+      <q-card-actions align="right">
         <OptionSelect
           v-model:currentOption="currentOption"
           :options="options"
@@ -78,10 +91,12 @@ const props = defineProps<{
   title: string;
   btnName?: string;
   readonly?: boolean;
-  where?: boolean;
+  isAssigner?: boolean;
+  officeRecord?: any;
 }>();
 
 const emit = defineEmits(['update:open', 'updated']);
+const stepper = ref(1);
 const currentRow: Ref<any> = ref(props.selectRow); //暫時不管
 const currentOption = ref(initialOffice);
 watch(
@@ -124,3 +139,10 @@ const editSubmit = async () => {
   closePopup();
 };
 </script>
+<style scoped>
+.q-stepper__content,
+.q-panel-parent {
+  padding: 0px;
+  display: none;
+}
+</style>

@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <Table
       :rows="rows"
-      :columns="assignColumn"
+      :columns="pendingColumns"
       v-model:page-now="pageNow"
       v-model:search-now="searchNow"
       v-model:order-now="orderNow"
@@ -10,11 +10,19 @@
       :tableTitle="tableTitle"
       :totalCount="totalCount"
     >
-      <template v-slot:btnAction="slotProps"
-        ><EditBtn
+      <template v-slot:action>
+        <q-btn
+          label="測試"
+          unelevated
+          style="background: #eff0f5"
+          @click="testing = true"
+        ></q-btn>
+      </template>
+      <template v-slot:btnAction="slotProps">
+        <EditBtn
           :selectRow="slotProps"
           @dialogOpen="(value) => (open = value)"
-          @setSelectRow="(value) => (selectRow = value)"
+          @setSelectRow="(val) => handleEditPop(val)"
         />
         <AuctionBtn
           :selectRow="slotProps"
@@ -26,14 +34,14 @@
     <EditDialog
       v-model:open="open"
       :selectRow="selectRow"
-      :currentOffice="currentOffice"
       :title="title"
       :options="options"
-      btnName="指派"
-      :readonly="true"
       @updated="updated++"
-      :where="true"
+      :readonly="true"
+      :isAssigner="true"
+      :officeRecord="officeRecord"
     />
+    <TestingDialog v-model:testing="testing" :rows="rows" @update="updated++" />
     <ConfirmDialog
       btnName="刪除"
       v-model:openConfirm="openConfirm"
@@ -50,14 +58,9 @@ import { ref, Ref, watch, computed } from 'vue';
 import EditDialog from '../components/Table/Dialog/EditDialog.vue';
 import Table from '../components/Table/QaTable.vue';
 import EditBtn from '../components/Table/ActionBtn/EditBtn.vue';
-import {
-  QA,
-  initialQASelect,
-  testInitialOffice,
-  paginationInitial,
-  orderInitial,
-} from '../components/Table/data ';
-import { assignColumn } from '../components/Table/Columns';
+import { QA, paginationInitial, orderInitial } from '../components/Table/data ';
+import { pendingColumns } from '../components/Table/Columns';
+import TestingDialog from '../components/Table/Dialog/TestingDialog.vue';
 import axios from 'axios';
 import { successs } from '../components/Table/ActionBtn/AnimateAction';
 import AuctionBtn from '../components/Table/ActionBtn/ActionBtn.vue';
@@ -65,32 +68,44 @@ import ConfirmDialog from '../components/Table/Dialog/ConfirmDialog.vue';
 
 //editPop
 const open = ref(false);
-const selectRow = ref([]);
+const selectRow: any = ref(null);
+const officeRecord: any = ref([]);
+
+const handleEditPop = async (value: any) => {
+  selectRow.value = value;
+  try {
+    const result = await axios.get(
+      `${process.env.API_URL}/api/AssignedOffice/${value.questionId}/office`
+    );
+    const records = Object.values(result.data).map((office: any) => ({
+      officeId: office,
+    }));
+
+    officeRecord.value = records;
+    console.log(result.data, records, 'recordOffice');
+  } catch (e) {
+    console.log('err', e);
+  }
+};
 
 //optionSelect
-const currentOffice = ref(testInitialOffice); //之後用auth fetch?
 const title = '指派單位';
 
-//fetch offices
-// const options = ref([]);
-// const fetchOffices = async () => {
-//   const result = await axios.get('http://140.136.202.125/api/Office');
-//   const offices = result.data.map((office: any) => ({
-//     label: office.officeName,
-//     value: office.officeId,
-//   }));
-//   options.value = offices;
-// };
-// fetchOffices();
-const options = [
-  { label: '資管', value: 1 },
-  { label: '統資', value: 2 },
-  { label: '圖資', value: 3 },
-];
+// fetch offices
+const options = ref([]);
+const fetchOffices = async () => {
+  const result = await axios.get(`${process.env.API_URL}/api/Office`);
+  const offices = result.data.map((office: any) => ({
+    label: office.officeName,
+    value: office.officeId,
+  }));
+  options.value = offices;
+};
+fetchOffices();
 
 //table
 //toolValue
-const tableTitle = '指派系所管理';
+const tableTitle = '待指派問題';
 const pageNow = ref(paginationInitial);
 const searchNow = ref('');
 const orderNow = ref(orderInitial);
@@ -105,38 +120,44 @@ const updatedFetch = computed(() => {
 });
 
 //rows
-const rows = ref([]);
+const rows: Ref<QA[]> = ref([]);
 const totalCount = ref(0);
 const loading = ref(false);
 //fetch data
 const fetchRows = async (status: string) => {
-  // console.log({
-  //   query: searchNow.value,
-  //   startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-  //   perPage: pageNow.value.rowsPerPage,
-  //   officeId: testInitialOffice.value,
-  //   order: orderNow.value.value,
-  //   qaStatus,
-  // });
   loading.value = true;
-
-  // const result = await axios.post('http://140.136.202.125/api/Question/paged', {
-  //   query: searchNow.value,
-  //   startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-  //   perPage: pageNow.value.rowsPerPage,
-  //   // officeId: 1,
-  //   order: orderNow.value.value,
-  //   status,
-  // });
-  // rows.value = result.data;
+  try {
+    const result = await axios.post(
+      `${process.env.API_URL}/api/Question/paged/beingkicked`,
+      {
+        query: searchNow.value,
+        startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
+        perPage: pageNow.value.rowsPerPage,
+        order: orderNow.value.value,
+        status,
+      },
+      {
+        headers: {
+          Authorization: localStorage.getItem('token'),
+        },
+      }
+    );
+    rows.value = result.data.data;
+    totalCount.value = result.data.totalCount;
+    console.log(result.data, 'fetching');
+  } catch (e) {
+    console.log('error', e);
+  }
   loading.value = false;
-  // console.log(result, 'fetching');
 };
-fetchRows('noAssign');
+fetchRows('UNCONFIRMED');
 
 watch(updatedFetch, () => {
-  fetchRows('noAssign');
+  fetchRows('UNCONFIRMED');
 });
+//testingPop
+const testing = ref(false);
+
 //handleAction(delete)
 const handleAction = async (
   row: QA | null,
@@ -144,14 +165,15 @@ const handleAction = async (
   success: string
 ) => {
   try {
-    // const result = await axios.patch(
-    //   `http://140.136.202.125/api/Question/${action}/${row.questionId}`
-    // );
-    console.log(row, action);
-    data.value = null;
-    console.log(data.value);
-    successs(success);
-    // console.log(result.data);
+    if (row !== null) {
+      const result = await axios.patch(
+        `http://140.136.202.125/api/Question/${action}/${row.questionId}`
+      );
+      console.log(row, action);
+      data.value = null;
+      successs(success);
+      console.log(result.data);
+    }
   } catch (e: any) {
     console.log(e, 'error');
   }

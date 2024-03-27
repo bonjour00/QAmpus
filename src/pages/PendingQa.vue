@@ -38,7 +38,6 @@
       :options="options"
       @updated="updated++"
       :readonly="true"
-      :where="true"
     />
     <TestingDialog v-model:testing="testing" :rows="rows" @update="updated++" />
     <ConfirmDialog
@@ -66,7 +65,7 @@ import AuctionBtn from '../components/Table/ActionBtn/ActionBtn.vue';
 import ConfirmDialog from '../components/Table/Dialog/ConfirmDialog.vue';
 
 //editPop
-const open = ref(false);
+const open = ref(true);
 const selectRow: any = ref(null);
 
 //optionSelect
@@ -108,24 +107,24 @@ const loading = ref(false);
 const fetchRows = async (status: string) => {
   loading.value = true;
   try {
-    const result = await axios.post(
-      `${process.env.API_URL}/api/Question/paged`,
-      {
-        query: searchNow.value,
-        startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-        perPage: pageNow.value.rowsPerPage,
-        order: orderNow.value.value,
-        status,
-      },
-      {
-        headers: {
-          Authorization: localStorage.getItem('token'),
-        },
-      }
-    );
-    rows.value = result.data.data;
-    totalCount.value = result.data.totalCount;
-    console.log(result.data, 'fetching');
+    // const result = await axios.post(
+    //   `${process.env.API_URL}/api/Question/paged`,
+    //   {
+    //     query: searchNow.value,
+    //     startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
+    //     perPage: pageNow.value.rowsPerPage,
+    //     order: orderNow.value.value,
+    //     status,
+    //   },
+    //   {
+    //     headers: {
+    //       Authorization: localStorage.getItem('token'),
+    //     },
+    //   }
+    // );
+    // rows.value = result.data.data;
+    // totalCount.value = result.data.totalCount;
+    // console.log(result.data, 'fetching');
   } catch (e) {
     console.log('error', e);
   }
