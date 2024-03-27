@@ -35,14 +35,14 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/login',
-    name: 'login',
-    component: () => import('pages/LoginPage.vue'),
-  },
-  {
     path: '/chat',
     name: 'chat',
     component: () => import('pages/ChatRoom.vue'),
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('pages/LoginPage.vue'),
   },
   {
     path: '/register',
@@ -50,9 +50,14 @@ const routes: RouteRecordRaw[] = [
     component: () => import('pages/RegisterPage.vue'),
   },
   {
-    path: '/registeradmin',
-    name: 'registeradmin',
-    component: () => import('pages/RegisterAdmin.vue'),
+    path: '/forget-pwd',
+    name: 'forget-pwd',
+    component: () => import('pages/ForgetPwd.vue'),
+  },
+  {
+    path: '/reset-pwd',
+    name: 'reset-pwd',
+    component: () => import('pages/ResetPwd.vue'),
   },
   {
     path: '/:catchAll(.*)*',
