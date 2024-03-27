@@ -1,4 +1,4 @@
-const headerStyle = 'font-size: medium;font-weight: 900';
+const headerStyle = 'font-size: medium;';
 const addHours = (date: Date, hours: number) => {
   const hoursToAdd = hours * 60 * 60 * 1000;
   date.setTime(date.getTime() + hoursToAdd);

@@ -14,7 +14,7 @@
         <q-btn
           label="測試"
           unelevated
-          style="background: #eff0f5; font-weight: 900"
+          style="background: #eff0f5"
           @click="testing = true"
         ></q-btn>
       </template>

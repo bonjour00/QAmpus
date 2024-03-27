@@ -2,19 +2,19 @@
   <div class="chatbox-wrapper">
     <div class="message-box">
       <div class="qampus-greet" v-if="qaList.length == 0">
-        <img src="./asset/collapsed-logo.png" />
+        <img :src="collapsedLogo" />
         <span class="greet-text"><b>How can I help you today?</b></span>
       </div>
       <div v-for="(qa, index) in qaList" :key="index">
         <div class="chat message">
-          <img src="../../src/assets/user.png" />
+          <img src="../assets/user.png" />
           <span
             ><b>您</b> <br />
             {{ qa.question }}
           </span>
         </div>
         <div class="chat response">
-          <img src="./asset/collapsed-logo.png" />
+          <img :src="collapsedLogo" />
           <span
             ><b>QAmpus</b> <br />
             {{ typeof qa.answer == 'object' ? qa.answer.qaAnswer : qa.answer }}
@@ -63,6 +63,7 @@
 import { Ref, ref } from 'vue';
 import axios from 'axios';
 import { successs } from '../components/Table/ActionBtn/AnimateAction';
+import collapsedLogo from '../assets/collapsed-logo.png';
 //暫時
 type MessageQA = {
   question: string;
@@ -145,14 +146,12 @@ const handleThumbDown = async (index: number) => {
 </script>
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&family=Noto+Serif+TC:wght@200;300;400;500;600;700;900&display=swap');
-
 * {
   padding: 0;
   margin: 0;
   font-family: Poppins, sans-serif, Noto Sans TC;
   box-sizing: border-box;
 }
-
 body {
   width: 100%;
   height: 100vh;

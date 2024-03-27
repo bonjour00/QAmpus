@@ -11,17 +11,14 @@
       :totalCount="totalCount"
     >
       <template v-slot:action>
-        <q-btn
-          unelevated
-          style="background: #eff0f5; font-weight: 900"
-          @click="upload = true"
+        <q-btn unelevated style="background: #eff0f5" @click="upload = true"
           ><q-icon name="add" />上傳檔案</q-btn
         >
       </template>
       <template v-slot:btnAction="slotProps">
         <q-btn
           label="重新上傳"
-          style="background: #eff0f5; border-radius: 10px; font-weight: 900"
+          style="background: #eff0f5; border-radius: 10px"
           unelevated
           @click="editUpload(slotProps.props.row)"
         />

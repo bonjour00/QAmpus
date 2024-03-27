@@ -213,7 +213,6 @@ const logout = async () => {
   display: flex;
   justify-content: flex-start;
   font-size: medium;
-  font-weight: 900;
   align-items: center;
 }
 

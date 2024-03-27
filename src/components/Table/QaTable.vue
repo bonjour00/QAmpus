@@ -94,6 +94,6 @@ const orderReturn = (value: any) => {
 </script>
 <style lang="sass">
 .q-table__title
-  font-weight: 900
+  font-weight: 600
   font-size: 30px
 </style>
