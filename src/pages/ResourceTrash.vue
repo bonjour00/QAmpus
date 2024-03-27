@@ -68,7 +68,6 @@ const fetchRows = async () => {
       query: searchNow.value,
       startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
       perPage: pageNow.value.rowsPerPage,
-      office: 3,
       order: orderNow.value.value,
       status: 'deleted',
     },

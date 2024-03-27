@@ -10,6 +10,14 @@
       :tableTitle="tableTitle"
       :totalCount="totalCount"
     >
+      <template v-slot:action>
+        <q-btn
+          label="新增管理者"
+          unelevated
+          style="background: #eff0f5"
+          @click="registerOpen = true"
+        ></q-btn>
+      </template>
       <template v-slot:btnAction="slotProps"
         ><AuctionBtn
           :selectRow="slotProps"
@@ -31,6 +39,10 @@
       @clean="data = null"
       @confirm="handleAction(data, 'user', '已修改其權限為使用者')"
     />
+    <RegisterDialog
+      v-model:registerOpen="registerOpen"
+      @registerUpdate="updated++"
+    />
   </div>
 </template>
 
@@ -47,6 +59,7 @@ import axios from 'axios';
 import { successs } from '../components/Table/ActionBtn/AnimateAction';
 import AuctionBtn from '../components/Table/ActionBtn/ActionBtn.vue';
 import ConfirmDialog from '../components/Table/Dialog/ConfirmDialog.vue';
+import RegisterDialog from '../components/Table/Dialog/RegisterDialog.vue';
 
 //table
 //toolValue
@@ -70,23 +83,22 @@ const totalCount = ref(0);
 const loading = ref(false);
 //fetch data
 const fetchRows = async () => {
-  // console.log({
-  //   query: searchNow.value,
-  //   startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-  //   perPage: pageNow.value.rowsPerPage,
-  //   officeId: testInitialOffice.value,
-  //   order: orderNow.value.value,
-  //   qaStatus,
-  // });
   loading.value = true;
-  const result = await axios.post('http://140.136.202.125/api/User/paged', {
-    query: searchNow.value,
-    startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-    perPage: pageNow.value.rowsPerPage,
-    // officeId: 1,
-    order: orderNow.value.value,
-    // status: 'UNCONFIRMED',
-  });
+  const result = await axios.post(
+    'http://140.136.202.125/api/User/paged',
+    {
+      query: searchNow.value,
+      startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
+      perPage: pageNow.value.rowsPerPage,
+      order: orderNow.value.value,
+      // status: 'UNCONFIRMED',
+    },
+    {
+      headers: {
+        Authorization: localStorage.getItem('token'),
+      },
+    }
+  );
   rows.value = result.data.data;
   totalCount.value = result.data.totalCount;
   loading.value = false;
@@ -128,4 +140,6 @@ const needConfirm = (row: any) => {
   openConfirm.value = true;
   data.value = row;
 };
+//registerOpen
+const registerOpen = ref(false);
 </script>

@@ -76,12 +76,13 @@ const login = async () => {
       const userRole = result_analyze.data.permission;
       if (userRole == 'admin') {
         router.push({ path: '/' });
-      } else if (userRole == 'assigner') {
+      } else if (userRole == '分配者') {
         router.push({ path: '/assign' });
       } else {
         router.push({ path: '/chat' });
       }
       localStorage.setItem('token', result.data.token);
+      localStorage.setItem('role', userRole);
     } catch (e: any) {
       console.log('登錄失敗', e);
       console.log(e.response.data);
