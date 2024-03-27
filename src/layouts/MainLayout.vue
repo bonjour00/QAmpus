@@ -115,7 +115,7 @@ const logoSource = computed(() => {
   return isSidebarExpanded.value ? expandedLogo : collapsedLogo;
 });
 
-const menus = [
+const menus: any = ref([
   {
     title: '待解決問題',
     icon: 'pending_actions',
@@ -141,7 +141,22 @@ const menus = [
     icon: 'groups',
     label: 'member',
   },
-];
+]);
+// {
+//     title: '待指派問題',
+//     icon: 'assignment_late',
+//     label: 'assign',
+//   },
+const adminOrAssigner = () => {
+  menus.value =
+    localStorage.getItem('role') == 'admin'
+      ? menus.value
+      : [
+          { title: '待指派問題', icon: 'assignment_late', label: 'assign' },
+          ...menus.value,
+        ];
+};
+adminOrAssigner();
 const logout = async () => {
   try {
     const result = await axios.post(

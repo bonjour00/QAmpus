@@ -4,6 +4,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
+    meta: { requiresAuth: true, role: ['admin', '分配者'] },
     children: [
       { path: '', component: () => import('pages/PendingQa.vue') },
       {
@@ -11,7 +12,11 @@ const routes: RouteRecordRaw[] = [
         name: 'pending',
         component: () => import('pages/PendingQa.vue'),
       },
-      { path: 'assign', component: () => import('pages/AssignQa.vue') },
+      {
+        path: 'assign',
+        meta: { role: ['分配者'] },
+        component: () => import('pages/AssignQa.vue'),
+      },
       {
         path: 'resource',
         name: 'resource',
@@ -37,6 +42,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/chat',
     name: 'chat',
+    meta: { requiresAuth: true, role: ['user'] },
     component: () => import('pages/ChatRoom.vue'),
   },
   {
