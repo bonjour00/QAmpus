@@ -1,18 +1,13 @@
 <template>
   <q-dialog :modelValue="upload" @update:model-value="closePopup">
-    <q-card style="padding: 5px; border-radius: 0.5rem">
+    <q-card style="border-radius: 10px" class="q-pa-sm">
       <q-card-section class="row items-center q-pb-none">
-        <div style="font-size: 25px; font-weight: 900">
-          <strong>上傳檔案</strong>
-        </div>
+        <div style="font-size: 25px" class="text-weight-bold">上傳檔案</div>
         <q-space />
         <q-btn icon="close" flat round dense @click="closePopup" />
       </q-card-section>
-      <q-card-section
-        class="row items-center q-pb-none"
-        style="margin-bottom: 80px"
-        ><q-tabs
-          class="tab-head"
+      <q-card-section class="column items-center q-px-sm">
+        <q-tabs
           v-model="tab"
           indicator-color="primary"
           dense
@@ -22,79 +17,54 @@
           <q-tab name="url" label="URL" />
           <q-tab name="file" label="檔案" />
         </q-tabs>
-        <div class="tab">
-          <div style="font-weight: 900">
-            資源名稱<q-input
+        <div class="row q-mt-lg q-col-gutter-x-sm flex">
+          <div class="text-weight-bold col-5">
+            資源名稱
+            <q-input
               v-model="sourceName"
               dense
               label-color="grey-9"
               outlined
               placeholder="請輸入資源名稱"
-              input-style="font-weight: 700"
+              input-class="text-weight-bold"
+              autogrow
             />
           </div>
-
-          <div style="width: 100%">
-            <q-tab-panels v-model="tab" animated>
-              <q-tab-panel name="url">
-                <div
-                  style="
-                    font-size: 15px;
-                    font-weight: 500;
-                    padding: 0px 0px 0px 10px;
-                  "
-                >
-                  URL
-                  <q-input
-                    v-model="url"
-                    dense
-                    label-color="grey-9"
-                    outlined
-                    placeholder="請輸入URL"
-                    input-style="font-weight: 700"
-                  />
-                </div>
-              </q-tab-panel>
-              <q-tab-panel name="file">
-                <div
-                  style="
-                    padding: 0px 0px 0px 10px;
-                    font-weight: 900;
-                    font-size: 15px;
-                  "
-                >
-                  檔案
+          <q-tab-panels v-model="tab" animated class="col">
+            <q-tab-panel name="url" class="q-pa-none">
+              <div class="text-weight-bold">
+                URL
+                <q-input
+                  v-model="url"
+                  dense
+                  label-color="grey-9"
+                  outlined
+                  placeholder="請輸入URL"
+                  input-class="text-weight-bold"
+                />
+              </div>
+            </q-tab-panel>
+            <q-tab-panel name="file" class="q-pa-none">
+              <div class="text-weight-bold">
+                檔案
+                <div class="relative-position">
                   <input
                     type="file"
-                    style="
-                      top: 0;
-                      right: 0;
-                      bottom: 0;
-                      left: 0;
-                      position: absolute;
-                      opacity: 0;
-                    "
+                    class="uploadInput"
                     accept=".pdf"
                     @change="handleFiles"
                   />
                   <div class="file-drop-area">
-                    <span
-                      v-if="!fileName"
-                      style="color: #79a0bd; font-weight: 900; cursor: pointer"
-                      >選擇</span
-                    >
-                    <span v-if="!fileName" style="font-weight: 900"
-                      >或直接拖曳檔案</span
-                    >
-                    <div style="font-weight: 900">{{ fileName }}</div>
+                    <span v-if="!fileName" style="color: #79a0bd">選擇</span>
+                    <span v-if="!fileName">或直接拖曳檔案</span>
+                    {{ fileName }}
                   </div>
-                </div></q-tab-panel
-              >
-            </q-tab-panels>
-          </div>
+                </div>
+              </div>
+            </q-tab-panel>
+          </q-tab-panels>
         </div>
       </q-card-section>
-
       <q-card-actions align="right">
         <q-btn flat label="取消" style="color: #79a0bd" @click="closePopup" />
         <q-btn
@@ -112,7 +82,6 @@
 <script setup lang="ts">
 import { ref, watch, Ref, computed } from 'vue';
 import { QA, Option } from '../data ';
-import './UploadDialog.css';
 import axios from 'axios';
 import { successs } from '..//ActionBtn/AnimateAction';
 
@@ -181,6 +150,13 @@ const uploadResource = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
+}
+.uploadInput {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  opacity: 0;
 }
 </style>

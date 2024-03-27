@@ -34,7 +34,6 @@
     <EditDialog
       v-model:open="open"
       :selectRow="selectRow"
-      :currentOffice="currentOffice"
       :title="title"
       :options="options"
       @updated="updated++"
@@ -58,13 +57,7 @@ import { ref, Ref, watch, computed } from 'vue';
 import EditDialog from '../components/Table/Dialog/EditDialog.vue';
 import Table from '../components/Table/QaTable.vue';
 import EditBtn from '../components/Table/ActionBtn/EditBtn.vue';
-import {
-  QA,
-  initialQASelect,
-  testInitialOffice,
-  paginationInitial,
-  orderInitial,
-} from '../components/Table/data ';
+import { QA, paginationInitial, orderInitial } from '../components/Table/data ';
 import { pendingColumns } from '../components/Table/Columns';
 import TestingDialog from '../components/Table/Dialog/TestingDialog.vue';
 import axios from 'axios';
@@ -74,28 +67,22 @@ import ConfirmDialog from '../components/Table/Dialog/ConfirmDialog.vue';
 
 //editPop
 const open = ref(false);
-const selectRow = ref([]);
+const selectRow: any = ref(null);
 
 //optionSelect
-const currentOffice = ref(testInitialOffice); //之後用auth fetch?
 const title = '指派單位';
 
-//fetch offices
-// const options = ref([]);
-// const fetchOffices = async () => {
-//   const result = await axios.get('http://140.136.202.125/api/Office');
-//   const offices = result.data.map((office: any) => ({
-//     label: office.officeName,
-//     value: office.officeId,
-//   }));
-//   options.value = offices;
-// };
-// fetchOffices();
-const options = [
-  { label: '資管', value: 1 },
-  { label: '統資', value: 2 },
-  { label: '圖資', value: 3 },
-];
+// fetch offices
+const options = ref([]);
+const fetchOffices = async () => {
+  const result = await axios.get(`${process.env.API_URL}/api/Office`);
+  const offices = result.data.map((office: any) => ({
+    label: office.officeName,
+    value: office.officeId,
+  }));
+  options.value = offices;
+};
+fetchOffices();
 
 //table
 //toolValue
@@ -119,19 +106,30 @@ const totalCount = ref(0);
 const loading = ref(false);
 //fetch data
 const fetchRows = async (status: string) => {
-  // loading.value = true;
-  // const result = await axios.post('http://140.136.202.125/api/Question/paged', {
-  //   query: searchNow.value,
-  //   startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-  //   perPage: pageNow.value.rowsPerPage,
-  //   officeId: 3,
-  //   order: orderNow.value.value,
-  //   status,
-  // });
-  // rows.value = result.data.data;
-  // totalCount.value = result.data.totalCount;
-  // console.log(result.data, 'fetching');
-  // loading.value = false;
+  loading.value = true;
+  try {
+    const result = await axios.post(
+      `${process.env.API_URL}/api/Question/paged`,
+      {
+        query: searchNow.value,
+        startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
+        perPage: pageNow.value.rowsPerPage,
+        order: orderNow.value.value,
+        status,
+      },
+      {
+        headers: {
+          Authorization: localStorage.getItem('token'),
+        },
+      }
+    );
+    rows.value = result.data.data;
+    totalCount.value = result.data.totalCount;
+    console.log(result.data, 'fetching');
+  } catch (e) {
+    console.log('error', e);
+  }
+  loading.value = false;
 };
 fetchRows('UNCONFIRMED');
 

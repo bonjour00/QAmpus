@@ -3,14 +3,14 @@
     <q-card>
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6">
-          <b>{{ title }}</b>
+          {{ title }}
         </div>
         <q-space />
         <q-btn icon="close" flat round dense @click="closePopup" />
       </q-card-section>
 
       <q-card-section>
-        <b>{{ description }}</b>
+        {{ description }}
       </q-card-section>
 
       <q-card-actions align="right">

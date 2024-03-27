@@ -66,15 +66,14 @@
 
 <script setup lang="ts">
 import { ref, watch, Ref, computed } from 'vue';
-import { QA, Option } from '../data ';
+import { QA, Option, initialOffice } from '../data ';
 import { successs } from '../ActionBtn/AnimateAction';
 import OptionSelect from '../Toolbar/OptionSelect.vue';
 import axios from 'axios';
 
 const props = defineProps<{
   open: boolean;
-  selectRow: QA | never[];
-  currentOffice: Option;
+  selectRow: QA | any;
   options: Option[];
   title: string;
   btnName?: string;
@@ -84,31 +83,31 @@ const props = defineProps<{
 
 const emit = defineEmits(['update:open', 'updated']);
 const currentRow: Ref<any> = ref(props.selectRow); //暫時不管
-const currentOption = ref(props.currentOffice);
+const currentOption = ref(initialOffice);
 watch(
   () => props.selectRow,
   () => {
-    return (currentRow.value = props.selectRow);
+    currentRow.value = props.selectRow;
+    currentOption.value = {
+      label: props.selectRow.officeName,
+      value: props.selectRow.officeId,
+    };
   }
 );
-watch(
-  () => props.currentOffice,
-  () => (currentOption.value = props.currentOffice)
-);
+
 const closePopup = () => {
   emit('update:open', false);
   currentRow.value = props.selectRow;
-  currentOption.value = props.currentOffice;
+  currentOption.value = {
+    label: props.selectRow.officeName,
+    value: props.selectRow.officeId,
+  };
 };
 
 const editSubmit = async () => {
-  // console.log({
-  //   ...currentRow.value,
-  //   officeId: currentOption.value.value,
-  // });
   try {
     const result = await axios.post(
-      `http://140.136.202.125/api/AssignedOffice
+      `${process.env.API_URL}/api/AssignedOffice
 `,
       {
         qaId: currentRow.value.questionId,

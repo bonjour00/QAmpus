@@ -5,6 +5,8 @@ export type QA = {
   questionCreaterId: string;
   questionAddtime: Date;
   questionStatus: string; //CONFIRMED、UNCONFIRMED 或 deleted
+  officeId: number;
+  officeName: string;
 };
 
 export type Recource = {
@@ -24,15 +26,6 @@ export type Member = {
   userEmail: string;
   userPermission: string; //admin
   userSignuptime: string;
-};
-
-export const initialQASelect: QA = {
-  questionId: -1,
-  questionQuestion: '當我們談到生活，',
-  questionAnswer: '當我們談到生活，',
-  questionCreaterId: '-1',
-  questionAddtime: new Date(),
-  questionStatus: 'pending',
 };
 
 export type Option = {
@@ -57,4 +50,4 @@ export const orderOptions: Option[] = [
   { label: '最新', value: 'desc' },
   { label: '最舊', value: 'asc' },
 ];
-export const testInitialOffice = { label: '資管', value: 1 };
+export const initialOffice = { label: '', value: -1 };
