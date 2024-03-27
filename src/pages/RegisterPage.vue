@@ -103,12 +103,15 @@ const register = async () => {
     return;
   } else {
     try {
-      const result = await axios.post(`${process.env.API_URL}/api/User`, {
-        userName: userName.value,
-        userPassword: userPassword.value,
-        userEmail: userEmail.value,
-        userPermission: 'user',
-      });
+      const result = await axios.post(
+        `${process.env.API_URL}/api/User/normal`,
+        {
+          userName: userName.value,
+          userPassword: userPassword.value,
+          userEmail: userEmail.value,
+          userPermission: 'user',
+        }
+      );
       successs('註冊成功');
       router.push({ path: '/login' });
     } catch (e) {

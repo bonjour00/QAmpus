@@ -3,7 +3,7 @@
     <div class="column container column" :style="customStyle">
       <div class="column items-center">
         <img class="logo" :src="collapsedLogo" />
-        <p class="title text-weight-bolder q-my-lg">{{ title }}</p>
+        <p class="title text-weight-medium q-my-lg">{{ title }}</p>
       </div>
       <div class="column">
         <slot></slot>
@@ -12,12 +12,12 @@
         color="primary"
         :label="btnLabel"
         @click="clickBtn"
-        class="text-weight-bolder auth-button q-my-lg"
+        class="text-weight-medium auth-button q-my-lg"
       />
       <div class="row justify-center">
         <p>{{ toDescription }}</p>
         <RouterLink :to="to" style="text-decoration: none; color: inherit">
-          <span class="text-primary text-weight-bolder">{{ toLinkTitle }}</span>
+          <span class="text-primary text-weight-medium">{{ toLinkTitle }}</span>
         </RouterLink>
       </div>
     </div>
