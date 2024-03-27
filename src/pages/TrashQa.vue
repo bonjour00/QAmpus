@@ -29,7 +29,7 @@
       title="確定刪除此問答嗎?"
       description="這將永久刪除這則問答!"
       @clean="data = null"
-      @confirm="handleAction(data, 'deleted', '已永久刪除')"
+      @confirm="handleDeleteAction(data, 'deleted', '已永久刪除')"
     />
   </div>
 </template>
@@ -75,14 +75,22 @@ const fetchRows = async (status: string) => {
   //   qaStatus,
   // });
   loading.value = true;
-  const result = await axios.post('http://140.136.202.125/api/Question/paged', {
-    query: searchNow.value,
-    startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-    perPage: pageNow.value.rowsPerPage,
-    officeId: 3,
-    order: orderNow.value.value,
-    status,
-  });
+  const result = await axios.post(
+    'http://140.136.202.125/api/Question/paged',
+    {
+      query: searchNow.value,
+      startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
+      perPage: pageNow.value.rowsPerPage,
+      officeId: 3,
+      order: orderNow.value.value,
+      status,
+    },
+    {
+      headers: {
+        Authorization: localStorage.getItem('token'),
+      },
+    }
+  );
   rows.value = result.data.data;
   totalCount.value = result.data.totalCount;
   loading.value = false;
@@ -96,6 +104,24 @@ watch(updatedFetch, () => {
 
 //handleAction(recover/delete)
 const handleAction = async (
+  row: QA | null,
+  action: string,
+  success: string
+) => {
+  try {
+    if (row !== null) {
+      const result = await axios.patch(
+        `http://140.136.202.125/api/Question/${action}/${row.questionId}`
+      );
+      successs(success);
+      console.log(result.data);
+    }
+  } catch (e: any) {
+    console.log(e, 'error');
+  }
+  updated.value++;
+};
+const handleDeleteAction = async (
   row: QA | null,
   action: string,
   success: string
