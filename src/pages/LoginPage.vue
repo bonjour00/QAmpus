@@ -6,6 +6,7 @@
     toDescription="沒有帳號？"
     to="/register"
     toLinkTitle="註冊"
+    :forget="true"
     @clickBtn="login"
   >
     <q-input

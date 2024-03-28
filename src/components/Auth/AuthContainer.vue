@@ -14,11 +14,25 @@
         @click="clickBtn"
         class="text-weight-medium auth-button q-my-lg"
       />
-      <div class="row justify-center">
-        <p>{{ toDescription }}</p>
-        <RouterLink :to="to" style="text-decoration: none; color: inherit">
-          <span class="text-primary text-weight-medium">{{ toLinkTitle }}</span>
-        </RouterLink>
+      <div class="flex justify-center">
+        <div class="column">
+          <div class="row">
+            <p>{{ toDescription }}</p>
+            <RouterLink :to="to" style="text-decoration: none; color: inherit">
+              <span class="text-primary text-weight-medium">{{
+                toLinkTitle
+              }}</span>
+            </RouterLink>
+          </div>
+
+          <RouterLink
+            to="/forget-pwd"
+            style="text-decoration: none; color: inherit"
+            v-if="forget"
+          >
+            <span class="text-primary text-weight-medium">忘記密碼?</span>
+          </RouterLink>
+        </div>
       </div>
     </div>
     <AuthWave />
@@ -35,6 +49,7 @@ const props = defineProps<{
   toDescription: string;
   to: string;
   toLinkTitle: string;
+  forget?: boolean;
 }>();
 const emit = defineEmits(['clickBtn']);
 

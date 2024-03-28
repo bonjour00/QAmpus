@@ -33,14 +33,12 @@ const forget = async () => {
   if (emailRef.value.hasError) {
     return;
   } else {
+    console.log('123');
     try {
-      // const result = await axios.post(
-      //   `${process.env.API_URL}/api/User/signin`,
-      //   {
-      //     userEmail: userEmail.value,
-      //     userPassword: userPassword.value,
-      //   }
-      // );
+      const result = await axios.post(
+        `${process.env.API_URL}/api/User/forgot-password?email=${userEmail.value}`
+      );
+      console.log(result.data);
     } catch (e: any) {
       console.log('忘記密碼失敗', e);
       console.log(e.response.data);
