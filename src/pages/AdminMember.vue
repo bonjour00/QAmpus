@@ -22,7 +22,8 @@
         ><AuctionBtn
           :selectRow="slotProps"
           @updated="(row) => handleAction(row, 'admin', '審核成功')"
-          icon="check"
+          icon="edit"
+          v-if="isAssigner"
         />
         <AuctionBtn
           :selectRow="slotProps"
@@ -61,6 +62,7 @@ import AuctionBtn from '../components/Table/ActionBtn/ActionBtn.vue';
 import ConfirmDialog from '../components/Table/Dialog/ConfirmDialog.vue';
 import RegisterDialog from '../components/Table/Dialog/RegisterDialog.vue';
 
+const isAssigner = localStorage.getItem('role') == 'admin';
 //table
 //toolValue
 const tableTitle = '權限管理';

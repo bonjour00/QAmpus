@@ -1,7 +1,7 @@
 <template>
   <AuthContainer
     title="重設您的密碼"
-    customStyle="margin-top: 20vh"
+    customStyle="margin-top: 10vh"
     btnLabel="確認重設密碼"
     toDescription=""
     to=""

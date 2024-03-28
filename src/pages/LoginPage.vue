@@ -1,7 +1,7 @@
 <template>
   <AuthContainer
     title="登入"
-    customStyle="margin-top: 15vh"
+    customStyle="margin-top: 5vh"
     btnLabel="登入"
     toDescription="沒有帳號？"
     to="/register"
