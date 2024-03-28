@@ -54,6 +54,7 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import AuthContainer from 'src/components/Auth/AuthContainer.vue';
+import { successs } from 'src/components/Table/ActionBtn/AnimateAction';
 
 const router = useRouter();
 
@@ -76,13 +77,12 @@ const reset = async () => {
     return;
   } else {
     try {
-      //   const result = await axios.post(
-      //     `${process.env.API_URL}/api/User/signin`,
-      //     {
-      //       userEmail: userEmail.value,
-      //       userPassword: userPassword.value,
-      //     }
-      //   );
+      const token = localStorage.getItem('tokenPwd');
+      const result = await axios.post(
+        `${process.env.API_URL}/api/User/reset-password?token=${token}&newPassword=${userPassword.value}`
+      );
+      console.log(result.data);
+      successs('修改成功');
       router.push({ path: '/login' });
     } catch (e: any) {
       console.log('重設失敗', e);
