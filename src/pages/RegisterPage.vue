@@ -89,7 +89,6 @@ const register = async () => {
   emailRef.value?.validate();
   pwdRef.value?.validate();
   confirmPwdRef.value?.validate();
-  console.log(nameRef.value, 'manevalue');
   if (
     nameRef.value.hasError ||
     emailRef.value.hasError ||
@@ -108,7 +107,7 @@ const register = async () => {
           userPermission: 'user',
         }
       );
-      successs('註冊成功');
+      successs('完成Email驗證後即註冊成功');
       router.push({ path: '/login' });
     } catch (e) {
       console.log('註冊失敗', e);

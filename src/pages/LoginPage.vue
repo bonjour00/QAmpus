@@ -23,7 +23,7 @@
       </template>
     </q-input>
     <template #link>
-      <AuthLink toDescription="沒有帳號？" to="/login" toLinkTitle="註冊" />
+      <AuthLink toDescription="沒有帳號？" to="/register" toLinkTitle="註冊" />
       <AuthLink
         toDescription="忘記密碼?"
         to="/forget-pwd"

@@ -55,6 +55,7 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 import AuthContainer from 'src/components/Auth/AuthContainer.vue';
 import { successs } from 'src/components/Table/ActionBtn/AnimateAction';
+import { notEmpty } from 'src/components/Input/rules';
 
 const router = useRouter();
 
@@ -66,20 +67,23 @@ const isPwd = ref(true);
 const isConfirmPwd = ref(true);
 
 //rules
-const notEmpty = (val: any) => val && val.length > 0;
 const pwdRef: any = ref(null);
 const confirmPwdRef: any = ref(null);
 
 const reset = async () => {
   pwdRef.value?.validate();
   confirmPwdRef.value?.validate();
+  const token = router.currentRoute.value.query.token;
   if (pwdRef.value.hasError || confirmPwdRef.value.hasError) {
     return;
   } else {
     try {
-      const token = localStorage.getItem('tokenPwd');
       const result = await axios.post(
-        `${process.env.API_URL}/api/User/reset-password?token=${token}&newPassword=${userPassword.value}`
+        `${process.env.API_URL}/api/User/reset-password`,
+        {
+          token,
+          newPassword: userPassword.value,
+        }
       );
       console.log(result.data);
       successs('修改成功');

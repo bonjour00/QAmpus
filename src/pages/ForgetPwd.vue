@@ -21,11 +21,12 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import AuthContainer from 'src/components/Auth/AuthContainer.vue';
+import { notEmpty } from 'src/components/Input/rules';
+import { successs } from 'src/components/Table/ActionBtn/AnimateAction';
 
 const userEmail = ref('');
 
 //rules
-const notEmpty = (val: any) => val && val.length > 0;
 const emailRef: any = ref(null);
 
 const forget = async () => {
@@ -35,9 +36,12 @@ const forget = async () => {
   } else {
     try {
       const result = await axios.post(
-        `${process.env.API_URL}/api/User/forgot-password?email=${userEmail.value}`
+        `${process.env.API_URL}/api/User/forgot-password`,
+        {
+          email: userEmail.value,
+        }
       );
-      localStorage.setItem('tokenPwd', result.data.token);
+      successs('已發送重設密碼Email驗證信');
       console.log(result.data);
     } catch (e: any) {
       console.log('忘記密碼失敗', e);

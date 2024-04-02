@@ -5,6 +5,6 @@ export const successs = (title: string) => {
     showConfirmButton: false,
     title,
     icon: 'success',
-    timer: 1200,
+    timer: 1500,
   });
 };
