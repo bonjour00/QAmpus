@@ -1,14 +1,5 @@
 <template>
-  <AuthContainer
-    title="登入"
-    customStyle="margin-top: 5vh"
-    btnLabel="登入"
-    toDescription="沒有帳號？"
-    to="/register"
-    toLinkTitle="註冊"
-    :forget="true"
-    @clickBtn="login"
-  >
+  <AuthContainer title="登入" btnLabel="登入" @clickBtn="login">
     <q-input
       v-model="userEmail"
       label="EMAIL"
@@ -31,6 +22,14 @@
         />
       </template>
     </q-input>
+    <template #link>
+      <AuthLink toDescription="沒有帳號？" to="/login" toLinkTitle="註冊" />
+      <AuthLink
+        toDescription="忘記密碼?"
+        to="/forget-pwd"
+        toLinkTitle="重設密碼"
+      />
+    </template>
   </AuthContainer>
 </template>
 <script setup lang="ts">
@@ -38,6 +37,8 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import AuthContainer from 'src/components/Auth/AuthContainer.vue';
+import AuthLink from 'src/components/Auth/AuthLink.vue';
+import { notEmpty } from 'src/components/Input/rules';
 
 const userEmail = ref('');
 const userPassword = ref('');
@@ -47,7 +48,6 @@ const router = useRouter();
 const isPwd = ref(true);
 
 //rules
-const notEmpty = (val: any) => val && val.length > 0;
 const emailRef: any = ref(null);
 const pwdRef: any = ref(null);
 

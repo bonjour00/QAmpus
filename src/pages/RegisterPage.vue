@@ -1,13 +1,5 @@
 <template>
-  <AuthContainer
-    title="註冊您的帳戶"
-    customStyle="margin-top: 5vh"
-    btnLabel="註冊"
-    toDescription="已經有帳號了？"
-    to="/login"
-    toLinkTitle="登入"
-    @clickBtn="register"
-  >
+  <AuthContainer title="註冊您的帳戶" btnLabel="註冊" @clickBtn="register">
     <q-input
       v-model="userName"
       label="輸入您的使用者名稱"
@@ -61,6 +53,9 @@
         />
       </template>
     </q-input>
+    <template #link>
+      <AuthLink toDescription="已經有帳號了？" to="/login" toLinkTitle="登入" />
+    </template>
   </AuthContainer>
 </template>
 <script setup lang="ts">
@@ -69,6 +64,8 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { successs } from '../components/Table/ActionBtn/AnimateAction';
 import AuthContainer from 'src/components/Auth/AuthContainer.vue';
+import AuthLink from 'src/components/Auth/AuthLink.vue';
+import { notEmpty } from 'src/components/Input/rules';
 
 const router = useRouter();
 
@@ -82,7 +79,6 @@ const isPwd = ref(true);
 const isConfirmPwd = ref(true);
 
 //rules
-const notEmpty = (val: any) => val && val.length > 0;
 const nameRef: any = ref(null);
 const emailRef: any = ref(null);
 const pwdRef: any = ref(null);
@@ -93,7 +89,7 @@ const register = async () => {
   emailRef.value?.validate();
   pwdRef.value?.validate();
   confirmPwdRef.value?.validate();
-
+  console.log(nameRef.value, 'manevalue');
   if (
     nameRef.value.hasError ||
     emailRef.value.hasError ||
