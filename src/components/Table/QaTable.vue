@@ -5,19 +5,17 @@
     row-key="id"
     :title="tableTitle"
     hide-pagination
-    :rows-per-page-options="[pagination.rowsPerPage]"
-    :loading="loading"
+    :rows-per-page-options="[tableStore.perPage]"
+    :loading="tableStore.loading"
     style="border-radius: 25px; padding: 20px; height: 92vh"
   >
     <template v-slot:top-right>
-      <SearchTable @update-search="searchReturn" />
+      <SearchTable @update-search="updateSearch" />
       <OptionSelect
-        :currentOption="orderNow"
-        @update:current-option="orderReturn"
-        :options="options"
+        v-model:currentOption="tableStore.order"
+        :options="tableStore.options"
         :title="title"
       />
-      <slot name="add"></slot>
     </template>
     <template v-slot:header-cell-actions>
       <q-th>
@@ -33,8 +31,8 @@
     <template #bottom>
       <div style="right: 30px" class="absolute">
         <PaginationTable
-          :pagination="pagination"
-          @update:pagination="pageReturn"
+          v-model:page="tableStore.page"
+          :totalPage="tableStore.totalPage"
         />
       </div>
     </template>
@@ -42,54 +40,25 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import SearchTable from './Toolbar/SearchTable.vue';
 import OptionSelect from './Toolbar/OptionSelect.vue';
 import PaginationTable from './Pagination/PaginationTable.vue';
-import {
-  QA,
-  Pagination,
-  Option,
-  orderOptions,
-  Recource,
-  Member,
-} from './data ';
+import { QA, Recource, Member } from './data ';
+import { useTableStore } from 'src/stores/Table/table';
 
 const props = defineProps<{
   rows: QA[] | Recource[] | Member[];
   columns: any;
   tableTitle: string;
-  loading: boolean;
-  pageNow: Pagination;
-  searchNow: string;
-  orderNow: Option;
-  totalCount: number;
 }>();
 
+const tableStore = useTableStore();
+
 //toolBar
-const options = orderOptions;
 const title = '分類'; //optionTitle(prepend前綴)
-
-//pagination
-const pagination = computed(() => {
-  return { ...props.pageNow, rowLength: props.totalCount };
-});
-
-const emit = defineEmits([
-  'update:pageNow',
-  'update:searchNow',
-  'update:orderNow',
-]);
-
-// 回傳第幾頁、幾筆
-const pageReturn = (value: any) => {
-  emit('update:pageNow', value);
-};
-const searchReturn = (value: any) => {
-  emit('update:searchNow', value);
-};
-const orderReturn = (value: any) => {
-  emit('update:orderNow', value);
+//enter時才search
+const updateSearch = (value: any) => {
+  tableStore.query = value;
 };
 </script>
 <style lang="sass">

@@ -44,34 +44,41 @@ export default route(function (/* { store, ssrContext } */) {
       return true;
     } else {
       const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const result_analyze = await axios.post(
-            `${process.env.API_URL}/api/User/analyzingPermission`,
-            {},
-            {
-              headers: {
-                Authorization: token,
-              },
-            }
-          );
-          const userRole = result_analyze.data.permission;
-          if (to.meta.role?.includes(userRole)) {
-            return true;
-          } else if (userRole == 'admin') {
-            return { path: '/pending' };
-          } else if (userRole == '分配者') {
-            return { path: '/assign' };
-          } else {
-            return { path: '/chat' };
+      if (!token) {
+        return { path: '/login' };
+      }
+      try {
+        const result_analyze = await axios.post(
+          `${process.env.API_URL}/User/analyzingPermission`,
+          {},
+          {
+            headers: {
+              Authorization: token,
+            },
           }
-        } catch (e) {
-          return { path: '/login' };
+        );
+        const userRole = result_analyze.data.permission;
+        if (to.meta.role?.includes(userRole)) {
+          if (to.path == '/') {
+            if (userRole == 'assigner') {
+              return { path: '/assign' };
+            } else if (userRole == 'admin') {
+              return { path: '/pending' };
+            }
+          }
+          return true;
+        } else if (userRole == 'admin') {
+          return { path: '/pending' };
+        } else if (userRole == 'assigner') {
+          return { path: '/assign' };
+        } else {
+          return { path: '/chat' };
         }
-      } else {
+      } catch (e) {
         return { path: '/login' };
       }
     }
   });
+
   return Router;
 });

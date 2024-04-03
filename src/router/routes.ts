@@ -4,17 +4,23 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
-    meta: { requiresAuth: true, role: ['admin', '分配者'] },
+    meta: {
+      requiresAuth: true,
+      role: ['admin', 'assigner'],
+    },
     children: [
       { path: '', component: () => import('pages/PendingQa.vue') },
       {
         path: 'pending',
         name: 'pending',
+
         component: () => import('pages/PendingQa.vue'),
       },
       {
         path: 'assign',
-        meta: { role: ['分配者'] },
+        meta: {
+          role: ['assigner'],
+        },
         component: () => import('pages/AssignQa.vue'),
       },
       {

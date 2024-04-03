@@ -36,7 +36,7 @@ const forget = async () => {
   } else {
     try {
       const result = await axios.post(
-        `${process.env.API_URL}/api/User/forgot-password`,
+        `${process.env.API_URL}/User/forgot-password`,
         {
           email: userEmail.value,
         }

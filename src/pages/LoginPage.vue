@@ -58,15 +58,12 @@ const login = async () => {
     return;
   } else {
     try {
-      const result = await axios.post(
-        `${process.env.API_URL}/api/User/signin`,
-        {
-          userEmail: userEmail.value,
-          userPassword: userPassword.value,
-        }
-      );
+      const result = await axios.post(`${process.env.API_URL}/User/signin`, {
+        userEmail: userEmail.value,
+        userPassword: userPassword.value,
+      });
       const result_analyze = await axios.post(
-        `${process.env.API_URL}/api/User/analyzingPermission`,
+        `${process.env.API_URL}/User/analyzingPermission`,
         {},
         {
           headers: {

@@ -1,10 +1,8 @@
 <template>
   <q-pagination
-    :modelValue="pagination.page"
-    @update:model-value="
-      (value) => $emit('update:pagination', { ...pagination, page: value })
-    "
-    :max="pagesNumber"
+    :modelValue="page"
+    @update:model-value="(value) => $emit('update:page', value)"
+    :max="totalPage"
     max-pages="6"
     boundary-numbers
     direction-links
@@ -17,15 +15,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { Pagination } from '../data ';
-
 const props = defineProps<{
-  pagination: Pagination;
+  page: number;
+  totalPage: number;
 }>();
-defineEmits(['update:pagination']);
-
-const pagesNumber = computed(() =>
-  Math.ceil(props.pagination.rowLength / props.pagination.rowsPerPage)
-);
+defineEmits(['update:page']);
 </script>

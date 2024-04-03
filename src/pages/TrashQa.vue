@@ -1,22 +1,17 @@
 <template>
   <div class="q-pa-md">
     <Table
-      :rows="rows"
+      :rows="tableStore.rows"
       :columns="pendingColumns"
-      v-model:page-now="pageNow"
-      v-model:search-now="searchNow"
-      v-model:order-now="orderNow"
-      :loading="loading"
       :tableTitle="tableTitle"
-      :totalCount="totalCount"
     >
       <template v-slot:btnAction="slotProps"
-        ><AuctionBtn
+        ><ActionBtn
           :selectRow="slotProps"
           @updated="(row) => handleAction(row, 'recover', '已復原')"
           icon="history"
         />
-        <AuctionBtn
+        <ActionBtn
           :selectRow="slotProps"
           @updated="(row) => needConfirm(row)"
           icon="delete"
@@ -35,71 +30,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, watch, computed } from 'vue';
+import { ref, Ref } from 'vue';
 import Table from '../components/Table/QaTable.vue';
-import { QA, paginationInitial, orderInitial } from '../components/Table/data ';
+import { QA } from '../components/Table/data ';
 import { pendingColumns } from '../components/Table/Columns';
 import axios from 'axios';
 import { successs } from '../components/Table/ActionBtn/AnimateAction';
-import AuctionBtn from '../components/Table/ActionBtn/ActionBtn.vue';
+import ActionBtn from '../components/Table/ActionBtn/ActionBtn.vue';
 import ConfirmDialog from '../components/Table/Dialog/ConfirmDialog.vue';
+import { useTableStore } from 'src/stores/Table/table';
+import useTableApi from 'src/composables/useTableApi';
+
+const tableStore = useTableStore();
+const { fetchRows } = useTableApi('/Question/paged', 'deleted');
+fetchRows();
 
 //table
 //toolValue
 const tableTitle = '近期刪除問題';
-const pageNow = ref(paginationInitial);
-const searchNow = ref('');
-const orderNow = ref(orderInitial);
 const updated = ref(0);
-const updatedFetch = computed(() => {
-  return {
-    page: pageNow.value,
-    search: searchNow.value,
-    order: orderNow.value,
-    updated: updated.value,
-  };
-});
 
 //rows
 const rows: Ref<QA[]> = ref([]);
-const totalCount = ref(0);
-const loading = ref(false);
-//fetch data
-const fetchRows = async (status: string) => {
-  // console.log({
-  //   query: searchNow.value,
-  //   startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-  //   perPage: pageNow.value.rowsPerPage,
-  //   officeId: testInitialOffice.value,
-  //   order: orderNow.value.value,
-  //   qaStatus,
-  // });
-  loading.value = true;
-  const result = await axios.post(
-    'http://140.136.202.125/api/Question/paged',
-    {
-      query: searchNow.value,
-      startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-      perPage: pageNow.value.rowsPerPage,
-      order: orderNow.value.value,
-      status,
-    },
-    {
-      headers: {
-        Authorization: localStorage.getItem('token'),
-      },
-    }
-  );
-  rows.value = result.data.data;
-  totalCount.value = result.data.totalCount;
-  loading.value = false;
-  console.log(result, 'fetching');
-};
-fetchRows('deleted');
-
-watch(updatedFetch, () => {
-  fetchRows('deleted');
-});
 
 //handleAction(recover/delete)
 const handleAction = async (

@@ -17,11 +17,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 const q = ref('');
-// const props = defineProps<{
-//   search: string;
-// }>();
-defineEmits(['updateSearch']);
 
-// :modelValue="search"
-//  @update:model-value="(value) => $emit('update:search', value)"
+defineEmits(['updateSearch']);
 </script>

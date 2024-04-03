@@ -3,7 +3,7 @@
     filled
     :modelValue="currentOption"
     @update:model-value="(value) => $emit('update:currentOption', value)"
-    :options="optionsFilter"
+    :options="options"
     class="q-ml-sm-sm"
     dense
     options-dense
@@ -26,8 +26,4 @@ const props = defineProps<{
 }>();
 
 defineEmits(['update:currentOption']);
-
-const optionsFilter = computed(() => {
-  return props.options.filter((x) => x.value !== props.currentOption.value);
-});
 </script>

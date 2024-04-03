@@ -79,7 +79,7 @@ const reset = async () => {
   } else {
     try {
       const result = await axios.post(
-        `${process.env.API_URL}/api/User/reset-password`,
+        `${process.env.API_URL}/User/reset-password`,
         {
           token,
           newPassword: userPassword.value,
