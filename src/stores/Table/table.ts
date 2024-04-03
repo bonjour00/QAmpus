@@ -19,8 +19,19 @@ export const useTableStore = defineStore('table', () => {
     Math.ceil(rows.value.length / perPage.value)
   );
 
-  const fetchRows = async (url: string, status: string) => {
+  const fetchRows = async (url: string, status = '') => {
+    console.log(
+      {
+        query: query.value,
+        startIndex: startIndex.value,
+        perPage: perPage.value,
+        order: order.value.value,
+        ...(status && { status }),
+      },
+      url
+    );
     loading.value = true;
+
     try {
       const result = await api.post(
         url,
@@ -29,7 +40,7 @@ export const useTableStore = defineStore('table', () => {
           startIndex: startIndex.value,
           perPage: perPage.value,
           order: order.value.value,
-          status,
+          ...(status && { status }),
         },
         {
           headers: {

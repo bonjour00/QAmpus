@@ -57,7 +57,7 @@ import { ref, Ref } from 'vue';
 import EditDialog from '../components/Table/Dialog/EditDialog.vue';
 import Table from '../components/Table/QaTable.vue';
 import EditBtn from '../components/Table/ActionBtn/EditBtn.vue';
-import { QA, paginationInitial, orderInitial } from '../components/Table/data ';
+import { QA } from '../components/Table/data ';
 import { pendingColumns } from '../components/Table/Columns';
 import TestingDialog from '../components/Table/Dialog/TestingDialog.vue';
 import axios from 'axios';
