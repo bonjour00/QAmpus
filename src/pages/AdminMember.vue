@@ -3,99 +3,87 @@
     <Table
       :rows="tableStore.rows"
       :columns="memberColumns"
-      :tableTitle="tableTitle"
+      tableTitle="權限管理"
+      rowKey="userPK"
     >
       <template v-slot:action>
-        <q-btn
-          label="新增管理者"
-          unelevated
-          style="background: #eff0f5"
-          @click="registerOpen = true"
-        ></q-btn>
+        <SlotBtn btnName="新增管理者" @clicked="openRegisterDialog" />
       </template>
-      <template v-slot:btnAction="slotProps"
-        ><AuctionBtn
-          :selectRow="slotProps"
-          @updated="(row) => handleAction(row, 'admin', '審核成功')"
+
+      <template v-slot:btnAction="slotProps">
+        <RoundBtn
+          @clicked="openEditMemberDialog(slotProps.props.row)"
           icon="edit"
         />
-        <AuctionBtn
-          :selectRow="slotProps"
-          @updated="(row) => needConfirm(row)"
+        <RoundBtn
+          @clicked="openWarningDialog(slotProps.props.row)"
           icon="delete"
         />
       </template>
     </Table>
-    <ConfirmDialog
-      btnName="刪除"
-      v-model:openConfirm="openConfirm"
-      title="確定修改此用戶權限嗎?"
-      description="這將使其權限變更為 '使用者'!"
-      @clean="data = null"
-      @confirm="handleAction(data, 'user', '已修改其權限為使用者')"
+    <WarningDialog
+      v-model:open="openWarning"
+      :title="`確定刪除${(row as Member)?.userName||''}嗎?`"
+      description="刪除後我們將其權限變更為User"
+      @warningDialogConfirm="deleteMemberSubmit"
+      @close="closeWarningDialog"
     />
-    <RegisterDialog
-      v-model:registerOpen="registerOpen"
-      @registerUpdate="updated++"
-    />
+    <EditMemberDialog />
+    <RegisterDialog />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, Ref } from 'vue';
 import Table from '../components/Table/QaTable.vue';
-import { Member } from '../components/Table/data ';
+import { MEMBER_TABLE_API, Member } from '../components/Table/data ';
 import { memberColumns } from '../components/Table/Columns';
-import axios from 'axios';
-import { successs } from '../components/Table/ActionBtn/AnimateAction';
-import AuctionBtn from '../components/Table/ActionBtn/ActionBtn.vue';
-import ConfirmDialog from '../components/Table/Dialog/ConfirmDialog.vue';
-import RegisterDialog from '../components/Table/Dialog/RegisterDialog.vue';
+import RoundBtn from 'src/components/Button/IconBtn/RoundBtn.vue';
+import SlotBtn from 'src/components/Button/Table/SlotBtn.vue';
+import WarningDialog from 'src/components/Dialog/WarningDialog.vue';
+import RegisterDialog from 'src/components/Dialog/RegisterDialog.vue';
 import { useTableStore } from 'src/stores/Table/table';
-import useTableApi from 'src/composables/useTableApi';
+import useTableApi from 'src/composables/Table/useTableApi';
+import useWarningDialog from 'src/composables/Dialog/useWarningDialog';
+import { useEditMemberDialogStore } from 'src/stores/Dialog/editMemberDialog';
+import EditMemberDialog from 'src/components/Dialog/EditMemberDialog.vue';
+import useTableAction from 'src/composables/Table/useTableAction';
+import { useRegisterDialogStore } from 'src/stores/Dialog/registerDialog';
 
 const tableStore = useTableStore();
-const { fetchRows } = useTableApi('/User/paged');
+const editMemberDialogStore = useEditMemberDialogStore();
+const registerDialogStore = useRegisterDialogStore();
+const {
+  open: openWarning,
+  row,
+  openWithData,
+  closeDialog,
+} = useWarningDialog();
+const { deleteMember } = useTableAction();
+const { fetchRows } = useTableApi(MEMBER_TABLE_API);
+
+//fetch rows
 fetchRows();
 
-//table
-//toolValue
-const tableTitle = '權限管理';
-const updated = ref(0);
-
-//rows
-const rows: Ref<Member[]> = ref([]);
-
-//handleAction(recover/delete)
-const handleAction = async (
-  row: Member | null,
-  status: string,
-  success: string
-) => {
-  try {
-    if (row !== null) {
-      const result = await axios.patch('http://140.136.202.125/api/User', {
-        userEmail: row.userEmail,
-        userPermission: status,
-      });
-      successs(success);
-      console.log(result.data);
-    }
-  } catch (e: any) {
-    console.log(e, 'error');
-  }
-  updated.value++;
+//actionBtn clicked (openEditMemberDialog)
+const openEditMemberDialog = (row: Member) => {
+  editMemberDialogStore.openMemberDialog(row);
 };
 
-//confirmPop
-const openConfirm = ref(false);
-
-//delete need confirm
-const data = ref(null);
-const needConfirm = (row: any) => {
-  openConfirm.value = true;
-  data.value = row;
+//actionBtn clicked (openRegisterDialog)
+const openRegisterDialog = (row: Member) => {
+  registerDialogStore.openRegisterDialog();
 };
-//registerOpen
-const registerOpen = ref(false);
+
+//actionBtn clicked (openWarningDialog)
+const openWarningDialog = (row: Member) => {
+  openWithData(row);
+};
+const closeWarningDialog = () => {
+  closeDialog();
+};
+const deleteMemberSubmit = async () => {
+  await deleteMember(row.value as Member);
+  closeDialog();
+  fetchRows();
+};
 </script>

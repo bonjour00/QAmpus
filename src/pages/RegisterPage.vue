@@ -5,14 +5,14 @@
       label="輸入您的使用者名稱"
       ref="nameRef"
       lazy-rules="ondemand"
-      :rules="[(val) => notEmpty(val) || '使用者名稱不能是空的']"
+      :rules="[notEmpty]"
     />
     <q-input
       v-model="userEmail"
       label="輸入您的Email"
       ref="emailRef"
       lazy-rules="ondemand"
-      :rules="[(val) => notEmpty(val) || '信箱不能是空的']"
+      :rules="[notEmpty]"
     />
     <q-input
       v-model="userPassword"
@@ -20,13 +20,7 @@
       :type="isPwd ? 'password' : 'text'"
       ref="pwdRef"
       lazy-rules="ondemand"
-      :rules="[
-        (val) => notEmpty(val) || '密碼不能是空的',
-        (val) =>
-          /^(?=.*[a-zA-Z])(?=.*\d).+$/.test(val) ||
-          '密碼強度不夠，須包含英文及數字',
-        (val) => val.length >= 8 || '密碼強度不夠，密碼長度需至少8個字元',
-      ]"
+      :rules="[notEmpty, pwTooEasy, pwTooShort]"
       ><template v-slot:append>
         <q-icon
           :name="isPwd ? 'visibility_off' : 'visibility'"
@@ -41,10 +35,7 @@
       :type="isConfirmPwd ? 'password' : 'text'"
       ref="confirmPwdRef"
       lazy-rules="ondemand"
-      :rules="[
-        (val) => notEmpty(val) || '密碼不能是空的',
-        (val) => val === userPassword || '密碼不一致',
-      ]"
+      :rules="[notEmpty, (val) => val === userPassword || '密碼不一致']"
       ><template v-slot:append>
         <q-icon
           :name="isConfirmPwd ? 'visibility_off' : 'visibility'"
@@ -60,12 +51,12 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import axios from 'axios';
 import { useRouter } from 'vue-router';
-import { successs } from '../components/Table/ActionBtn/AnimateAction';
+import { successs } from 'src/components/AnimateAction/AnimateAction';
 import AuthContainer from 'src/components/Auth/AuthContainer.vue';
 import AuthLink from 'src/components/Auth/AuthLink.vue';
-import { notEmpty } from 'src/components/Input/rules';
+import { notEmpty, pwTooEasy, pwTooShort } from 'src/components/Input/rules';
+import { api } from 'src/boot/axios';
 
 const router = useRouter();
 
@@ -98,7 +89,7 @@ const register = async () => {
     return;
   } else {
     try {
-      const result = await axios.post(`${process.env.API_URL}/User/normal`, {
+      const result = await api.post('/User/normal', {
         userName: userName.value,
         userPassword: userPassword.value,
         userEmail: userEmail.value,
@@ -106,8 +97,8 @@ const register = async () => {
       });
       successs('完成Email驗證後即註冊成功');
       router.push({ path: '/login' });
-    } catch (e) {
-      console.log('註冊失敗', e);
+    } catch (error: any) {
+      console.log('註冊失敗', error.response?.data?.message || '發生錯誤');
     }
   }
 };

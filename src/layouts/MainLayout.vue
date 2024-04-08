@@ -31,7 +31,7 @@
             expanded: isSidebarExpanded,
             active: isMenuActive(menu.label),
           }"
-          v-for="menu in menus"
+          v-for="menu in userStore.layoutMenu"
           :key="menu.title"
           @click="currentChange(menu.label)"
         >
@@ -91,7 +91,9 @@ import { ref } from 'vue';
 import { computed } from 'vue';
 import expandedLogo from '../assets/expanded-logo.png';
 import collapsedLogo from '../assets/collapsed-logo.png';
-import axios from 'axios';
+import { useUserStore } from 'src/stores/Auth/user';
+
+const userStore = useUserStore();
 
 const router = useRouter();
 const isSidebarExpanded = ref(true);
@@ -99,7 +101,6 @@ const isSidebarExpanded = ref(true);
 const currentChange = (label: string) => {
   router.push({ path: label });
 };
-
 const toggleSidebar = () => {
   isSidebarExpanded.value = !isSidebarExpanded.value;
 };
@@ -115,63 +116,8 @@ const logoSource = computed(() => {
   return isSidebarExpanded.value ? expandedLogo : collapsedLogo;
 });
 
-const menus: any = ref([
-  {
-    title: '待解決問題',
-    icon: 'pending_actions',
-    label: 'pending',
-  },
-  {
-    title: '資源管理',
-    icon: 'create_new_folder',
-    label: 'resource',
-  },
-  {
-    title: '近期刪除問題',
-    icon: 'delete',
-    label: 'trash-qa',
-  },
-  {
-    title: '近期刪除資源',
-    icon: 'delete',
-    label: 'trash-resource',
-  },
-  {
-    title: '權限管理',
-    icon: 'groups',
-    label: 'member',
-  },
-]);
-// {
-//     title: '待指派問題',
-//     icon: 'assignment_late',
-//     label: 'assign',
-//   },
-const adminOrAssigner = () => {
-  menus.value =
-    localStorage.getItem('role') == 'admin'
-      ? menus.value
-      : [
-          { title: '待指派問題', icon: 'assignment_late', label: 'assign' },
-          ...menus.value,
-        ];
-};
-adminOrAssigner();
 const logout = async () => {
-  try {
-    const result = await axios.post(
-      'http://140.136.202.125/api/User/logout',
-      {},
-      {
-        headers: { Authorization: localStorage.getItem('token') },
-      }
-    );
-    localStorage.removeItem('token');
-    console.log(result, 'logout');
-    router.push({ path: '/login' });
-  } catch (e) {
-    console.log('error', e);
-  }
+  userStore.logout();
 };
 </script>
 <style scoped>

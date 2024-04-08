@@ -5,7 +5,7 @@
       label="EMAIL"
       ref="emailRef"
       lazy-rules="ondemand"
-      :rules="[(val) => notEmpty(val) || '信箱不能是空的']"
+      :rules="[notEmpty]"
     />
     <q-input
       v-model="userPassword"
@@ -13,7 +13,7 @@
       :type="isPwd ? 'password' : 'text'"
       ref="pwdRef"
       lazy-rules="ondemand"
-      :rules="[(val) => notEmpty(val) || '密碼不能是空的']"
+      :rules="[notEmpty]"
       ><template v-slot:append>
         <q-icon
           :name="isPwd ? 'visibility_off' : 'visibility'"
@@ -34,11 +34,14 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import axios from 'axios';
 import { useRouter } from 'vue-router';
 import AuthContainer from 'src/components/Auth/AuthContainer.vue';
 import AuthLink from 'src/components/Auth/AuthLink.vue';
 import { notEmpty } from 'src/components/Input/rules';
+import { api } from 'src/boot/axios';
+import { useUserStore } from 'src/stores/Auth/user';
+
+const userStore = useUserStore();
 
 const userEmail = ref('');
 const userPassword = ref('');
@@ -58,32 +61,15 @@ const login = async () => {
     return;
   } else {
     try {
-      const result = await axios.post(`${process.env.API_URL}/User/signin`, {
+      const result = await api.post('/User/signin', {
         userEmail: userEmail.value,
         userPassword: userPassword.value,
       });
-      const result_analyze = await axios.post(
-        `${process.env.API_URL}/User/analyzingPermission`,
-        {},
-        {
-          headers: {
-            Authorization: result.data.token,
-          },
-        }
-      );
-      const userRole = result_analyze.data.permission;
-      if (userRole == 'admin') {
-        router.push({ path: '/' });
-      } else if (userRole == '分配者') {
-        router.push({ path: '/assign' });
-      } else {
-        router.push({ path: '/chat' });
-      }
+      router.push({ path: '/' });
+      userStore.userEmail = userEmail.value;
       localStorage.setItem('token', result.data.token);
-      localStorage.setItem('role', userRole);
-    } catch (e: any) {
-      console.log('登錄失敗', e);
-      console.log(e.response.data);
+    } catch (error: any) {
+      console.error('登錄失敗:', error.response?.data?.message || '發生錯誤');
     }
   }
 };

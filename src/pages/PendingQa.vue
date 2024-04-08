@@ -3,132 +3,86 @@
     <Table
       :rows="tableStore.rows"
       :columns="pendingColumns"
-      :tableTitle="tableTitle"
+      tableTitle="待解決問題"
+      selection="multiple"
+      rowKey="questionId"
     >
       <template v-slot:action>
-        <q-btn
-          label="測試"
-          unelevated
-          style="background: #eff0f5"
-          @click="testing = true"
-        ></q-btn>
+        <SlotBtn btnName="測試" @clicked="openTestingDialog()" />
       </template>
       <template v-slot:btnAction="slotProps">
-        <EditBtn
-          :selectRow="slotProps"
-          @dialogOpen="(value) => (open = value)"
-          @setSelectRow="(value) => (selectRow = value)"
-        />
-        <ActionBtn
-          :selectRow="slotProps"
-          @updated="(row) => needConfirm(row)"
+        <RoundBtn @clicked="openEditDialog(slotProps.props.row)" icon="edit" />
+        <RoundBtn
+          @clicked="openWarningDialog(slotProps.props.row)"
           icon="delete"
         />
       </template>
     </Table>
-    <EditDialog
-      v-model:open="open"
-      :selectRow="selectRow"
-      :title="title"
-      :options="options"
-      @updated="updated++"
-      :readonly="true"
-    />
-    <TestingDialog
-      v-model:testing="testing"
-      :rows="rows"
-      @updating="updated++"
-    />
-    <ConfirmDialog
-      btnName="刪除"
-      v-model:openConfirm="openConfirm"
+    <EditDialog btnName="修改" />
+    <TestingDialog />
+    <WarningDialog
+      v-model:open="openWarning"
       title="確定刪除此問答嗎?"
       description="刪除後30天內 您可以在 '近期刪除問題' 中找到 並恢復"
-      @clean="data = null"
-      @confirm="handleAction(data, 'deleted', '已刪除')"
+      @warningDialogConfirm="deleteQaSubmit"
+      @close="closeWarningDialog"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, Ref } from 'vue';
-import EditDialog from '../components/Table/Dialog/EditDialog.vue';
+import EditDialog from 'src/components/Dialog/EditDialog.vue';
 import Table from '../components/Table/QaTable.vue';
-import EditBtn from '../components/Table/ActionBtn/EditBtn.vue';
-import { QA } from '../components/Table/data ';
+import {
+  PENDING_TABLE_STATUS,
+  QA,
+  QA_TABLE_API,
+} from '../components/Table/data ';
 import { pendingColumns } from '../components/Table/Columns';
-import TestingDialog from '../components/Table/Dialog/TestingDialog.vue';
-import axios from 'axios';
-import { successs } from '../components/Table/ActionBtn/AnimateAction';
-import ActionBtn from '../components/Table/ActionBtn/ActionBtn.vue';
-import ConfirmDialog from '../components/Table/Dialog/ConfirmDialog.vue';
+import TestingDialog from 'src/components/Dialog/TestingDialog.vue';
+import RoundBtn from 'src/components/Button/IconBtn/RoundBtn.vue';
+import SlotBtn from 'src/components/Button/Table/SlotBtn.vue';
+import WarningDialog from 'src/components/Dialog/WarningDialog.vue';
 import { useTableStore } from 'src/stores/Table/table';
-import useTableApi from 'src/composables/useTableApi';
+import useTableApi from 'src/composables/Table/useTableApi';
+import { useEditDialogStore } from 'src/stores/Dialog/editDialog';
+import useWarningDialog from 'src/composables/Dialog/useWarningDialog';
+import useTableAction from 'src/composables/Table/useTableAction';
+import { useTestingDialogStore } from 'src/stores/Dialog/testingDialog';
 
 const tableStore = useTableStore();
-const { fetchRows } = useTableApi('/Question/paged', 'UNCONFIRMED');
+const editDialogStore = useEditDialogStore();
+const testingDialogStore = useTestingDialogStore();
+const {
+  open: openWarning,
+  row,
+  openWithData,
+  closeDialog,
+} = useWarningDialog();
+const { deleteQa } = useTableAction();
+const { fetchRows } = useTableApi(QA_TABLE_API, PENDING_TABLE_STATUS);
+
+//fetch rows
 fetchRows();
 
-//editPop
-const open = ref(false);
-const selectRow: any = ref(null);
-
-//optionSelect
-const title = '指派單位';
-
-// fetch offices
-const options = ref([]);
-
-const fetchOffices = async () => {
-  const result = await axios.get(`${process.env.API_URL}/Office`);
-  const offices = result.data.map((office: any) => ({
-    label: office.officeName,
-    value: office.officeId,
-  }));
-  options.value = offices;
+//actionBtn clicked (openEditDialog)
+const openEditDialog = (row: QA) => {
+  editDialogStore.openEditDialog(row);
 };
-fetchOffices();
-
-//table
-//toolValue
-const tableTitle = '待解決問題';
-const updated = ref(0);
-
-//rows
-const rows: Ref<QA[]> = ref([]);
-
-//testingPop
-const testing = ref(false);
-
-//handleAction(delete)
-const handleAction = async (
-  row: QA | null,
-  action: string,
-  success: string
-) => {
-  try {
-    if (row !== null) {
-      const result = await axios.patch(
-        `http://140.136.202.125/api/Question/${action}/${row.questionId}`
-      );
-      console.log(row, action);
-      data.value = null;
-      successs(success);
-      console.log(result.data);
-    }
-  } catch (e: any) {
-    console.log(e, 'error');
-  }
-  updated.value++;
+//actionBtn clicked (openTestingDialog)
+const openTestingDialog = () => {
+  testingDialogStore.openTestingDialog(QA_TABLE_API, PENDING_TABLE_STATUS);
 };
-
-//confirmPop
-const openConfirm = ref(false);
-
-//delete need confirm
-const data = ref(null);
-const needConfirm = (row: any) => {
-  openConfirm.value = true;
-  data.value = row;
+//actionBtn clicked (openWarningDialog)
+const openWarningDialog = (row: QA) => {
+  openWithData(row);
+};
+const closeWarningDialog = () => {
+  closeDialog();
+};
+const deleteQaSubmit = async () => {
+  await deleteQa(row.value as QA);
+  closeDialog();
+  fetchRows();
 };
 </script>

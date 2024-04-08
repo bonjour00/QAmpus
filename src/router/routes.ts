@@ -47,9 +47,15 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/chat',
-    name: 'chat',
     meta: { requiresAuth: true, role: ['user'] },
-    component: () => import('pages/ChatRoom.vue'),
+    component: () => import('layouts/UserLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: 'chat',
+        component: () => import('pages/ChatRoom.vue'),
+      },
+    ],
   },
   {
     path: '/login',

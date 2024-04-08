@@ -3,74 +3,73 @@
     <Table
       :rows="tableStore.rows"
       :columns="resourceColumns"
-      :tableTitle="tableTitle"
+      tableTitle="近期刪除資源"
+      rowKey="dataId"
     >
       <template v-slot:btnAction="slotProps"
-        ><ActionBtn
-          :selectRow="slotProps"
-          @updated="(row) => handleAction(row, 'recover', '已復原')"
+        ><RoundBtn
+          @clicked="recoverFileSubmit(slotProps.props.row)"
           icon="history"
         />
-        <ActionBtn
-          :selectRow="slotProps"
-          @updated="(row) => handleActionDelete(row, 'deleted', '刪除成功')"
+        <RoundBtn
+          @clicked="openWarningDialog(slotProps.props.row)"
           icon="delete"
         />
       </template>
     </Table>
+    <WarningDialog
+      v-model:open="openWarning"
+      :title="`確定永久刪除${(row as Resource)?.dataFilename.replace(/^\d+-/, '')||''}嗎?`"
+      description="這將永久刪除這份檔案!"
+      @warningDialogConfirm="permanentDeleteFile"
+      @close="closeWarningDialog"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, Ref } from 'vue';
 import Table from '../components/Table/QaTable.vue';
-import { Recource } from '../components/Table/data ';
+import {
+  BLOB_TABLE_API,
+  Resource,
+  TRASH_BLOB_TABLE_STATUS,
+} from '../components/Table/data ';
 import { resourceColumns } from '../components/Table/Columns';
-import axios from 'axios';
-import { successs } from '../components/Table/ActionBtn/AnimateAction';
-import ActionBtn from '../components/Table/ActionBtn/ActionBtn.vue';
+import RoundBtn from 'src/components/Button/IconBtn/RoundBtn.vue';
 import { useTableStore } from 'src/stores/Table/table';
-import useTableApi from 'src/composables/useTableApi';
+import useTableApi from 'src/composables/Table/useTableApi';
+import useWarningDialog from 'src/composables/Dialog/useWarningDialog';
+import useTableAction from 'src/composables/Table/useTableAction';
+import WarningDialog from 'src/components/Dialog/WarningDialog.vue';
 
 const tableStore = useTableStore();
-const { fetchRows } = useTableApi('/Blob/paged', 'deleted');
+const {
+  open: openWarning,
+  row,
+  openWithData,
+  closeDialog,
+} = useWarningDialog();
+const { recoverFile, permanentDelFile } = useTableAction();
+const { fetchRows } = useTableApi(BLOB_TABLE_API, TRASH_BLOB_TABLE_STATUS);
+
+//fetch rows
 fetchRows();
 
-//table
-//toolValue
-const tableTitle = '近期刪除資源';
-const updated = ref(0);
-
-//rows
-const rows: Ref<Recource[]> = ref([]);
-
-//handleAction(recover/delete)
-const handleAction = async (row: Recource, action: string, success: string) => {
-  try {
-    const result = await axios.patch(
-      `http://140.136.202.125/api/Blob/${action}/${row.dataFilename}`
-    );
-    successs(success);
-    console.log(result.data);
-  } catch (e: any) {
-    console.log(e, 'error');
-  }
-  updated.value++;
+//actionBtn clicked (recoverFile)
+const recoverFileSubmit = async (row: Resource) => {
+  await recoverFile(row);
+  fetchRows();
 };
-const handleActionDelete = async (
-  row: Recource,
-  action: string,
-  success: string
-) => {
-  try {
-    const result = await axios.delete(
-      `http://140.136.202.125/api/Blob/fileName?filename=${row.dataFilename}`
-    );
-    successs(success);
-    console.log(result.data);
-  } catch (e: any) {
-    console.log(e, 'error');
-  }
-  updated.value++;
+//actionBtn clicked (openWarningDialog)
+const openWarningDialog = (row: Resource) => {
+  openWithData(row);
+};
+const closeWarningDialog = () => {
+  closeDialog();
+};
+const permanentDeleteFile = async () => {
+  await permanentDelFile(row.value as Resource);
+  closeDialog();
+  fetchRows();
 };
 </script>

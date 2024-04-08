@@ -37,6 +37,14 @@ export const pendingColumns = [
     headerStyle,
   },
   {
+    name: 'officeName',
+    align: 'left',
+    label: '指派單位',
+    field: 'officeName',
+    sortable: true,
+    headerStyle,
+  },
+  {
     name: 'actions',
     align: 'right',
     label: '',
@@ -73,6 +81,7 @@ export const resourceColumns = [
     sortable: true,
     headerStyle,
   },
+
   {
     name: 'dataUploadTime',
     align: 'left',
@@ -80,6 +89,14 @@ export const resourceColumns = [
     field: 'dataUploadTime',
     format: (val: Date) =>
       `${addHours(new Date(val), 8).toLocaleString('zh-TW')}`,
+    sortable: true,
+    headerStyle,
+  },
+  {
+    name: 'officeName',
+    align: 'left',
+    label: '單位',
+    field: 'officeName',
     sortable: true,
     headerStyle,
   },
@@ -122,54 +139,42 @@ export const memberColumns = [
     headerStyle,
   },
   {
+    name: 'officeName',
+    align: 'left',
+    label: '單位',
+    field: 'officeName',
+    sortable: true,
+    headerStyle,
+  },
+  {
     name: 'userPermission',
     align: 'left',
-    label: '狀態',
+    label: '權限',
     field: 'userPermission',
+    sortable: true,
+    headerStyle,
+  },
+  {
+    name: 'emailVerified',
+    align: 'left',
+    label: '狀態',
+    field: 'emailVerified',
     sortable: true,
     headerStyle,
   },
   { name: 'actions', align: 'right', label: '', field: '' },
 ];
 
+const index = pendingColumns.findIndex((column) => column.name === 'actions');
 export const assignColumn = [
-  {
-    name: 'questionQuestion',
-    label: '問題',
-    align: 'left',
-    field: 'questionQuestion',
-    format: (val: string) =>
-      `${val.length > 20 ? val.substring(0, 20) + '...' : val}`,
-    sortable: true,
-    headerStyle,
-  },
-  {
-    name: 'questionAnswer',
-    label: '答案',
-    align: 'left',
-    field: 'questionAnswer',
-    format: (val: string) =>
-      `${val.length > 20 ? val.substring(0, 20) + '...' : val}`,
-    sortable: true,
-    headerStyle,
-  },
-  {
-    name: 'questionAddtime',
-    align: 'left',
-    label: '發問時間',
-    field: 'questionAddtime',
-    format: (val: Date) =>
-      `${addHours(new Date(val), 8).toLocaleString('zh-TW')}`,
-    sortable: true,
-    headerStyle,
-  },
+  ...pendingColumns.slice(0, index),
   {
     name: 'trans',
     align: 'left',
     label: '轉移次數',
     field: 'trans',
     sortable: true,
-    headerStyle: 'font-size: medium;font-weight: 900',
+    headerStyle,
   },
-  { name: 'actions', align: 'right', label: '', field: '' },
+  ...pendingColumns.slice(index),
 ];

@@ -1,6 +1,5 @@
 import { computed, watch } from 'vue';
 import { useTableStore } from 'src/stores/Table/table';
-import { storeToRefs } from 'pinia';
 
 export default function useTableApi(url: string, status = '') {
   const tableStore = useTableStore();

@@ -2,14 +2,18 @@ import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { orderOptions, orderInitial } from 'src/components/Table/data ';
 import { api } from 'src/boot/axios';
+import useOffice from 'src/composables/common/useOffice';
 
 export const useTableStore = defineStore('table', () => {
+  const { office, filterOption, setOfficeSelect, $officeReset, filterFn } =
+    useOffice();
   const loading = ref(false);
   const page = ref(1);
   const query = ref('');
   const order = ref(orderInitial);
   const perPage = ref(10);
   const rows = ref([]);
+  const selected = ref([]);
 
   const options = computed(() =>
     orderOptions.filter((x) => x.value !== order.value.value)
@@ -63,6 +67,7 @@ export const useTableStore = defineStore('table', () => {
     order.value = orderInitial;
     perPage.value = 10;
     rows.value = [];
+    selected.value = [];
   };
 
   return {
@@ -74,6 +79,7 @@ export const useTableStore = defineStore('table', () => {
     rows,
     options,
     totalPage,
+    selected,
     fetchRows,
     $reset,
   };

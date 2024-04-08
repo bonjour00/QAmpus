@@ -3,101 +3,73 @@
     <Table
       :rows="tableStore.rows"
       :columns="pendingColumns"
-      :tableTitle="tableTitle"
+      tableTitle="近期刪除問題"
+      rowKey="questionId"
     >
-      <template v-slot:btnAction="slotProps"
-        ><ActionBtn
-          :selectRow="slotProps"
-          @updated="(row) => handleAction(row, 'recover', '已復原')"
+      <template v-slot:btnAction="slotProps">
+        <RoundBtn
+          @clicked="recoverQaSubmit(slotProps.props.row)"
           icon="history"
         />
-        <ActionBtn
-          :selectRow="slotProps"
-          @updated="(row) => needConfirm(row)"
+        <RoundBtn
+          @clicked="openWarningDialog(slotProps.props.row)"
           icon="delete"
         />
       </template>
     </Table>
-    <ConfirmDialog
-      btnName="刪除"
-      v-model:openConfirm="openConfirm"
-      title="確定刪除此問答嗎?"
+    <WarningDialog
+      v-model:open="openWarning"
+      title="確定永久刪除此問答嗎?"
       description="這將永久刪除這則問答!"
-      @clean="data = null"
-      @confirm="handleDeleteAction(data, 'deleted', '已永久刪除')"
+      @warningDialogConfirm="permanentDeleteQa"
+      @close="closeWarningDialog"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, Ref } from 'vue';
 import Table from '../components/Table/QaTable.vue';
-import { QA } from '../components/Table/data ';
+import {
+  QA,
+  QA_TABLE_API,
+  TRASH_QA_TABLE_STATUS,
+} from '../components/Table/data ';
 import { pendingColumns } from '../components/Table/Columns';
-import axios from 'axios';
-import { successs } from '../components/Table/ActionBtn/AnimateAction';
-import ActionBtn from '../components/Table/ActionBtn/ActionBtn.vue';
-import ConfirmDialog from '../components/Table/Dialog/ConfirmDialog.vue';
+import RoundBtn from 'src/components/Button/IconBtn/RoundBtn.vue';
 import { useTableStore } from 'src/stores/Table/table';
-import useTableApi from 'src/composables/useTableApi';
+import useTableApi from 'src/composables/Table/useTableApi';
+import WarningDialog from 'src/components/Dialog/WarningDialog.vue';
+import useWarningDialog from 'src/composables/Dialog/useWarningDialog';
+import useTableAction from 'src/composables/Table/useTableAction';
 
 const tableStore = useTableStore();
-const { fetchRows } = useTableApi('/Question/paged', 'deleted');
+const {
+  open: openWarning,
+  row,
+  openWithData,
+  closeDialog,
+} = useWarningDialog();
+const { recoverQa, permanentDelQa } = useTableAction();
+const { fetchRows } = useTableApi(QA_TABLE_API, TRASH_QA_TABLE_STATUS);
+
+//fetch rows
 fetchRows();
 
-//table
-//toolValue
-const tableTitle = '近期刪除問題';
-const updated = ref(0);
-
-//rows
-const rows: Ref<QA[]> = ref([]);
-
-//handleAction(recover/delete)
-const handleAction = async (
-  row: QA | null,
-  action: string,
-  success: string
-) => {
-  try {
-    if (row !== null) {
-      const result = await axios.patch(
-        `http://140.136.202.125/api/Question/${action}/${row.questionId}`
-      );
-      successs(success);
-      console.log(result.data);
-    }
-  } catch (e: any) {
-    console.log(e, 'error');
-  }
-  updated.value++;
+//actionBtn clicked (recoverQa)
+const recoverQaSubmit = async (row: QA) => {
+  await recoverQa(row);
+  fetchRows();
 };
-const handleDeleteAction = async (
-  row: QA | null,
-  action: string,
-  success: string
-) => {
-  try {
-    if (row !== null) {
-      const result = await axios.delete(
-        `http://140.136.202.125/api/Question/${row.questionId}`
-      );
-      successs(success);
-      console.log(result.data);
-    }
-  } catch (e: any) {
-    console.log(e, 'error');
-  }
-  updated.value++;
+//actionBtn clicked (openWarningDialog)
+const openWarningDialog = (row: QA) => {
+  openWithData(row);
 };
-
-//confirmPop
-const openConfirm = ref(false);
-
-//delete need confirm
-const data = ref(null);
-const needConfirm = (row: any) => {
-  openConfirm.value = true;
-  data.value = row;
+const closeWarningDialog = () => {
+  closeDialog();
+};
+const permanentDeleteQa = async () => {
+  await permanentDelQa(row.value as QA);
+  closeDialog();
+  fetchRows();
 };
 </script>

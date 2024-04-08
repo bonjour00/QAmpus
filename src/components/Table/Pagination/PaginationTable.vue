@@ -6,9 +6,9 @@
     max-pages="6"
     boundary-numbers
     direction-links
-    active-color="accent"
+    active-color="secondary"
     unelevated
-    color="secondary"
+    color="light"
     text-color="black"
     active-text-color="white"
   />
