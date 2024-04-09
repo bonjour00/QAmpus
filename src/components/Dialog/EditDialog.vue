@@ -17,6 +17,7 @@
           "
           dense
           autogrow
+          readonly
           ><template v-slot:prepend>
             <span class="text-subtitle1">Q:&nbsp;</span>
           </template>

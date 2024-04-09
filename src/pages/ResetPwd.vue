@@ -1,5 +1,10 @@
 <template>
-  <AuthContainer title="重設您的密碼" btnLabel="確認重設密碼" @clickBtn="reset">
+  <AuthContainer
+    title="重設您的密碼"
+    btnLabel="確認重設密碼"
+    @clickBtn="reset"
+    :loadingShow="loadingShow"
+  >
     <q-input
       v-model="userPassword"
       label="輸入您的密碼"
@@ -43,6 +48,7 @@ import { api } from 'src/boot/axios';
 
 const router = useRouter();
 
+const loadingShow = ref(false);
 const userPassword = ref('');
 const comfirmPassword = ref('');
 
@@ -61,6 +67,7 @@ const reset = async () => {
   if (pwdRef.value.hasError || confirmPwdRef.value.hasError) {
     return;
   } else {
+    loadingShow.value = true;
     try {
       const result = await api.post('/User/reset-password', {
         token,
@@ -74,6 +81,7 @@ const reset = async () => {
         error.response.data.errors.Token[0] || '發生錯誤'
       );
     }
+    loadingShow.value = false;
   }
 };
 </script>

@@ -3,6 +3,7 @@
     title="忘記密碼"
     btnLabel="寄送重設密碼驗證信"
     @clickBtn="forget"
+    :loadingShow="loadingShow"
   >
     <q-input
       v-model="userEmail"
@@ -20,8 +21,8 @@ import { notEmpty } from 'src/components/Input/rules';
 import { successs } from 'src/components/AnimateAction/AnimateAction';
 import { api } from 'src/boot/axios';
 
+const loadingShow = ref(false);
 const userEmail = ref('');
-
 //rules
 const emailRef: any = ref(null);
 
@@ -30,6 +31,7 @@ const forget = async () => {
   if (emailRef.value.hasError) {
     return;
   } else {
+    loadingShow.value = true;
     try {
       const result = await api.post('/User/forgot-password', {
         email: userEmail.value,
@@ -38,6 +40,7 @@ const forget = async () => {
     } catch (error: any) {
       console.log('忘記密碼失敗:', error.response?.data || '發生錯誤');
     }
+    loadingShow.value = false;
   }
 };
 </script>

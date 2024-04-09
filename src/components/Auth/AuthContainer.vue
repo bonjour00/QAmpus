@@ -16,6 +16,7 @@
           <slot name="link"></slot>
         </div>
       </div>
+      <HourglassLoading :showing="loadingShow" />
     </div>
     <AuthWave />
   </div>
@@ -23,10 +24,12 @@
 <script setup lang="ts">
 import AuthWave from './AuthWave.vue';
 import LogoTitle from './LogoTitle.vue';
+import HourglassLoading from '../Loading/HourglassLoading.vue';
 
 const props = defineProps<{
   title: string;
   btnLabel: string;
+  loadingShow: boolean;
 }>();
 const emit = defineEmits(['clickBtn']);
 

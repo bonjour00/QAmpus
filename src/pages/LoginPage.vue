@@ -1,5 +1,10 @@
 <template>
-  <AuthContainer title="登入" btnLabel="登入" @clickBtn="login">
+  <AuthContainer
+    title="登入"
+    btnLabel="登入"
+    @clickBtn="login"
+    :loadingShow="loadingShow"
+  >
     <q-input
       v-model="userEmail"
       label="EMAIL"
@@ -43,6 +48,8 @@ import { useUserStore } from 'src/stores/Auth/user';
 
 const userStore = useUserStore();
 
+const loadingShow = ref(false);
+
 const userEmail = ref('');
 const userPassword = ref('');
 const router = useRouter();
@@ -61,6 +68,7 @@ const login = async () => {
     return;
   } else {
     try {
+      loadingShow.value = true;
       const result = await api.post('/User/signin', {
         userEmail: userEmail.value,
         userPassword: userPassword.value,
@@ -71,6 +79,7 @@ const login = async () => {
     } catch (error: any) {
       console.error('登錄失敗:', error.response?.data?.message || '發生錯誤');
     }
+    loadingShow.value = false;
   }
 };
 </script>

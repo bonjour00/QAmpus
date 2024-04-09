@@ -1,5 +1,10 @@
 <template>
-  <AuthContainer title="註冊您的帳戶" btnLabel="註冊" @clickBtn="register">
+  <AuthContainer
+    title="註冊您的帳戶"
+    btnLabel="註冊"
+    @clickBtn="register"
+    :loadingShow="loadingShow"
+  >
     <q-input
       v-model="userName"
       label="輸入您的使用者名稱"
@@ -60,6 +65,7 @@ import { api } from 'src/boot/axios';
 
 const router = useRouter();
 
+const loadingShow = ref(false);
 const userName = ref('');
 const userEmail = ref('');
 const userPassword = ref('');
@@ -88,6 +94,7 @@ const register = async () => {
   ) {
     return;
   } else {
+    loadingShow.value = true;
     try {
       const result = await api.post('/User/normal', {
         userName: userName.value,
@@ -100,6 +107,7 @@ const register = async () => {
     } catch (error: any) {
       console.log('註冊失敗', error.response?.data?.message || '發生錯誤');
     }
+    loadingShow.value = false;
   }
 };
 </script>
