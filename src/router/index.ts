@@ -39,42 +39,42 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
 
-  // Router.beforeEach(async (to, from) => {
-  //   const userStore = useUserStore();
-  //   if (!to.meta.requiresAuth) {
-  //     return true;
-  //   } else {
-  //     const token = localStorage.getItem('token');
-  //     if (!token) {
-  //       return { path: '/login' };
-  //     }
-  //     try {
-  //       await userStore.tokenAnalyzation();
-  //       const userRole = userStore.userPermission;
-  //       userStore.initialMenu();
-  //       // await userStore.getUserInfo();
-  //       if (to.meta.role?.includes(userRole)) {
-  //         if (to.path == '/') {
-  //           if (userRole == 'assigner') {
-  //             return { path: '/assign' };
-  //           } else if (userRole == 'admin') {
-  //             return { path: '/pending' };
-  //           }
-  //         }
-  //         return true;
-  //       } else if (userRole == 'admin') {
-  //         return { path: '/pending' };
-  //       } else if (userRole == 'assigner') {
-  //         return { path: '/assign' };
-  //       } else {
-  //         return { path: '/chat' };
-  //       }
-  //     } catch (e) {
-  //       console.log('error:', e);
-  //       return { path: '/login' };
-  //     }
-  //   }
-  // });
+  Router.beforeEach(async (to, from) => {
+    const userStore = useUserStore();
+    if (!to.meta.requiresAuth) {
+      return true;
+    } else {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        return { path: '/login' };
+      }
+      try {
+        await userStore.tokenAnalyzation();
+        const userRole = userStore.userPermission;
+        userStore.initialMenu();
+        // await userStore.getUserInfo();
+        if (to.meta.role?.includes(userRole)) {
+          if (to.path == '/') {
+            if (userRole == 'assigner') {
+              return { path: '/assign' };
+            } else if (userRole == 'admin') {
+              return { path: '/pending' };
+            }
+          }
+          return true;
+        } else if (userRole == 'admin') {
+          return { path: '/pending' };
+        } else if (userRole == 'assigner') {
+          return { path: '/assign' };
+        } else {
+          return { path: '/chat' };
+        }
+      } catch (e) {
+        console.log('error:', e);
+        return { path: '/login' };
+      }
+    }
+  });
 
   return Router;
 });
