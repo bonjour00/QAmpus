@@ -55,6 +55,7 @@
         <DialogButton btnName="取消" @clicked="closeRegisterDialog" />
         <DialogButton btnName="註冊" @clicked="signupMember" />
       </q-card-actions>
+      <HourglassLoading :showing="registerDialogStore.loading" />
     </q-card>
   </q-dialog>
 </template>
@@ -64,6 +65,7 @@ import DialogButton from 'src/components/Button/Dialog/DialogButton.vue';
 import OptionSelect from '../Table/Toolbar/OptionSelect.vue';
 import FilterSelect from '../Select/FilterSelect.vue';
 import { notEmpty } from 'src/components/Input/rules';
+import HourglassLoading from '../Loading/HourglassLoading.vue';
 import { storeToRefs } from 'pinia';
 import { useRegisterDialogStore } from 'src/stores/Dialog/registerDialog';
 

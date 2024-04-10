@@ -21,6 +21,7 @@
       v-model:open="openWarning"
       title="確定永久刪除此問答嗎?"
       description="這將永久刪除這則問答!"
+      :loading="loading"
       @warningDialogConfirm="permanentDeleteQa"
       @close="closeWarningDialog"
     />
@@ -49,7 +50,7 @@ const {
   openWithData,
   closeDialog,
 } = useWarningDialog();
-const { recoverQa, permanentDelQa } = useTableAction();
+const { recoverQa, permanentDelQa, loading } = useTableAction();
 const { fetchRows } = useTableApi(QA_TABLE_API, TRASH_QA_TABLE_STATUS);
 
 //fetch rows

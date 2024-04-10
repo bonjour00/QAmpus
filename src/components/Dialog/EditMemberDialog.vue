@@ -45,19 +45,17 @@
 
       <q-card-actions align="right">
         <DialogButton btnName="取消" @clicked="closeEditMemberDialog" />
-        <DialogButton btnName="修改" @clicked="editMember" />
-      </q-card-actions>
+        <DialogButton btnName="修改" @clicked="editMember" /> </q-card-actions
+      ><HourglassLoading :showing="editMemberDialogStore.loading" />
     </q-card>
   </q-dialog>
 </template>
-<!-- v-show="
-registerDialogStore.userPermission == 'assigner' &&
-registerDialogStore.role.value != 'assigner'
-" -->
+
 <script setup lang="ts">
 import DialogButton from 'src/components/Button/Dialog/DialogButton.vue';
 import RoundBtn from 'src/components/Button/IconBtn/RoundBtn.vue';
 import FilterSelect from '../Select/FilterSelect.vue';
+import HourglassLoading from '../Loading/HourglassLoading.vue';
 import OptionSelect from '../Table/Toolbar/OptionSelect.vue';
 import { useEditMemberDialogStore } from 'src/stores/Dialog/editMemberDialog';
 

@@ -100,12 +100,14 @@
           @clicked="uploadResource"
         />
       </q-card-actions>
+      <HourglassLoading :showing="uploadDialogStore.loading" />
     </q-card>
   </q-dialog>
 </template>
 
 <script setup lang="ts">
 import DialogButton from 'src/components/Button/Dialog/DialogButton.vue';
+import HourglassLoading from '../Loading/HourglassLoading.vue';
 import RoundBtn from 'src/components/Button/IconBtn/RoundBtn.vue';
 import { useUploadDialogStore } from 'src/stores/Dialog/uploadDialog';
 import {

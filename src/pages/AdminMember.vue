@@ -33,6 +33,7 @@
       v-model:open="openWarning"
       :title="`確定刪除${(row as Member)?.userName||''}嗎?`"
       description="此刪除動作將無法回復"
+      :loading="loading"
       @warningDialogConfirm="deleteMemberSubmit"
       @close="closeWarningDialog"
     />
@@ -69,7 +70,7 @@ const {
   openWithData,
   closeDialog,
 } = useWarningDialog();
-const { deleteMember } = useTableAction();
+const { deleteMember, loading } = useTableAction();
 const { fetchRows } = useTableApi(MEMBER_TABLE_API, tableStore.role.value);
 
 tableStore.setInitialRole();

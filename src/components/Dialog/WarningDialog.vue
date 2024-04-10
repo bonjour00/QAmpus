@@ -14,11 +14,13 @@
         <DialogButton btnName="取消" @clicked="closeWarningDialog" />
         <DialogButton btnName="刪除" @clicked="warningDialogConfirm" />
       </q-card-actions>
+      <HourglassLoading :showing="loading" />
     </q-card>
   </q-dialog>
 </template>
 
 <script setup lang="ts">
+import HourglassLoading from '../Loading/HourglassLoading.vue';
 import DialogButton from '../Button/Dialog/DialogButton.vue';
 import WarningAnimate from '../AnimateAction/WarningAnimate.vue';
 
@@ -26,6 +28,7 @@ const props = defineProps<{
   open: boolean;
   title: string;
   description: string;
+  loading: boolean;
 }>();
 const emit = defineEmits(['warningDialogConfirm', 'close']);
 

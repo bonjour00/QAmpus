@@ -54,6 +54,7 @@
         <DialogButton btnName="取消" @clicked="closeTestingDialog" />
         <DialogButton btnName="確認" @clicked="testingDialogConfirm" />
       </q-card-actions>
+      <HourglassLoading :showing="testingDialogStore.loading" />
     </q-card>
   </q-dialog>
 </template>
@@ -62,6 +63,7 @@
 import DialogButton from 'src/components/Button/Dialog/DialogButton.vue';
 import RoundBtn from 'src/components/Button/IconBtn/RoundBtn.vue';
 import { useTestingDialogStore } from 'src/stores/Dialog/testingDialog';
+import HourglassLoading from '../Loading/HourglassLoading.vue';
 import InnerLoading from '../Loading/InnerLoading.vue';
 import { QA } from '../Table/data ';
 

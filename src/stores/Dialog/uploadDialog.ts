@@ -19,10 +19,12 @@ export const useUploadDialogStore = defineStore('uploadDialog', () => {
   const urlInput = ref('');
   const sourceName = ref('');
   const file: Ref<File | null> = ref(null);
-  const fileName = ref(''); //原檔案名稱 (重新上傳)
+  const fileName = ref(''); //原檔案名稱 (去除單位tag)
+  const tagFileName = ref(''); //原檔案名稱 (單位tag)
   const btnName = ref('上傳');
   const sourceNameRef: any = ref(null);
   const fileRef: any = ref(null);
+  const loading = ref(false);
 
   const openUploadDialog = () => {
     open.value = true;
@@ -31,6 +33,7 @@ export const useUploadDialogStore = defineStore('uploadDialog', () => {
     open.value = true;
     sourceName.value = data.dataDescription;
     fileName.value = data.dataFilename.replace(/^\d+-/, '');
+    tagFileName.value = data.dataFilename;
     btnName.value = '重新上傳';
   };
   const $reset = () => {
@@ -40,9 +43,11 @@ export const useUploadDialogStore = defineStore('uploadDialog', () => {
     sourceName.value = '';
     file.value = null;
     fileName.value = '';
+    tagFileName.value = '';
     btnName.value = '上傳';
     sourceNameRef.value = null;
     fileRef.value = null;
+    loading.value = false;
   };
 
   const closeUploadDialog = () => {
@@ -82,18 +87,24 @@ export const useUploadDialogStore = defineStore('uploadDialog', () => {
     } else {
       try {
         if (tab.value === 'file') {
+          loading.value = true;
           if (fileName.value) {
             //reUpload
-            await upload(`/Blob/reupload?originalfilename=${fileName.value}`);
+
+            await upload(
+              `/Blob/reupload?originalfilename=${tagFileName.value}`
+            );
           } else {
             //first upload
             await upload(`/Blob/upload?description=${sourceName.value}`);
           }
+          loading.value = false;
           successs('上傳成功');
           tableStore.fetchRows(BLOB_TABLE_API, MANAGE_BLOB_TABLE_STATUS);
         }
         closeUploadDialog();
       } catch (error: any) {
+        loading.value = false;
         notifyFail(error.response?.data);
       }
     }
@@ -118,6 +129,7 @@ export const useUploadDialogStore = defineStore('uploadDialog', () => {
     btnName,
     sourceNameRef,
     fileRef,
+    loading,
     openUploadDialog,
     openUploadWithData,
     closeUploadDialog,

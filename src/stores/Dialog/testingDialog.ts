@@ -19,6 +19,7 @@ export const useTestingDialogStore = defineStore('testingDialog', () => {
   const questionIds: Ref<number[]> = ref([]);
   const url = ref('');
   const status = ref('');
+  const loading = ref(false);
 
   const testingQa = async (QA: QA) => {
     const result = await api.post('/Question/ask', {
@@ -58,6 +59,7 @@ export const useTestingDialogStore = defineStore('testingDialog', () => {
     questionIds.value = [];
     url.value = '';
     status.value = '';
+    loading.value = false;
   };
   const closeTestingDialog = () => {
     $reset();
@@ -74,12 +76,14 @@ export const useTestingDialogStore = defineStore('testingDialog', () => {
     try {
       const ids = questionIds.value;
       if (ids.length > 0) {
+        loading.value = true;
         for (let i = 0; i < ids.length; i++) {
           const index = rows.value.findIndex(
             (question) => question.questionId == ids[i]
           );
           await confirmQa(ids[i], rows.value[index].questionAnswer);
         }
+        loading.value = false;
         successs('已確認，並送信');
         tableStore.selected = [];
         closeTestingDialog();
@@ -97,6 +101,7 @@ export const useTestingDialogStore = defineStore('testingDialog', () => {
     open,
     rows,
     questionIds,
+    loading,
     openTestingDialog,
     isTestingLoading,
     closeTestingDialog,

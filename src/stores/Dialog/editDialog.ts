@@ -19,6 +19,7 @@ export const useEditDialogStore = defineStore('editDialog', () => {
   const open = ref(false);
   const row: Ref<QA | null> = ref(null);
   const officeRecord: Ref<Array<any> | null> = ref(null);
+  const loading = ref(false);
 
   const getOfficeRecord = async (data: QA) => {
     try {
@@ -47,6 +48,7 @@ export const useEditDialogStore = defineStore('editDialog', () => {
     open.value = false;
     row.value = null;
     officeRecord.value = null;
+    loading.value = false;
     $officeReset();
   };
   const closeEditDialog = () => {
@@ -54,6 +56,7 @@ export const useEditDialogStore = defineStore('editDialog', () => {
   };
   //轉單位
   const editSubmit = async () => {
+    loading.value = true;
     try {
       const result = await api.post(
         '/AssignedOffice',
@@ -68,11 +71,13 @@ export const useEditDialogStore = defineStore('editDialog', () => {
         }
       );
       console.log(result.data);
+      loading.value = true;
       successs('修改成功');
       tableStore.fetchRows(QA_TABLE_API, PENDING_TABLE_STATUS);
     } catch (e: any) {
       notifyFail(e.response?.data);
     }
+
     closeEditDialog();
   };
 
@@ -82,6 +87,7 @@ export const useEditDialogStore = defineStore('editDialog', () => {
     office,
     filterOption,
     officeRecord,
+    loading,
     getOfficeRecord,
     openEditDialog,
     closeEditDialog,

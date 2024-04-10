@@ -30,6 +30,7 @@
       v-model:open="openWarning"
       :title="`確定刪除${(row as Resource)?.dataFilename.replace(/^\d+-/, '')||''}嗎?`"
       description="刪除後30天內 您可以在 '近期刪除資源' 中找到 並恢復"
+      :loading="loading"
       @warningDialogConfirm="deleteFileSubmit"
       @close="closeWarningDialog"
     />
@@ -64,7 +65,7 @@ const {
   openWithData,
   closeDialog,
 } = useWarningDialog();
-const { deleteFile, downloadResource } = useTableAction();
+const { deleteFile, downloadResource, loading } = useTableAction();
 const { fetchRows } = useTableApi(BLOB_TABLE_API, MANAGE_BLOB_TABLE_STATUS);
 
 //fetch rows

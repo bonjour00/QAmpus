@@ -52,6 +52,7 @@
         <DialogButton btnName="取消" @clicked="closeEditDialog" />
         <DialogButton :btnName="btnName" @clicked="editSubmit" />
       </q-card-actions>
+      <HourglassLoading :showing="editDialogStore.loading" />
     </q-card>
   </q-dialog>
 </template>
@@ -60,12 +61,12 @@
 import DialogButton from 'src/components/Button/Dialog/DialogButton.vue';
 import RoundBtn from 'src/components/Button/IconBtn/RoundBtn.vue';
 import FilterSelect from '../Select/FilterSelect.vue';
-import { useEditDialogStore } from 'src/stores/Dialog/editDialog';
 import OfficeRecord from '../TransRecord/OfficeRecord.vue';
+import HourglassLoading from '../Loading/HourglassLoading.vue';
+import { useEditDialogStore } from 'src/stores/Dialog/editDialog';
 
 const props = defineProps<{
   btnName: string;
-  // isAssigner?: boolean;
 }>();
 
 const editDialogStore = useEditDialogStore();

@@ -29,6 +29,7 @@ export const useRegisterDialogStore = defineStore('registerDialog', () => {
   const idRef: any = ref(null);
   const officeRef: any = ref(null);
   const role = ref(initialMember);
+  const loading = ref(false);
 
   const options = computed(() => {
     return assignOptions.filter((x) => x.value != role.value.value);
@@ -58,6 +59,7 @@ export const useRegisterDialogStore = defineStore('registerDialog', () => {
     idRef.value = null;
     officeRef.value = null;
     role.value = initialMember;
+    loading.value = false;
     $officeReset();
   };
 
@@ -79,7 +81,6 @@ export const useRegisterDialogStore = defineStore('registerDialog', () => {
         },
       }
     );
-    successs('已發送註冊信');
   };
   const assignerToSignup = async () => {
     const userPermission = role.value.value;
@@ -101,7 +102,6 @@ export const useRegisterDialogStore = defineStore('registerDialog', () => {
         },
       }
     );
-    successs('已發送註冊信');
   };
 
   const signupMember = async () => {
@@ -116,14 +116,18 @@ export const useRegisterDialogStore = defineStore('registerDialog', () => {
       return;
     } else {
       try {
+        loading.value = true;
         if (userPermission.value == 'assigner') {
           await assignerToSignup();
         } else {
           await signupAdmin();
         }
+        loading.value = false;
+        successs('已發送驗證信');
         tableStore.fetchRows(MEMBER_TABLE_API, tableStore.role.value);
         closeRegisterDialog();
       } catch (error: any) {
+        loading.value = false;
         notifyFail(error.response?.data?.message, '註冊失敗: ');
       }
     }
@@ -142,6 +146,7 @@ export const useRegisterDialogStore = defineStore('registerDialog', () => {
     office,
     filterOption,
     userPermission,
+    loading,
     openRegisterDialog,
     closeRegisterDialog,
     signupMember,

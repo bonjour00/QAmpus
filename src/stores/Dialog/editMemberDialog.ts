@@ -24,6 +24,7 @@ export const useEditMemberDialogStore = defineStore('editMemberDialog', () => {
   const row: Ref<Member | null> = ref(null);
   const role = ref(initialMember); //role
   const userName = ref('');
+  const loading = ref(false);
 
   const options = computed(() => {
     return assignOptions.filter((x) => x.value != role.value.value);
@@ -42,6 +43,7 @@ export const useEditMemberDialogStore = defineStore('editMemberDialog', () => {
     role.value = initialMember;
     row.value = null;
     userName.value = '  ';
+    loading.value = false;
     $officeReset();
   };
   const closeEditMemberDialog = () => {
@@ -50,6 +52,7 @@ export const useEditMemberDialogStore = defineStore('editMemberDialog', () => {
   //edit member permision
   const editMember = async () => {
     try {
+      loading.value = true;
       const userPermission = role.value.value;
       const editOffice =
         userPermission == 'assigner' ? officeId.value : office.value.value;
@@ -58,6 +61,7 @@ export const useEditMemberDialogStore = defineStore('editMemberDialog', () => {
         userPermission,
         officeId: editOffice,
       });
+      loading.value = false;
       successs('修改成功');
       tableStore.fetchRows(MEMBER_TABLE_API, tableStore.role.value);
     } catch (e: any) {
@@ -75,6 +79,7 @@ export const useEditMemberDialogStore = defineStore('editMemberDialog', () => {
     filterOption,
     officeName,
     row,
+    loading,
     openMemberDialog,
     closeEditMemberDialog,
     editMember,

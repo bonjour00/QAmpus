@@ -21,6 +21,7 @@
       v-model:open="openWarning"
       :title="`確定永久刪除${(row as Resource)?.dataFilename.replace(/^\d+-/, '')||''}嗎?`"
       description="這將永久刪除這份檔案!"
+      :loading="loading"
       @warningDialogConfirm="permanentDeleteFile"
       @close="closeWarningDialog"
     />
@@ -49,7 +50,7 @@ const {
   openWithData,
   closeDialog,
 } = useWarningDialog();
-const { recoverFile, permanentDelFile } = useTableAction();
+const { recoverFile, permanentDelFile, loading } = useTableAction();
 const { fetchRows } = useTableApi(BLOB_TABLE_API, TRASH_BLOB_TABLE_STATUS);
 
 //fetch rows

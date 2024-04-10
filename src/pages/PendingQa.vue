@@ -24,6 +24,7 @@
       v-model:open="openWarning"
       title="確定刪除此問答嗎?"
       description="刪除後30天內 您可以在 '近期刪除問題' 中找到 並恢復"
+      :loading="loading"
       @warningDialogConfirm="deleteQaSubmit"
       @close="closeWarningDialog"
     />
@@ -59,7 +60,7 @@ const {
   openWithData,
   closeDialog,
 } = useWarningDialog();
-const { deleteQa } = useTableAction();
+const { deleteQa, loading } = useTableAction();
 const { fetchRows } = useTableApi(QA_TABLE_API, PENDING_TABLE_STATUS);
 
 //fetch rows
