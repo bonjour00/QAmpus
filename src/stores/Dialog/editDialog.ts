@@ -9,11 +9,13 @@ import { successs } from 'src/components/AnimateAction/AnimateAction';
 import { api } from 'src/boot/axios';
 import { useTableStore } from '../Table/table';
 import useOffice from 'src/composables/common/useOffice';
+import useNotify from 'src/composables/Notify/useNotify';
 
 export const useEditDialogStore = defineStore('editDialog', () => {
   const tableStore = useTableStore();
   const { office, filterOption, setOfficeSelect, $officeReset, filterFn } =
     useOffice();
+  const { notifyFail } = useNotify();
   const open = ref(false);
   const row: Ref<QA | null> = ref(null);
   const officeRecord: Ref<Array<any> | null> = ref(null);
@@ -69,7 +71,7 @@ export const useEditDialogStore = defineStore('editDialog', () => {
       successs('修改成功');
       tableStore.fetchRows(QA_TABLE_API, PENDING_TABLE_STATUS);
     } catch (e: any) {
-      console.log(e, 'error');
+      notifyFail(e.response?.data);
     }
     closeEditDialog();
   };

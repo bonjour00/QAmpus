@@ -20,7 +20,9 @@ import AuthContainer from 'src/components/Auth/AuthContainer.vue';
 import { notEmpty } from 'src/components/Input/rules';
 import { successs } from 'src/components/AnimateAction/AnimateAction';
 import { api } from 'src/boot/axios';
+import useNotify from 'src/composables/Notify/useNotify';
 
+const { notifyFail } = useNotify();
 const loadingShow = ref(false);
 const userEmail = ref('');
 //rules
@@ -38,7 +40,7 @@ const forget = async () => {
       });
       successs('已發送重設密碼Email驗證信');
     } catch (error: any) {
-      console.log('忘記密碼失敗:', error.response?.data || '發生錯誤');
+      notifyFail(error.response?.data, '發送驗證信失敗:');
     }
     loadingShow.value = false;
   }

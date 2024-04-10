@@ -45,8 +45,10 @@ import AuthLink from 'src/components/Auth/AuthLink.vue';
 import { notEmpty } from 'src/components/Input/rules';
 import { api } from 'src/boot/axios';
 import { useUserStore } from 'src/stores/Auth/user';
+import useNotify from 'src/composables/Notify/useNotify';
 
-const userStore = useUserStore();
+// const userStore = useUserStore();
+const { notifyFail } = useNotify();
 
 const loadingShow = ref(false);
 
@@ -76,7 +78,7 @@ const login = async () => {
       router.push({ path: '/' });
       localStorage.setItem('token', result.data.token);
     } catch (error: any) {
-      console.error('登錄失敗:', error.response?.data?.message || '發生錯誤');
+      notifyFail(error.response?.data?.message, '登錄失敗:');
     }
     loadingShow.value = false;
   }

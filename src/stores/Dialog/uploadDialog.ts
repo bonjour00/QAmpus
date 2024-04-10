@@ -8,9 +8,11 @@ import { Ref, computed, ref } from 'vue';
 import { api } from 'src/boot/axios';
 import { successs } from 'src/components/AnimateAction/AnimateAction';
 import { useTableStore } from '../Table/table';
+import useNotify from 'src/composables/Notify/useNotify';
 
 export const useUploadDialogStore = defineStore('uploadDialog', () => {
   const tableStore = useTableStore();
+  const { notifyFail, notifyWarning } = useNotify();
 
   const open = ref(false);
   const tab = ref('file');
@@ -48,7 +50,7 @@ export const useUploadDialogStore = defineStore('uploadDialog', () => {
   };
   const rejected = (rejection: any) => {
     if (rejection[0].failedPropValidation) {
-      alert('只接受.pdf');
+      notifyWarning('只接受.pdf檔案');
     }
   };
   const makeForm = (file: any) => {
@@ -70,7 +72,7 @@ export const useUploadDialogStore = defineStore('uploadDialog', () => {
   };
   const uploadResource = async () => {
     if (tab.value == 'url') {
-      alert('訂閱可解鎖URL功能 ，詳情請聯絡QAmpus管理員~');
+      notifyWarning('訂閱可解鎖URL功能 ，詳情請聯絡QAmpus管理員~');
       return;
     }
     fileRef.value?.validate();
@@ -92,7 +94,7 @@ export const useUploadDialogStore = defineStore('uploadDialog', () => {
         }
         closeUploadDialog();
       } catch (error: any) {
-        console.error('error:', error.response?.data || '發生錯誤');
+        notifyFail(error.response?.data);
       }
     }
   };

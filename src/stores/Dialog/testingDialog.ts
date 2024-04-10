@@ -8,9 +8,11 @@ import { Ref, ref } from 'vue';
 import { api } from 'src/boot/axios';
 import { successs } from 'src/components/AnimateAction/AnimateAction';
 import { useTableStore } from '../Table/table';
+import useNotify from 'src/composables/Notify/useNotify';
 
 export const useTestingDialogStore = defineStore('testingDialog', () => {
   const tableStore = useTableStore();
+  const { notifyWarning } = useNotify();
 
   const open = ref(false);
   const rows: Ref<QA[]> = ref([]);
@@ -42,7 +44,7 @@ export const useTestingDialogStore = defineStore('testingDialog', () => {
       status.value = tableStatus;
       testingQaMuti(data);
     } else {
-      alert('沒選');
+      notifyWarning('尚未選取測試內容');
     }
   };
 
@@ -83,7 +85,7 @@ export const useTestingDialogStore = defineStore('testingDialog', () => {
         closeTestingDialog();
         tableStore.fetchRows(QA_TABLE_API, PENDING_TABLE_STATUS);
       } else {
-        alert('沒選');
+        notifyWarning('尚未選取測試內容');
       }
     } catch (e) {
       console.log(e, 'llll');

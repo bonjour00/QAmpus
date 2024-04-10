@@ -10,6 +10,7 @@ import { successs } from 'src/components/AnimateAction/AnimateAction';
 import { useTableStore } from '../Table/table';
 import { useUserStore } from '../Auth/user';
 import useOffice from 'src/composables/common/useOffice';
+import useNotify from 'src/composables/Notify/useNotify';
 
 export const useRegisterDialogStore = defineStore('registerDialog', () => {
   const tableStore = useTableStore();
@@ -17,6 +18,7 @@ export const useRegisterDialogStore = defineStore('registerDialog', () => {
   const { userPermission } = storeToRefs(userStore);
   const { office, filterOption, setOfficeSelect, $officeReset, filterFn } =
     useOffice();
+  const { notifyFail } = useNotify();
 
   const open = ref(false);
   const userId = ref('');
@@ -77,7 +79,6 @@ export const useRegisterDialogStore = defineStore('registerDialog', () => {
         },
       }
     );
-    console.log(result.data);
     successs('已發送註冊信');
   };
   const assignerToSignup = async () => {
@@ -100,7 +101,6 @@ export const useRegisterDialogStore = defineStore('registerDialog', () => {
         },
       }
     );
-    console.log(result.data);
     successs('已發送註冊信');
   };
 
@@ -124,7 +124,7 @@ export const useRegisterDialogStore = defineStore('registerDialog', () => {
         tableStore.fetchRows(MEMBER_TABLE_API, tableStore.role.value);
         closeRegisterDialog();
       } catch (error: any) {
-        console.log('error:', error);
+        notifyFail(error.response?.data?.message, '註冊失敗: ');
       }
     }
   };

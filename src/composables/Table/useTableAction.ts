@@ -1,8 +1,11 @@
 import { successs } from 'src/components/AnimateAction/AnimateAction';
 import { api } from 'src/boot/axios';
 import { Member, QA, Resource } from 'src/components/Table/data ';
+import useNotify from '../Notify/useNotify';
 
 export default function useTableAction() {
+  const { notifyFail } = useNotify();
+
   //QA
   const deleteQa = async (row: QA) => {
     try {
@@ -11,7 +14,7 @@ export default function useTableAction() {
       console.log(result.data);
       successs('刪除成功');
     } catch (e: any) {
-      console.log(e, 'error');
+      notifyFail(e.message);
     }
   };
 
@@ -22,7 +25,7 @@ export default function useTableAction() {
       console.log(result.data);
       successs('已復原');
     } catch (e: any) {
-      console.log(e, 'error');
+      notifyFail(e.message);
     }
   };
 
@@ -33,7 +36,7 @@ export default function useTableAction() {
       console.log(result.data);
       successs('刪除成功');
     } catch (e: any) {
-      console.log(e, 'error');
+      notifyFail(e.message);
     }
   };
   //Blob
@@ -44,7 +47,7 @@ export default function useTableAction() {
       console.log(result.data);
       successs('刪除成功');
     } catch (e: any) {
-      console.log(e, 'error');
+      notifyFail(e.message);
     }
   };
   const recoverFile = async (row: Resource) => {
@@ -54,7 +57,7 @@ export default function useTableAction() {
       console.log(result.data);
       successs('已復原');
     } catch (e: any) {
-      console.log(e, 'error');
+      notifyFail(e.message);
     }
   };
   const permanentDelFile = async (row: Resource) => {
@@ -64,6 +67,7 @@ export default function useTableAction() {
       console.log(result.data);
       successs('刪除成功');
     } catch (e: any) {
+      notifyFail(e.message);
       console.log(e, 'error');
     }
   };
@@ -71,7 +75,7 @@ export default function useTableAction() {
     try {
       const fileName = row.dataFilename;
       const realFileName = fileName.replace(/^\d+-/, '');
-      const result = await api.get(`/Blob/fileName?filename=${fileName}`, {
+      const result = await api.get(`/Blob/fileName?filename=${fileName}1`, {
         responseType: 'blob',
       });
       const fileURL = URL.createObjectURL(new Blob([result.data]));
@@ -86,7 +90,7 @@ export default function useTableAction() {
       URL.revokeObjectURL(fileURL);
       successs('下載成功');
     } catch (e: any) {
-      console.log(e, 'error');
+      notifyFail(e.message);
     }
   };
   //Member
@@ -98,7 +102,7 @@ export default function useTableAction() {
       });
       successs('刪除成功');
     } catch (e: any) {
-      console.log(e, 'error');
+      notifyFail(e.message);
     }
   };
   return {

@@ -32,7 +32,7 @@
     <WarningDialog
       v-model:open="openWarning"
       :title="`確定刪除${(row as Member)?.userName||''}嗎?`"
-      description="刪除後我們將其權限變更為User"
+      description="此刪除動作將無法回復"
       @warningDialogConfirm="deleteMemberSubmit"
       @close="closeWarningDialog"
     />

@@ -44,7 +44,9 @@ import AuthContainer from 'src/components/Auth/AuthContainer.vue';
 import { successs } from 'src/components/AnimateAction/AnimateAction';
 import { notEmpty, pwTooEasy, pwTooShort } from 'src/components/Input/rules';
 import { api } from 'src/boot/axios';
+import useNotify from 'src/composables/Notify/useNotify';
 
+const { notifyFail } = useNotify();
 const router = useRouter();
 
 const loadingShow = ref(false);
@@ -75,10 +77,7 @@ const reset = async () => {
       successs('修改成功');
       router.push({ path: '/login' });
     } catch (error: any) {
-      console.log(
-        '重設失敗',
-        error.response.data.errors.Token[0] || '發生錯誤'
-      );
+      notifyFail(error.response.data.errors.Token[0], '重設失敗');
     }
     loadingShow.value = false;
   }

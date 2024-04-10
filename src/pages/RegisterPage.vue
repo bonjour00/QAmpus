@@ -62,7 +62,9 @@ import AuthContainer from 'src/components/Auth/AuthContainer.vue';
 import AuthLink from 'src/components/Auth/AuthLink.vue';
 import { notEmpty, pwTooEasy, pwTooShort } from 'src/components/Input/rules';
 import { api } from 'src/boot/axios';
+import useNotify from 'src/composables/Notify/useNotify';
 
+const { notifyFail } = useNotify();
 const router = useRouter();
 
 const loadingShow = ref(false);
@@ -105,7 +107,7 @@ const register = async () => {
       successs('完成Email驗證後即註冊成功');
       router.push({ path: '/login' });
     } catch (error: any) {
-      console.log('註冊失敗', error.response?.data?.message || '發生錯誤');
+      notifyFail(error.response?.data?.message, '註冊失敗');
     }
     loadingShow.value = false;
   }
