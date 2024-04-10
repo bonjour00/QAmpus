@@ -1,12 +1,26 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import { orderOptions, orderInitial } from 'src/components/Table/data ';
+import {
+  orderOptions,
+  orderInitial,
+  initialMember,
+  assignOptions,
+} from 'src/components/Table/data ';
 import { api } from 'src/boot/axios';
 import useOffice from 'src/composables/common/useOffice';
+import { useUserStore } from '../Auth/user';
 
 export const useTableStore = defineStore('table', () => {
-  const { office, filterOption, setOfficeSelect, $officeReset, filterFn } =
-    useOffice();
+  const userStore = useUserStore();
+  const {
+    office,
+    filterOption,
+    officeList,
+    setOfficeSelect,
+    $officeReset,
+    filterFn,
+    customSetSelect,
+  } = useOffice();
   const loading = ref(false);
   const page = ref(1);
   const query = ref('');
@@ -14,7 +28,12 @@ export const useTableStore = defineStore('table', () => {
   const perPage = ref(10);
   const rows = ref([]);
   const selected = ref([]);
+  const defaultSelect: any = ref(null);
+  const role = ref(initialMember);
 
+  const roleOptions = computed(() => {
+    return assignOptions.filter((x) => x.value != role.value.value);
+  });
   const options = computed(() =>
     orderOptions.filter((x) => x.value !== order.value.value)
   );
@@ -22,18 +41,35 @@ export const useTableStore = defineStore('table', () => {
   const totalPage = computed(() =>
     Math.ceil(rows.value.length / perPage.value)
   );
+  const all = { label: '全部', value: '' };
 
+  const setInitialRole = () => {
+    role.value = {
+      label: userStore.userPermission,
+      value: userStore.userPermission,
+    };
+  };
+  const setTool = async () => {
+    defaultSelect.value = {
+      label: userStore.officeName,
+      value: userStore.officeId,
+    };
+    await setOfficeSelect({
+      officeName: userStore.officeName,
+      officeId: userStore.officeId,
+    });
+    const options = [all, ...officeList.value];
+    customSetSelect(options);
+  };
+  const setAssignSelect = () => {
+    office.value = all;
+    defaultSelect.value = all;
+  };
   const fetchRows = async (url: string, status = '') => {
-    console.log(
-      {
-        query: query.value,
-        startIndex: startIndex.value,
-        perPage: perPage.value,
-        order: order.value.value,
-        ...(status && { status }),
-      },
-      url
-    );
+    const officeId = office.value
+      ? office.value.value
+      : defaultSelect.value.value;
+
     loading.value = true;
 
     try {
@@ -44,6 +80,7 @@ export const useTableStore = defineStore('table', () => {
           startIndex: startIndex.value,
           perPage: perPage.value,
           order: order.value.value,
+          ...(officeId && { officeId }),
           ...(status && { status }),
         },
         {
@@ -68,6 +105,11 @@ export const useTableStore = defineStore('table', () => {
     perPage.value = 10;
     rows.value = [];
     selected.value = [];
+    rows.value = [];
+    selected.value = [];
+    defaultSelect.value = null;
+    role.value = initialMember;
+    $officeReset();
   };
 
   return {
@@ -80,7 +122,15 @@ export const useTableStore = defineStore('table', () => {
     options,
     totalPage,
     selected,
+    office,
+    filterOption,
+    role,
+    roleOptions,
     fetchRows,
     $reset,
+    filterFn,
+    setTool,
+    setAssignSelect,
+    setInitialRole,
   };
 });

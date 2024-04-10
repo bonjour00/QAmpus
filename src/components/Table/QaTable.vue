@@ -13,6 +13,14 @@
   >
     <template v-slot:top-right>
       <div class="q-gutter-sm flex">
+        <FilterSelect
+          v-if="userStore.userPermission == 'assigner'"
+          title="指派單位: "
+          v-model:currentOption="tableStore.office"
+          :filterFn="filterFn"
+          :filterOption="tableStore.filterOption"
+        />
+        <slot name="role"></slot>
         <SearchTable @update-search="updateSearch" />
         <OptionSelect
           v-model:currentOption="tableStore.order"
@@ -82,8 +90,10 @@
 import SearchTable from './Toolbar/SearchTable.vue';
 import OptionSelect from './Toolbar/OptionSelect.vue';
 import PaginationTable from './Pagination/PaginationTable.vue';
+import FilterSelect from '../Select/FilterSelect.vue';
 import { QA, Resource, Member } from './data ';
 import { useTableStore } from 'src/stores/Table/table';
+import { useUserStore } from 'src/stores/Auth/user';
 
 const props = defineProps<{
   rows: QA[] | Resource[] | Member[];
@@ -95,6 +105,7 @@ const props = defineProps<{
 }>();
 
 const tableStore = useTableStore();
+const userStore = useUserStore();
 
 defineEmits(['download']);
 
@@ -109,6 +120,9 @@ const title = '分類'; //optionTitle(prepend前綴)
 //enter時才search
 const updateSearch = (value: any) => {
   tableStore.query = value;
+};
+const filterFn = (val: string, update: any) => {
+  tableStore.filterFn(val, update);
 };
 </script>
 <style lang="sass">

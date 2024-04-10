@@ -62,8 +62,9 @@ const {
 const { deleteQa } = useTableAction();
 const { fetchRows } = useTableApi(QA_ASSIGN_TABLE_API, ASSIGN_TABLE_STATUS);
 
+tableStore.setAssignSelect();
 //fetch rows
-fetchRows();
+// fetchRows();
 
 //actionBtn clicked (openEditDialog)
 const openEditDialog = (row: QA) => {

@@ -52,7 +52,6 @@ export default route(function (/* { store, ssrContext } */) {
         await userStore.tokenAnalyzation();
         const userRole = userStore.userPermission;
         userStore.initialMenu();
-        // await userStore.getUserInfo();
         if (to.meta.role?.includes(userRole)) {
           if (to.path == '/') {
             if (userRole == 'assigner') {

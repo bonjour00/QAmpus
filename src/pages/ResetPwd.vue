@@ -39,7 +39,6 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import axios from 'axios';
 import { useRouter } from 'vue-router';
 import AuthContainer from 'src/components/Auth/AuthContainer.vue';
 import { successs } from 'src/components/AnimateAction/AnimateAction';

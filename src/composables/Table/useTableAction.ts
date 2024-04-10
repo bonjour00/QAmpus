@@ -29,7 +29,7 @@ export default function useTableAction() {
   const permanentDelQa = async (row: QA) => {
     try {
       const qaId = row.questionId;
-      const result = await api.delete(`/Question/${qaId}`);
+      const result = await api.patch(`/Question/permanentlydeleted/${qaId}`);
       console.log(result.data);
       successs('刪除成功');
     } catch (e: any) {

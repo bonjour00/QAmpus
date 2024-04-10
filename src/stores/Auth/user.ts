@@ -9,40 +9,43 @@ export const useUserStore = defineStore('user', () => {
 
   const userPermission: Ref<string> = ref('');
   const userName: Ref<string | null> = ref(null);
-  const officeId: Ref<number | null> = ref(48); //165
-  const officeName: Ref<string | null> = ref('資訊中心'); //'資管系'
   const userEmail: Ref<string | null> = ref(null);
+  const officeId: Ref<number | null> = ref(null); //165
+  const officeName: Ref<string | null> = ref(null); //'資管系'
   const layoutMenu = ref(adminMenu);
 
-  // const $reset = () => {
-  //   userPermission.value = '';
-  //   userName.value = null;
-  //   officeId.value = null;
-  //   officeName.value = null;
-  //   userEmail.value = null;
-  // };
-
-  const getUserInfo = async () => {
-    try {
-      const result = await api.get(`/User/${userEmail.value}`);
-      console.log(result.data);
-    } catch (error: any) {
-      console.log(error);
-    }
+  const $reset = () => {
+    userPermission.value = '';
+    userName.value = null;
+    officeId.value = null;
+    officeName.value = null;
+    userEmail.value = null;
   };
 
   const tokenAnalyzation = async () => {
-    const token = localStorage.getItem('token');
-    const result = await api.post(
-      '/User/analyzingPermission',
-      {},
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    );
-    userPermission.value = result.data.permission;
+    try {
+      const token = localStorage.getItem('token');
+      const result = await api.post(
+        'User/analyzingall',
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      userPermission.value = result.data.userPermission.trim();
+      userName.value = result.data.userName.trim();
+      userEmail.value = result.data.userEmail.trim();
+      officeId.value = result.data.officeId;
+      officeName.value = result.data.officeName
+        ? result.data.officeName.trim()
+        : null;
+    } catch (error: any) {
+      console.log('errorAuth:', error);
+      localStorage.removeItem('token');
+      router.push({ path: '/login' });
+    }
   };
   const initialMenu = () => {
     layoutMenu.value =
@@ -58,6 +61,7 @@ export const useUserStore = defineStore('user', () => {
           headers: { Authorization: localStorage.getItem('token') },
         }
       );
+      $reset();
       localStorage.removeItem('token');
       router.push({ path: '/login' });
     } catch (e) {
@@ -68,11 +72,9 @@ export const useUserStore = defineStore('user', () => {
     layoutMenu,
     userPermission,
     userName,
+    userEmail,
     officeId,
     officeName,
-    userEmail,
-    // $reset,
-    getUserInfo,
     initialMenu,
     tokenAnalyzation,
     logout,

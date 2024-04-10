@@ -3,7 +3,7 @@ import { initialOffice, Option } from 'src/components/Table/data ';
 import { api } from 'src/boot/axios';
 
 export default function useOffice() {
-  const office = ref(initialOffice);
+  const office: Ref<Option> = ref(initialOffice);
   const officeList: Ref<Option[]> = ref([]);
   const filterOption: Ref<Option[]> = ref([]);
 
@@ -19,13 +19,17 @@ export default function useOffice() {
       console.log(e);
     }
   };
+
+  const customSetSelect = (data: any) => {
+    officeList.value = data;
+  };
   //office q-select intial
-  const setOfficeSelect = (data: any) => {
+  const setOfficeSelect = async (data: any) => {
     office.value = {
       label: data.officeName,
       value: data.officeId,
     };
-    fetchOffices();
+    await fetchOffices();
   };
   const $officeReset = () => {
     office.value = initialOffice;
@@ -51,8 +55,10 @@ export default function useOffice() {
   return {
     office,
     filterOption,
+    officeList,
     setOfficeSelect,
     $officeReset,
     filterFn,
+    customSetSelect,
   };
 }

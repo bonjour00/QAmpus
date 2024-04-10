@@ -74,7 +74,6 @@ const login = async () => {
         userPassword: userPassword.value,
       });
       router.push({ path: '/' });
-      userStore.userEmail = userEmail.value;
       localStorage.setItem('token', result.data.token);
     } catch (error: any) {
       console.error('登錄失敗:', error.response?.data?.message || '發生錯誤');

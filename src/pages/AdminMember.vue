@@ -9,11 +9,19 @@
       <template v-slot:action>
         <SlotBtn btnName="新增管理者" @clicked="openRegisterDialog" />
       </template>
-
+      <template #role>
+        <OptionSelect
+          v-model:currentOption="tableStore.role"
+          :options="tableStore.roleOptions"
+          title="權限"
+          v-if="userStore.userPermission == 'assigner'"
+        />
+      </template>
       <template v-slot:btnAction="slotProps">
         <RoundBtn
           @clicked="openEditMemberDialog(slotProps.props.row)"
           icon="edit"
+          v-if="userStore.userPermission == 'assigner'"
         />
         <RoundBtn
           @clicked="openWarningDialog(slotProps.props.row)"
@@ -44,14 +52,17 @@ import RegisterDialog from 'src/components/Dialog/RegisterDialog.vue';
 import { useTableStore } from 'src/stores/Table/table';
 import useTableApi from 'src/composables/Table/useTableApi';
 import useWarningDialog from 'src/composables/Dialog/useWarningDialog';
+import OptionSelect from 'src/components/Table/Toolbar/OptionSelect.vue';
 import { useEditMemberDialogStore } from 'src/stores/Dialog/editMemberDialog';
 import EditMemberDialog from 'src/components/Dialog/EditMemberDialog.vue';
 import useTableAction from 'src/composables/Table/useTableAction';
 import { useRegisterDialogStore } from 'src/stores/Dialog/registerDialog';
+import { useUserStore } from 'src/stores/Auth/user';
 
 const tableStore = useTableStore();
 const editMemberDialogStore = useEditMemberDialogStore();
 const registerDialogStore = useRegisterDialogStore();
+const userStore = useUserStore();
 const {
   open: openWarning,
   row,
@@ -59,10 +70,11 @@ const {
   closeDialog,
 } = useWarningDialog();
 const { deleteMember } = useTableAction();
-const { fetchRows } = useTableApi(MEMBER_TABLE_API);
+const { fetchRows } = useTableApi(MEMBER_TABLE_API, tableStore.role.value);
 
+tableStore.setInitialRole();
 //fetch rows
-fetchRows();
+// fetchRows();
 
 //actionBtn clicked (openEditMemberDialog)
 const openEditMemberDialog = (row: Member) => {

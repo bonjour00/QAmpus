@@ -62,16 +62,21 @@ export const useTestingDialogStore = defineStore('testingDialog', () => {
   };
 
   // 按下確認->寄信
-  const confirmQa = async (questionId: number) => {
-    const result = await api.patch(`/Question/confirm/${questionId}`);
+  const confirmQa = async (questionId: number, answer: string) => {
+    const result = await api.patch(
+      `/Question/confirm/${questionId}?answer=${answer}`
+    );
     console.log(result.data);
   };
-  const cofirmMuti = () => {
+  const cofirmMuti = async () => {
     try {
-      const rows = questionIds.value;
-      if (rows.length > 0) {
-        for (let i = 0; i < rows.length; i++) {
-          confirmQa(rows[i]);
+      const ids = questionIds.value;
+      if (ids.length > 0) {
+        for (let i = 0; i < ids.length; i++) {
+          const index = rows.value.findIndex(
+            (question) => question.questionId == ids[i]
+          );
+          await confirmQa(ids[i], rows.value[index].questionAnswer);
         }
         successs('已確認，並送信');
         tableStore.selected = [];
@@ -81,7 +86,7 @@ export const useTestingDialogStore = defineStore('testingDialog', () => {
         alert('沒選');
       }
     } catch (e) {
-      console.log(e);
+      console.log(e, 'llll');
       closeTestingDialog();
     }
   };

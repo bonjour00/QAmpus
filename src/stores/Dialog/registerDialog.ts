@@ -121,7 +121,7 @@ export const useRegisterDialogStore = defineStore('registerDialog', () => {
         } else {
           await signupAdmin();
         }
-        tableStore.fetchRows(MEMBER_TABLE_API);
+        tableStore.fetchRows(MEMBER_TABLE_API, tableStore.role.value);
         closeRegisterDialog();
       } catch (error: any) {
         console.log('error:', error);
