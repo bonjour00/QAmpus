@@ -24,15 +24,13 @@ export const useEditDialogStore = defineStore('editDialog', () => {
   const getOfficeRecord = async (data: QA) => {
     try {
       const result = await api.get(`/AssignedOffice/${data.questionId}/office`);
-      const records = Object.values(result.data)
-        .map((office: any) => {
-          if (office) {
-            return {
-              title: office,
-            };
-          }
-        })
-        .filter((record) => record !== undefined);
+      const records = result.data.officeTransferHistoryList.map(
+        (office: any) => {
+          return {
+            title: office.officeName,
+          };
+        }
+      );
       officeRecord.value = records;
     } catch (e) {
       console.log('err', e);
