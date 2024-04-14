@@ -39,7 +39,7 @@
             Toggled: isSidebarToggled,
             active: isMenuActive(menu.label),
           }"
-          v-for="menu in menus"
+          v-for="menu in userStore.layoutMenu"
           :key="menu.title"
           @click="currentChange(menu.label)"
         >
@@ -96,10 +96,20 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
+<<<<<<< HEAD
 import { ref, computed, watch } from 'vue';
 import expandedLogo from './expanded-logo.png';
 import collapsedLogo from './collapsed-logo.png';
 import axios from 'axios';
+=======
+import { ref } from 'vue';
+import { computed } from 'vue';
+import expandedLogo from '../assets/expanded-logo.png';
+import collapsedLogo from '../assets/collapsed-logo.png';
+import { useUserStore } from 'src/stores/Auth/user';
+
+const userStore = useUserStore();
+>>>>>>> origin
 
 const router = useRouter();
 const isSidebarToggled = ref(true);
@@ -132,7 +142,6 @@ const currentChange = (label: string) => {
   }
   router.push({ path: label });
 };
-
 const toggleSidebar = () => {
   isSidebarToggled.value = !isSidebarToggled.value;
   isManuallyExpanded.value = isSidebarToggled.value;
@@ -155,6 +164,7 @@ const logoSource = computed(() => {
   return isSidebarToggled.value ? expandedLogo : collapsedLogo;
 });
 
+<<<<<<< HEAD
 const menus = [
   {
     title: '待解決問題',
@@ -183,21 +193,10 @@ const menus = [
   },
 ];
 
+=======
+>>>>>>> origin
 const logout = async () => {
-  try {
-    const result = await axios.post(
-      'http://140.136.202.125/api/User/logout',
-      {},
-      {
-        headers: { Authorization: localStorage.getItem('token') },
-      }
-    );
-    localStorage.removeItem('token');
-    console.log(result, 'logout');
-    router.push({ path: '/login' });
-  } catch (e) {
-    console.log('error', e);
-  }
+  userStore.logout();
 };
 </script>
 
@@ -304,7 +303,6 @@ const logout = async () => {
   display: flex;
   justify-content: flex-start;
   font-size: medium;
-  font-weight: 900;
   align-items: center;
 }
 

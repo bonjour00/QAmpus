@@ -1,131 +1,102 @@
 <template>
   <div class="q-pa-md">
     <Table
-      :rows="rows"
+      :rows="tableStore.rows"
       :columns="memberColumns"
-      v-model:page-now="pageNow"
-      v-model:search-now="searchNow"
-      v-model:order-now="orderNow"
-      :loading="loading"
-      :tableTitle="tableTitle"
-      :totalCount="totalCount"
+      tableTitle="權限管理"
+      rowKey="userPK"
     >
-      <template v-slot:btnAction="slotProps"
-        ><AuctionBtn
-          :selectRow="slotProps"
-          @updated="(row) => handleAction(row, 'admin', '審核成功')"
-          icon="check"
+      <template v-slot:action>
+        <SlotBtn btnName="新增管理者" @clicked="openRegisterDialog" />
+      </template>
+      <template #role>
+        <OptionSelect
+          v-model:currentOption="tableStore.role"
+          :options="tableStore.roleOptions"
+          title="權限"
+          v-if="userStore.userPermission == 'assigner'"
         />
-        <AuctionBtn
-          :selectRow="slotProps"
-          @updated="(row) => needConfirm(row)"
+      </template>
+      <template v-slot:btnAction="slotProps">
+        <RoundBtn
+          @clicked="openEditMemberDialog(slotProps.props.row)"
+          icon="edit"
+          v-if="userStore.userPermission == 'assigner'"
+        />
+        <RoundBtn
+          @clicked="openWarningDialog(slotProps.props.row)"
           icon="delete"
         />
       </template>
     </Table>
-    <ConfirmDialog
-      btnName="刪除"
-      v-model:openConfirm="openConfirm"
-      title="確定修改此用戶權限嗎?"
-      description="這將使其權限變更為 '使用者'!"
-      @clean="data = null"
-      @confirm="handleAction(data, 'user', '已修改其權限為使用者')"
+    <WarningDialog
+      v-model:open="openWarning"
+      :title="`確定刪除${(row as Member)?.userName||''}嗎?`"
+      description="此刪除動作將無法回復"
+      :loading="loading"
+      @warningDialogConfirm="deleteMemberSubmit"
+      @close="closeWarningDialog"
     />
+    <EditMemberDialog />
+    <RegisterDialog />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, watch, computed } from 'vue';
-import Table from './Components/Table/QaTable.vue';
-import {
-  Member,
-  paginationInitial,
-  orderInitial,
-} from './Components/Table/data ';
-import { memberColumns } from './Components/Table/Columns';
-import axios from 'axios';
-import { successs } from './Components/Table/ActionBtn/AnimateAction';
-import AuctionBtn from './Components/Table/ActionBtn/ActionBtn.vue';
-import ConfirmDialog from './Components/Table/Dialog/ConfirmDialog.vue';
+import Table from '../components/Table/QaTable.vue';
+import { MEMBER_TABLE_API, Member } from '../components/Table/data ';
+import { memberColumns } from '../components/Table/Columns';
+import RoundBtn from 'src/components/Button/IconBtn/RoundBtn.vue';
+import SlotBtn from 'src/components/Button/Table/SlotBtn.vue';
+import WarningDialog from 'src/components/Dialog/WarningDialog.vue';
+import RegisterDialog from 'src/components/Dialog/RegisterDialog.vue';
+import { useTableStore } from 'src/stores/Table/table';
+import useTableApi from 'src/composables/Table/useTableApi';
+import useWarningDialog from 'src/composables/Dialog/useWarningDialog';
+import OptionSelect from 'src/components/Table/Toolbar/OptionSelect.vue';
+import { useEditMemberDialogStore } from 'src/stores/Dialog/editMemberDialog';
+import EditMemberDialog from 'src/components/Dialog/EditMemberDialog.vue';
+import useTableAction from 'src/composables/Table/useTableAction';
+import { useRegisterDialogStore } from 'src/stores/Dialog/registerDialog';
+import { useUserStore } from 'src/stores/Auth/user';
 
-//table
-//toolValue
-const tableTitle = '權限管理';
-const pageNow = ref(paginationInitial);
-const searchNow = ref('');
-const orderNow = ref(orderInitial);
-const updated = ref(0);
-const updatedFetch = computed(() => {
-  return {
-    page: pageNow.value,
-    search: searchNow.value,
-    order: orderNow.value,
-    updated: updated.value,
-  };
-});
+const tableStore = useTableStore();
+const editMemberDialogStore = useEditMemberDialogStore();
+const registerDialogStore = useRegisterDialogStore();
+const userStore = useUserStore();
+const {
+  open: openWarning,
+  row,
+  openWithData,
+  closeDialog,
+} = useWarningDialog();
+const { deleteMember, loading } = useTableAction();
+const { fetchRows } = useTableApi(MEMBER_TABLE_API, tableStore.role.value);
 
-//rows
-const rows: Ref<Member[]> = ref([]);
-const totalCount = ref(0);
-const loading = ref(false);
-//fetch data
-const fetchRows = async () => {
-  // console.log({
-  //   query: searchNow.value,
-  //   startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-  //   perPage: pageNow.value.rowsPerPage,
-  //   officeId: testInitialOffice.value,
-  //   order: orderNow.value.value,
-  //   qaStatus,
-  // });
-  loading.value = true;
-  const result = await axios.post('http://140.136.202.125/api/User/paged', {
-    query: searchNow.value,
-    startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-    perPage: pageNow.value.rowsPerPage,
-    // officeId: 1,
-    order: orderNow.value.value,
-    // status: 'UNCONFIRMED',
-  });
-  rows.value = result.data.data;
-  totalCount.value = result.data.totalCount;
-  loading.value = false;
-  console.log(result.data, 'fetching');
+tableStore.setInitialRole();
+//fetch rows
+// fetchRows();
+
+//actionBtn clicked (openEditMemberDialog)
+const openEditMemberDialog = (row: Member) => {
+  editMemberDialogStore.openMemberDialog(row);
 };
-fetchRows();
 
-watch(updatedFetch, () => {
+//actionBtn clicked (openRegisterDialog)
+const openRegisterDialog = (row: Member) => {
+  registerDialogStore.openRegisterDialog();
+};
+
+//actionBtn clicked (openWarningDialog)
+const openWarningDialog = (row: Member) => {
+  openWithData(row);
+};
+const closeWarningDialog = () => {
+  closeDialog();
+};
+const deleteMemberSubmit = async () => {
+  await deleteMember(row.value as Member);
+  closeDialog();
   fetchRows();
-});
-
-//handleAction(recover/delete)
-const handleAction = async (
-  row: Member | null,
-  status: string,
-  success: string
-) => {
-  try {
-    if (row !== null) {
-      const result = await axios.patch('http://140.136.202.125/api/User', {
-        userEmail: row.userEmail,
-        userPermission: status,
-      });
-      successs(success);
-      console.log(result.data);
-    }
-  } catch (e: any) {
-    console.log(e, 'error');
-  }
-  updated.value++;
-};
-
-//confirmPop
-const openConfirm = ref(false);
-
-//delete need confirm
-const data = ref(null);
-const needConfirm = (row: any) => {
-  openConfirm.value = true;
-  data.value = row;
 };
 </script>

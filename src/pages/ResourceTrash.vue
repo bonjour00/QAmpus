@@ -1,121 +1,76 @@
 <template>
   <div class="q-pa-md">
     <Table
-      :rows="rows"
+      :rows="tableStore.rows"
       :columns="resourceColumns"
-      v-model:page-now="pageNow"
-      v-model:search-now="searchNow"
-      v-model:order-now="orderNow"
-      :loading="loading"
-      :tableTitle="tableTitle"
-      :totalCount="totalCount"
+      tableTitle="近期刪除資源"
+      rowKey="dataId"
     >
       <template v-slot:btnAction="slotProps"
-        ><AuctionBtn
-          :selectRow="slotProps"
-          @updated="(row) => handleAction(row, 'recover', '已復原')"
+        ><RoundBtn
+          @clicked="recoverFileSubmit(slotProps.props.row)"
           icon="history"
         />
-        <AuctionBtn
-          :selectRow="slotProps"
-          @updated="(row) => handleActionDelete(row, 'deleted', '刪除成功')"
+        <RoundBtn
+          @clicked="openWarningDialog(slotProps.props.row)"
           icon="delete"
         />
       </template>
     </Table>
+    <WarningDialog
+      v-model:open="openWarning"
+      :title="`確定永久刪除${(row as Resource)?.dataFilename.replace(/^\d+-/, '')||''}嗎?`"
+      description="這將永久刪除這份檔案!"
+      :loading="loading"
+      @warningDialogConfirm="permanentDeleteFile"
+      @close="closeWarningDialog"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, watch, computed } from 'vue';
-import Table from './Components/Table/QaTable.vue';
+import Table from '../components/Table/QaTable.vue';
 import {
-  Recource,
-  paginationInitial,
-  orderInitial,
-} from './Components/Table/data ';
-import { resourceColumns } from './Components/Table/Columns';
-import axios from 'axios';
-import { successs } from './Components/Table/ActionBtn/AnimateAction';
-import AuctionBtn from './Components/Table/ActionBtn/ActionBtn.vue';
+  BLOB_TABLE_API,
+  Resource,
+  TRASH_BLOB_TABLE_STATUS,
+} from '../components/Table/data ';
+import { resourceColumns } from '../components/Table/Columns';
+import RoundBtn from 'src/components/Button/IconBtn/RoundBtn.vue';
+import { useTableStore } from 'src/stores/Table/table';
+import useTableApi from 'src/composables/Table/useTableApi';
+import useWarningDialog from 'src/composables/Dialog/useWarningDialog';
+import useTableAction from 'src/composables/Table/useTableAction';
+import WarningDialog from 'src/components/Dialog/WarningDialog.vue';
 
-//table
-//toolValue
-const tableTitle = '近期刪除資源';
-const pageNow = ref(paginationInitial);
-const searchNow = ref('');
-const orderNow = ref(orderInitial);
-const updated = ref(0);
-const updatedFetch = computed(() => {
-  return {
-    page: pageNow.value,
-    search: searchNow.value,
-    order: orderNow.value,
-    updated: updated.value,
-  };
-});
+const tableStore = useTableStore();
+const {
+  open: openWarning,
+  row,
+  openWithData,
+  closeDialog,
+} = useWarningDialog();
+const { recoverFile, permanentDelFile, loading } = useTableAction();
+const { fetchRows } = useTableApi(BLOB_TABLE_API, TRASH_BLOB_TABLE_STATUS);
 
-//rows
-const rows: Ref<Recource[]> = ref([]);
-const totalCount = ref(0);
-const loading = ref(false);
-//fetch data
-const fetchRows = async () => {
-  // console.log({
-  //   query: searchNow.value,
-  //   startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-  //   perPage: pageNow.value.rowsPerPage,
-  //   officeId: testInitialOffice.value,
-  //   order: orderNow.value.value,
-  //   qaStatus,
-  // });
-  loading.value = true;
-  const result = await axios.post('http://140.136.202.125/api/Blob/paged', {
-    query: searchNow.value,
-    startIndex: (pageNow.value.page - 1) * pageNow.value.rowsPerPage,
-    perPage: pageNow.value.rowsPerPage,
-    office: 3,
-    order: orderNow.value.value,
-    status: 'deleted',
-  });
-  rows.value = result.data.data;
-  totalCount.value = result.data.totalCount;
-  loading.value = false;
-  console.log(result.data, 'fetching');
-};
+//fetch rows
 fetchRows();
 
-watch(updatedFetch, () => {
+//actionBtn clicked (recoverFile)
+const recoverFileSubmit = async (row: Resource) => {
+  await recoverFile(row);
   fetchRows();
-});
-
-//handleAction(recover/delete)
-const handleAction = async (row: Recource, action: string, success: string) => {
-  try {
-    const result = await axios.patch(
-      `http://140.136.202.125/api/Blob/${action}/${row.dataFilename}`
-    );
-    successs(success);
-    console.log(result.data);
-  } catch (e: any) {
-    console.log(e, 'error');
-  }
-  updated.value++;
 };
-const handleActionDelete = async (
-  row: Recource,
-  action: string,
-  success: string
-) => {
-  try {
-    const result = await axios.delete(
-      `http://140.136.202.125/api/Blob/fileName?filename=${row.dataFilename}`
-    );
-    successs(success);
-    console.log(result.data);
-  } catch (e: any) {
-    console.log(e, 'error');
-  }
-  updated.value++;
+//actionBtn clicked (openWarningDialog)
+const openWarningDialog = (row: Resource) => {
+  openWithData(row);
+};
+const closeWarningDialog = () => {
+  closeDialog();
+};
+const permanentDeleteFile = async () => {
+  await permanentDelFile(row.value as Resource);
+  closeDialog();
+  fetchRows();
 };
 </script>

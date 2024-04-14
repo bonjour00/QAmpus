@@ -1,181 +1,115 @@
 <template>
-  <div class="main">
-    <div class="logo-container">
-      <img class="logo" src="./asset/collapsed-logo.png" />
-      <p class="title">註冊您的帳戶</p>
-
-      <q-input class="username" v-model="userName" label="輸入您的使用者名稱" />
-      <q-input class="account" v-model="userEmail" label="輸入您的EMAIL" />
-      <q-input class="password" v-model="userPassword" label="輸入您的密碼" />
-      <q-btn
-        class="login-button"
-        text-color="white"
-        label="註冊"
-        @click="register"
-      />
-      <div class="forget">
-        <p>已經有帳號了？</p>
-        <a class="alter" href="http://localhost:9000/#/login" target="_blank"
-          >登入</a
-        >
-      </div>
-      <!-- 最底下的波浪       -->
-      <svg
-        class="wave"
-        id="wave"
-        style="transform: rotate(0deg); transition: 0.3s"
-        viewBox="0 0 1440 180"
-        version="1.1"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <linearGradient id="sw-gradient-0" x1="0" x2="0" y1="1" y2="0">
-            <stop stop-color="rgba(95, 147, 184, 1)" offset="0%"></stop>
-            <stop stop-color="rgba(95, 147, 184, 1)" offset="100%"></stop>
-          </linearGradient>
-        </defs>
-        <path
-          style="transform: translate(0, 0px); opacity: 1"
-          fill="url(#sw-gradient-0)"
-          d="M0,90L60,96C120,102,240,114,360,123C480,132,600,138,720,123C840,108,960,72,1080,51C1200,30,1320,24,1440,39C1560,54,1680,90,1800,93C1920,96,2040,66,2160,54C2280,42,2400,48,2520,42C2640,36,2760,18,2880,15C3000,12,3120,24,3240,36C3360,48,3480,60,3600,66C3720,72,3840,72,3960,87C4080,102,4200,132,4320,120C4440,108,4560,54,4680,51C4800,48,4920,96,5040,108C5160,120,5280,96,5400,81C5520,66,5640,60,5760,51C5880,42,6000,30,6120,42C6240,54,6360,90,6480,105C6600,120,6720,114,6840,117C6960,120,7080,132,7200,138C7320,144,7440,144,7560,132C7680,120,7800,96,7920,75C8040,54,8160,36,8280,48C8400,60,8520,102,8580,123L8640,144L8640,180L8580,180C8520,180,8400,180,8280,180C8160,180,8040,180,7920,180C7800,180,7680,180,7560,180C7440,180,7320,180,7200,180C7080,180,6960,180,6840,180C6720,180,6600,180,6480,180C6360,180,6240,180,6120,180C6000,180,5880,180,5760,180C5640,180,5520,180,5400,180C5280,180,5160,180,5040,180C4920,180,4800,180,4680,180C4560,180,4440,180,4320,180C4200,180,4080,180,3960,180C3840,180,3720,180,3600,180C3480,180,3360,180,3240,180C3120,180,3000,180,2880,180C2760,180,2640,180,2520,180C2400,180,2280,180,2160,180C2040,180,1920,180,1800,180C1680,180,1560,180,1440,180C1320,180,1200,180,1080,180C960,180,840,180,720,180C600,180,480,180,360,180C240,180,120,180,60,180L0,180Z"
-        ></path>
-        <defs>
-          <linearGradient id="sw-gradient-1" x1="0" x2="0" y1="1" y2="0">
-            <stop stop-color="rgba(153, 179, 188, 1)" offset="0%"></stop>
-            <stop stop-color="rgba(153, 179, 188, 1)" offset="100%"></stop>
-          </linearGradient>
-        </defs>
-        <path
-          style="transform: translate(0, 50px); opacity: 0.8"
-          fill="url(#sw-gradient-1)"
-          d="M0,54L60,45C120,36,240,18,360,15C480,12,600,24,720,36C840,48,960,60,1080,66C1200,72,1320,72,1440,75C1560,78,1680,84,1800,90C1920,96,2040,102,2160,99C2280,96,2400,84,2520,84C2640,84,2760,96,2880,87C3000,78,3120,48,3240,42C3360,36,3480,54,3600,60C3720,66,3840,60,3960,69C4080,78,4200,102,4320,111C4440,120,4560,114,4680,99C4800,84,4920,60,5040,48C5160,36,5280,36,5400,39C5520,42,5640,48,5760,48C5880,48,6000,42,6120,45C6240,48,6360,60,6480,81C6600,102,6720,132,6840,129C6960,126,7080,90,7200,66C7320,42,7440,30,7560,42C7680,54,7800,90,7920,96C8040,102,8160,78,8280,81C8400,84,8520,114,8580,129L8640,144L8640,180L8580,180C8520,180,8400,180,8280,180C8160,180,8040,180,7920,180C7800,180,7680,180,7560,180C7440,180,7320,180,7200,180C7080,180,6960,180,6840,180C6720,180,6600,180,6480,180C6360,180,6240,180,6120,180C6000,180,5880,180,5760,180C5640,180,5520,180,5400,180C5280,180,5160,180,5040,180C4920,180,4800,180,4680,180C4560,180,4440,180,4320,180C4200,180,4080,180,3960,180C3840,180,3720,180,3600,180C3480,180,3360,180,3240,180C3120,180,3000,180,2880,180C2760,180,2640,180,2520,180C2400,180,2280,180,2160,180C2040,180,1920,180,1800,180C1680,180,1560,180,1440,180C1320,180,1200,180,1080,180C960,180,840,180,720,180C600,180,480,180,360,180C240,180,120,180,60,180L0,180Z"
-        ></path>
-      </svg>
-      <!-- 最底下的波浪       -->
-    </div>
-  </div>
+  <AuthContainer
+    title="註冊您的帳戶"
+    btnLabel="註冊"
+    @clickBtn="register"
+    :loadingShow="loadingShow"
+  >
+    <q-input
+      v-model="userName"
+      label="輸入您的使用者名稱"
+      ref="nameRef"
+      lazy-rules="ondemand"
+      :rules="[notEmpty]"
+    />
+    <q-input
+      v-model="userEmail"
+      label="輸入您的Email"
+      ref="emailRef"
+      lazy-rules="ondemand"
+      :rules="[notEmpty]"
+    />
+    <q-input
+      v-model="userPassword"
+      label="輸入您的密碼"
+      :type="isPwd ? 'password' : 'text'"
+      ref="pwdRef"
+      lazy-rules="ondemand"
+      :rules="[notEmpty, pwTooEasy, pwTooShort]"
+      ><template v-slot:append>
+        <q-icon
+          :name="isPwd ? 'visibility_off' : 'visibility'"
+          class="cursor-pointer"
+          @click="isPwd = !isPwd"
+        />
+      </template>
+    </q-input>
+    <q-input
+      v-model="comfirmPassword"
+      label="再次輸入您的密碼"
+      :type="isConfirmPwd ? 'password' : 'text'"
+      ref="confirmPwdRef"
+      lazy-rules="ondemand"
+      :rules="[notEmpty, (val) => val === userPassword || '密碼不一致']"
+      ><template v-slot:append>
+        <q-icon
+          :name="isConfirmPwd ? 'visibility_off' : 'visibility'"
+          class="cursor-pointer"
+          @click="isConfirmPwd = !isConfirmPwd"
+        />
+      </template>
+    </q-input>
+    <template #link>
+      <AuthLink toDescription="已經有帳號了？" to="/login" toLinkTitle="登入" />
+    </template>
+  </AuthContainer>
 </template>
 <script setup lang="ts">
-import axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { successs } from 'src/components/AnimateAction/AnimateAction';
+import AuthContainer from 'src/components/Auth/AuthContainer.vue';
+import AuthLink from 'src/components/Auth/AuthLink.vue';
+import { notEmpty, pwTooEasy, pwTooShort } from 'src/components/Input/rules';
+import { api } from 'src/boot/axios';
+import useNotify from 'src/composables/Notify/useNotify';
 
+const { notifyFail } = useNotify();
 const router = useRouter();
 
+const loadingShow = ref(false);
 const userName = ref('');
-const userPassword = ref('');
 const userEmail = ref('');
+const userPassword = ref('');
+const comfirmPassword = ref('');
+
+//pwd see or not
+const isPwd = ref(true);
+const isConfirmPwd = ref(true);
+
+//rules
+const nameRef: any = ref(null);
+const emailRef: any = ref(null);
+const pwdRef: any = ref(null);
+const confirmPwdRef: any = ref(null);
 
 const register = async () => {
-  try {
-    const result = await axios.post('http://140.136.202.125/api/User', {
-      userId: `${Date.now()}`,
-      userName: userName.value,
-      userPassword: userPassword.value,
-      userEmail: userEmail.value,
-      userPermission: 'user',
-    });
-    console.log('註冊成功', result);
-    router.push({ path: '/login' });
-  } catch (e) {
-    console.log('註冊失敗', e);
+  nameRef.value?.validate();
+  emailRef.value?.validate();
+  pwdRef.value?.validate();
+  confirmPwdRef.value?.validate();
+  if (
+    nameRef.value.hasError ||
+    emailRef.value.hasError ||
+    pwdRef.value.hasError ||
+    confirmPwdRef.value.hasError
+  ) {
+    return;
+  } else {
+    loadingShow.value = true;
+    try {
+      const result = await api.post('/User/normal', {
+        userName: userName.value,
+        userPassword: userPassword.value,
+        userEmail: userEmail.value,
+        userPermission: 'user',
+      });
+      successs('完成Email驗證後即註冊成功');
+      router.push({ path: '/login' });
+    } catch (error: any) {
+      notifyFail(error.response?.data?.message, '註冊失敗');
+    }
+    loadingShow.value = false;
   }
 };
 </script>
-<style scoped>
-.main {
-  background-color: white;
-  width: 100vw;
-  height: 100vh;
-}
-.logo-container {
-  width: 100vw;
-  height: 100vh;
-}
-
-.logo {
-  position: absolute;
-  top: 15%;
-  left: 50%;
-  transform: translate(-50%, -25%);
-  width: 6%;
-}
-.title {
-  background-color: none;
-  position: absolute;
-  font-size: 25px;
-  top: 28%;
-  left: 50%;
-  transform: translate(-50%, -25%);
-  font-weight: 900;
-  color: #484848;
-}
-.username {
-  position: absolute;
-  top: 35%;
-  left: 50%;
-  transform: translate(-50%, -25%);
-  width: 20%;
-}
-.account {
-  position: absolute;
-  top: 44%;
-  left: 50%;
-  transform: translate(-50%, -25%);
-  width: 20%;
-}
-.password {
-  position: absolute;
-  top: 53%;
-  left: 50%;
-  transform: translate(-50%, -25%);
-  width: 20%;
-}
-
-.q-field__label {
-  font-weight: 900;
-}
-.q-field__native:focus {
-  border-bottom: 3px solid #2a77af;
-}
-.wave {
-  width: 100vw;
-  position: absolute;
-  bottom: 0;
-}
-.login-button {
-  position: absolute;
-  top: 60%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 20%;
-  height: 3rem;
-  background-color: #2a77af;
-  font-size: 1rem;
-  font-weight: 900;
-  border-radius: 10px;
-  margin-top: 2rem;
-}
-
-.q-field__native,
-.q-field__prefix,
-.q-field__suffix,
-.q-field__input {
-  margin-top: 0.5rem;
-}
-.forget {
-  position: absolute;
-  display: flex;
-  top: 72%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: black;
-  text-decoration: none;
-}
-
-.alter {
-  text-decoration: none;
-  color: #2a77af;
-  font-weight: 900;
-}
-</style>
