@@ -1,13 +1,21 @@
 <template>
-  <div class="custom-layout">
-    <div class="sidebar" :class="{ expanded: isSidebarExpanded }">
+  <div class="custom-layout" :class="{ 'dark-background': isSidebarUnder885 }">
+    <div
+      v-if="!isSidebarToggled && screenWidth <= 885"
+      class="expand-button-container"
+    >
+      <button class="toggle-button" @click="expandSidebar">
+        <q-icon size="20px" name="arrow_forward_ios" class="chevron-icon" />
+      </button>
+    </div>
+    <div class="sidebar" :class="{ toggled: isSidebarToggled }">
       <div class="sidebar-list">
-        <div class="expand-button-container">
+        <div class="toggle-button-container">
           <button
-            class="expand-button"
+            class="toggle-button"
             @click="toggleSidebar"
             align="right"
-            :class="{ 'rotate-icon': isSidebarExpanded }"
+            :class="{ 'rotate-icon': isSidebarToggled }"
           >
             <q-icon size="20px" name="arrow_forward_ios" class="chevron-icon" />
           </button>
@@ -17,8 +25,8 @@
             class="logo"
             :src="logoSource"
             :class="{
-              'expanded-logo': isSidebarExpanded,
-              'collapsed-logo': !isSidebarExpanded,
+              'expanded-logo': isSidebarToggled,
+              'collapsed-logo': !isSidebarToggled,
             }"
           />
         </div>
@@ -28,7 +36,7 @@
           flat
           class="sidebar-button"
           :class="{
-            expanded: isSidebarExpanded,
+            Toggled: isSidebarToggled,
             active: isMenuActive(menu.label),
           }"
           v-for="menu in menus"
@@ -38,13 +46,13 @@
           <div class="button-content">
             <q-icon
               :name="menu.icon"
-              :class="{ expanded: isSidebarExpanded }"
+              :class="{ toggled: isSidebarToggled }"
               class="sidebar-icon"
             />
 
             <p
-              v-show="isSidebarExpanded"
-              :class="{ expanded: isSidebarExpanded }"
+              v-show="isSidebarToggled"
+              :class="{ toggled: isSidebarToggled }"
               class="sidebar-title"
             >
               {{ menu.title }}
@@ -56,20 +64,20 @@
           flat
           class="sidebar-button"
           :class="{
-            expanded: isSidebarExpanded,
+            toggled: isSidebarToggled,
           }"
           @click="logout"
         >
           <div class="button-content">
             <q-icon
               name="logout"
-              :class="{ expanded: isSidebarExpanded }"
+              :class="{ toggled: isSidebarToggled }"
               class="sidebar-icon"
             />
 
             <p
-              v-show="isSidebarExpanded"
-              :class="{ expanded: isSidebarExpanded }"
+              v-show="isSidebarToggled"
+              :class="{ toggled: isSidebarToggled }"
               class="sidebar-title"
             >
               登出
@@ -78,6 +86,7 @@
         </q-btn>
       </div>
     </div>
+    <div v-if="isSidebarUnder885" class="dark-overlay"></div>
 
     <div class="content">
       <router-view />
@@ -87,21 +96,51 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
-import { computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import expandedLogo from './expanded-logo.png';
 import collapsedLogo from './collapsed-logo.png';
 import axios from 'axios';
 
 const router = useRouter();
-const isSidebarExpanded = ref(true);
+const isSidebarToggled = ref(true);
+const screenWidth = ref(window.innerWidth);
+const isManuallyExpanded = ref(false);
+const isSidebarUnder885 = computed(
+  () => screenWidth.value <= 885 && isSidebarToggled.value
+);
+
+const updateSidebarState = () => {
+  if (screenWidth.value <= 885 && !isManuallyExpanded.value) {
+    isSidebarToggled.value = false;
+  } else {
+    isSidebarToggled.value = true;
+    if (screenWidth.value > 885) {
+      isManuallyExpanded.value = false;
+    }
+  }
+};
+
+watch(screenWidth, updateSidebarState);
+
+window.addEventListener('resize', () => {
+  screenWidth.value = window.innerWidth;
+});
 
 const currentChange = (label: string) => {
+  if (screenWidth.value <= 885) {
+    isSidebarToggled.value = false;
+  }
   router.push({ path: label });
 };
 
 const toggleSidebar = () => {
-  isSidebarExpanded.value = !isSidebarExpanded.value;
+  isSidebarToggled.value = !isSidebarToggled.value;
+  isManuallyExpanded.value = isSidebarToggled.value;
+};
+
+const expandSidebar = () => {
+  isSidebarToggled.value = true;
+  isManuallyExpanded.value = true;
 };
 
 const isMenuActive = (label: string) => {
@@ -111,8 +150,9 @@ const isMenuActive = (label: string) => {
       `/${label.toLowerCase()}` === '/pending')
   );
 };
+
 const logoSource = computed(() => {
-  return isSidebarExpanded.value ? expandedLogo : collapsedLogo;
+  return isSidebarToggled.value ? expandedLogo : collapsedLogo;
 });
 
 const menus = [
@@ -142,6 +182,7 @@ const menus = [
     label: 'member',
   },
 ];
+
 const logout = async () => {
   try {
     const result = await axios.post(
@@ -159,7 +200,54 @@ const logout = async () => {
   }
 };
 </script>
+
 <style scoped>
+.expand-button-container {
+  display: none;
+  justify-content: center;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1100;
+}
+
+.expand-button {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.dark-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+@media (max-width: 885px) {
+  .expand-button-container {
+    display: flex;
+  }
+  .sidebar {
+    display: none;
+    width: 20rem;
+    height: 100%;
+    box-shadow: none !important;
+  }
+
+  .sidebar.toggled {
+    display: block;
+
+    position: absolute;
+
+    z-index: 999;
+  }
+}
+
 .custom-layout {
   display: flex;
   height: 100vh;
@@ -169,7 +257,7 @@ const logout = async () => {
 .sidebar {
   background-color: white;
   width: 100px;
-  transition: width 0.3s;
+  transition: width 0.3s ease;
   box-shadow: 5px 0px 30px 0px rgba(226, 236, 249, 0.5);
 }
 
@@ -200,14 +288,17 @@ const logout = async () => {
   background-color: #79a0bd;
   color: white;
 }
-.expanded {
+.toggled {
   width: 20rem;
 }
-.expanded .sidebar-icon {
+.toggled .sidebar-icon {
+  max-width: 2rem;
+}
+.toggled .sidebar-icon {
   max-width: 2rem;
 }
 
-.expanded .sidebar-title {
+.toggled .sidebar-title {
   max-width: 6rem;
   margin-left: 1rem;
   display: flex;
@@ -217,7 +308,7 @@ const logout = async () => {
   align-items: center;
 }
 
-.expanded .button-content {
+.toggled .button-content {
   display: flex;
 }
 
@@ -230,14 +321,14 @@ const logout = async () => {
   padding: 20px;
   transition: margin-left 0.3s;
 }
-.expand-button {
+.toggle-button {
   left: 4.5rem;
   width: 1rem;
   background-color: transparent;
   border: 0;
   cursor: pointer;
 }
-.expand-button-container {
+.toggle-button-container {
   display: flex;
   justify-content: flex-end;
   padding-top: 1rem;
@@ -260,7 +351,7 @@ const logout = async () => {
   transform: rotate(180deg);
   transition: transform 0.3s ease-in-out;
 }
-.expanded .chevron-icon:hover {
+.toggled .chevron-icon:hover {
   transition: 0.3s;
   color: white;
 }
