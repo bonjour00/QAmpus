@@ -8,6 +8,7 @@
         <q-icon size="20px" name="arrow_forward_ios" class="chevron-icon" />
       </button>
     </div>
+
     <div class="sidebar" :class="{ toggled: isSidebarToggled }">
       <div class="sidebar-list">
         <div class="toggle-button-container">
@@ -96,20 +97,14 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-<<<<<<< HEAD
-import { ref, computed, watch } from 'vue';
-import expandedLogo from './expanded-logo.png';
-import collapsedLogo from './collapsed-logo.png';
-import axios from 'axios';
-=======
 import { ref } from 'vue';
 import { computed } from 'vue';
+import { watch } from 'vue';
 import expandedLogo from '../assets/expanded-logo.png';
 import collapsedLogo from '../assets/collapsed-logo.png';
 import { useUserStore } from 'src/stores/Auth/user';
 
 const userStore = useUserStore();
->>>>>>> origin
 
 const router = useRouter();
 const isSidebarToggled = ref(true);
@@ -164,7 +159,6 @@ const logoSource = computed(() => {
   return isSidebarToggled.value ? expandedLogo : collapsedLogo;
 });
 
-<<<<<<< HEAD
 const menus = [
   {
     title: '待解決問題',
@@ -193,8 +187,6 @@ const menus = [
   },
 ];
 
-=======
->>>>>>> origin
 const logout = async () => {
   userStore.logout();
 };
@@ -204,10 +196,10 @@ const logout = async () => {
 .expand-button-container {
   display: none;
   justify-content: center;
-  position: fixed;
+  position: absolute;
   top: 1rem;
   left: 1rem;
-  z-index: 1100;
+  z-index: 900;
 }
 
 .expand-button {
@@ -240,10 +232,8 @@ const logout = async () => {
 
   .sidebar.toggled {
     display: block;
-
     position: absolute;
-
-    z-index: 999;
+    z-index: 3;
   }
 }
 
@@ -258,6 +248,7 @@ const logout = async () => {
   width: 100px;
   transition: width 0.3s ease;
   box-shadow: 5px 0px 30px 0px rgba(226, 236, 249, 0.5);
+  overflow-y: auto;
 }
 
 .sidebar-list {
@@ -316,9 +307,12 @@ const logout = async () => {
 
 .content {
   flex: 1;
-  padding: 20px;
+  margin: 10px;
   transition: margin-left 0.3s;
+
+  overflow-x: auto;
 }
+
 .toggle-button {
   left: 4.5rem;
   width: 1rem;
@@ -328,9 +322,16 @@ const logout = async () => {
 }
 .toggle-button-container {
   display: flex;
+  position: absolute;
+  z-index: 999;
   justify-content: flex-end;
-  padding-top: 1rem;
-  padding-right: 1rem;
+  left: 5rem;
+  top: 1rem;
+  transition: left 0.3s ease;
+}
+.toggled .toggle-button-container {
+  left: 18.5rem;
+  transition: left 0.3s ease;
 }
 .chevron-icon {
   color: #9197b3;

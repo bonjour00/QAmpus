@@ -92,3 +92,4 @@ const deleteQaSubmit = async () => {
   fetchRows();
 };
 </script>
+<style scoped></style>
