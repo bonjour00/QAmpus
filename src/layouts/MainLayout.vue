@@ -99,17 +99,21 @@ const router = useRouter();
 const isSidebarExpanded = ref(true);
 
 const currentChange = (label: string) => {
-  router.push({ path: label });
+  router.push({ name: label });
 };
 const toggleSidebar = () => {
   isSidebarExpanded.value = !isSidebarExpanded.value;
 };
 
 const isMenuActive = (label: string) => {
+  const path = router.currentRoute.value.path;
+  const pathArray = path.split('/');
+  const index = pathArray.length - 2;
+  const pathName = label.toLowerCase();
   return (
-    router.currentRoute.value.path === `/${label.toLowerCase()}` ||
-    (router.currentRoute.value.path === '/' &&
-      `/${label.toLowerCase()}` === '/pending')
+    pathArray[index] === `${pathName}` ||
+    path === `/${pathName}` ||
+    (path === '/' && `/${pathName}` === '/pending')
   );
 };
 const logoSource = computed(() => {
@@ -143,9 +147,9 @@ const logout = async () => {
   margin-left: 0.5rem;
 }
 .sidebar-button {
-  margin-top: 2rem;
+  margin-top: 1rem;
   width: 70% !important;
-  height: 3.5rem;
+  height: 3rem;
   border: 0;
   left: 15%;
   border-radius: 8px;
@@ -187,7 +191,7 @@ const logout = async () => {
 
 .content {
   flex: 1;
-  padding: 20px;
+  /* padding: 20px; */
   transition: margin-left 0.3s;
 }
 .expand-button {

@@ -24,6 +24,16 @@ export const adminMenu = [
     icon: 'groups',
     label: 'member',
   },
+  {
+    title: '聊天室',
+    icon: 'chat',
+    label: 'chat',
+  },
+  {
+    title: '個人設置',
+    icon: 'manage_accounts',
+    label: 'setting',
+  },
 ];
 export const assignerMenu = [
   { title: '待指派問題', icon: 'assignment_late', label: 'assign' },

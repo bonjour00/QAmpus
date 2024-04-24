@@ -42,35 +42,46 @@ export default route(function (/* { store, ssrContext } */) {
   Router.beforeEach(async (to, from) => {
     const userStore = useUserStore();
     if (!to.meta.requiresAuth) {
+      if (to.meta.needIdentify) {
+        const token = localStorage.getItem('token');
+        if (token) {
+          await userStore.tokenAnalyzation();
+        }
+      }
       return true;
     } else {
       const token = localStorage.getItem('token');
       if (!token) {
-        return { path: '/login' };
+        return { path: '/chat' };
       }
       try {
         await userStore.tokenAnalyzation();
         const userRole = userStore.userPermission;
-        userStore.initialMenu();
+        //去符合自己權限
         if (to.meta.role?.includes(userRole)) {
           if (to.path == '/') {
-            if (userRole == 'assigner') {
-              return { path: '/assign' };
-            } else if (userRole == 'admin') {
-              return { path: '/pending' };
+            switch (userRole) {
+              case 'assigner':
+                return { path: '/assign' };
+              case 'admin':
+                return { path: '/pending' };
+              default:
+                return { path: '/chat' };
             }
           }
           return true;
-        } else if (userRole == 'admin') {
-          return { path: '/pending' };
-        } else if (userRole == 'assigner') {
-          return { path: '/assign' };
-        } else {
-          return { path: '/chat' };
+        } //去不符合自己權限
+        switch (userRole) {
+          case 'assigner':
+            return { path: '/assign' };
+          case 'admin':
+            return { path: '/pending' };
+          default:
+            return { path: '/chat' };
         }
       } catch (e) {
         console.log('error:', e);
-        return { path: '/login' };
+        return { path: '/chat' };
       }
     }
   });

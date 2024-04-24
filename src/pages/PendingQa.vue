@@ -8,17 +8,25 @@
       rowKey="questionId"
     >
       <template v-slot:action>
-        <SlotBtn btnName="測試" @clicked="openTestingDialog()" />
+        <SlotBtn
+          btnName="批次測試"
+          @clicked="openTestingDialog()"
+          v-show="tableStore.selected.length > 0"
+        />
       </template>
       <template v-slot:btnAction="slotProps">
         <RoundBtn @clicked="openEditDialog(slotProps.props.row)" icon="edit" />
         <RoundBtn
+          v-if="
+            userStore.userPermission == 'assigner' ||
+            !slotProps.props.row.questoinFinalassign
+          "
           @clicked="openWarningDialog(slotProps.props.row)"
           icon="delete"
         />
       </template>
     </Table>
-    <EditDialog btnName="修改" />
+    <EditDialog btnName="轉移單位" />
     <TestingDialog />
     <WarningDialog
       v-model:open="openWarning"
@@ -50,10 +58,12 @@ import { useEditDialogStore } from 'src/stores/Dialog/editDialog';
 import useWarningDialog from 'src/composables/Dialog/useWarningDialog';
 import useTableAction from 'src/composables/Table/useTableAction';
 import { useTestingDialogStore } from 'src/stores/Dialog/testingDialog';
+import { useUserStore } from 'src/stores/Auth/user';
 
 const tableStore = useTableStore();
 const editDialogStore = useEditDialogStore();
 const testingDialogStore = useTestingDialogStore();
+const userStore = useUserStore();
 const {
   open: openWarning,
   row,

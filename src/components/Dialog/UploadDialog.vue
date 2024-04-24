@@ -73,12 +73,16 @@
                   clearable
                   @rejected="rejected"
                   ref="fileRef"
-                  :rules="[
-                    notEmptyResource,
-                    blobUploadVaild,
-                    blobUploadLength,
-                    uploadDialogStore.reuploadRule,
-                  ]"
+                  :rules="
+                    uploadDialogStore.fileName && uploadDialogStore.file == null
+                      ? []
+                      : [
+                          notEmptyResource,
+                          blobUploadVaild,
+                          blobUploadLength,
+                          uploadDialogStore.reuploadRule,
+                        ]
+                  "
                 >
                   <template v-slot:prepend>
                     <q-icon name="attach_file" />
@@ -89,12 +93,27 @@
           </q-tab-panels>
         </div>
       </q-card-section>
-      <q-card-actions align="right">
-        <DialogButton btnName="取消" @clicked="closeUploadDialog" />
+      <q-card-actions align="right" class="q-pa-md">
+        <FilterSelect
+          v-show="
+            userStore.userPermission == 'assigner' &&
+            !uploadDialogStore.fileName
+          "
+          title="註冊單位: "
+          v-model:currentOption="uploadDialogStore.office"
+          :filterFn="filterFn"
+          :filterOption="uploadDialogStore.filterOption"
+        />
+        <q-space />
+        <DialogButton
+          btnName="取消"
+          @clicked="closeUploadDialog"
+          :flat="true"
+        />
         <DialogButton
           :btnName="
             uploadDialogStore.tab == 'url'
-              ? '付費訂閱'
+              ? '付費解鎖'
               : uploadDialogStore.btnName
           "
           @clicked="uploadResource"
@@ -109,6 +128,7 @@
 import DialogButton from 'src/components/Button/Dialog/DialogButton.vue';
 import HourglassLoading from '../Loading/HourglassLoading.vue';
 import RoundBtn from 'src/components/Button/IconBtn/RoundBtn.vue';
+import FilterSelect from '../Select/FilterSelect.vue';
 import { useUploadDialogStore } from 'src/stores/Dialog/uploadDialog';
 import {
   notEmpty,
@@ -117,8 +137,10 @@ import {
   notEmptyResource,
 } from '../Input/rules';
 import { storeToRefs } from 'pinia';
+import { useUserStore } from 'src/stores/Auth/user';
 
 const uploadDialogStore = useUploadDialogStore();
+const userStore = useUserStore();
 const { sourceNameRef, fileRef } = storeToRefs(uploadDialogStore);
 
 const rejected = (rejection: any) => {
@@ -129,5 +151,8 @@ const uploadResource = () => {
 };
 const closeUploadDialog = () => {
   uploadDialogStore.closeUploadDialog();
+};
+const filterFn = (val: string, update: any) => {
+  uploadDialogStore.filterFn(val, update);
 };
 </script>

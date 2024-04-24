@@ -5,7 +5,7 @@ const addHours = (date: Date, hours: number) => {
   return date;
 };
 
-export const pendingColumns = [
+const pendingColumn = [
   {
     name: 'questionQuestion',
     label: '問題',
@@ -44,15 +44,9 @@ export const pendingColumns = [
     sortable: true,
     headerStyle,
   },
-  {
-    name: 'actions',
-    align: 'right',
-    label: '',
-    field: '',
-  },
 ];
 
-export const resourceColumns = [
+const resourceColumn = [
   {
     name: 'dataFilename',
     label: '來源',
@@ -100,10 +94,9 @@ export const resourceColumns = [
     sortable: true,
     headerStyle,
   },
-  { name: 'actions', align: 'right', label: '', field: '' },
 ];
 
-export const memberColumns = [
+const memberColumn = [
   {
     name: 'userId',
     label: '教職員編號',
@@ -162,19 +155,48 @@ export const memberColumns = [
     sortable: true,
     headerStyle,
   },
-  { name: 'actions', align: 'right', label: '', field: '' },
 ];
-
-const index = pendingColumns.findIndex((column) => column.name === 'actions');
+const action = { name: 'actions', align: 'right', label: '', field: '' };
+export const pendingColumns = [...pendingColumn, action];
+export const resourceColumns = [...resourceColumn, action];
+export const memberColumns = [...memberColumn, action];
 export const assignColumn = [
-  ...pendingColumns.slice(0, index),
+  ...pendingColumn,
   {
-    name: 'trans',
+    name: 'time',
     align: 'left',
     label: '轉移次數',
-    field: 'trans',
+    field: 'time',
     sortable: true,
     headerStyle,
   },
-  ...pendingColumns.slice(index),
+  action,
+];
+export const trashQAColumns = [
+  ...pendingColumn,
+  {
+    name: 'questionDeletedtime',
+    align: 'left',
+    label: '刪除時間',
+    field: 'questionDeletedtime',
+    format: (val: Date) =>
+      `${addHours(new Date(val), 8).toLocaleString('zh-TW')}`,
+    sortable: true,
+    headerStyle,
+  },
+  action,
+];
+export const trashResouceColumns = [
+  ...resourceColumn,
+  {
+    name: 'dataDeletedTime',
+    align: 'left',
+    label: '刪除時間',
+    field: 'dataDeletedTime',
+    format: (val: Date) =>
+      `${addHours(new Date(val), 8).toLocaleString('zh-TW')}`,
+    sortable: true,
+    headerStyle,
+  },
+  action,
 ];

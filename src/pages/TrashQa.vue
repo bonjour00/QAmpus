@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <Table
       :rows="tableStore.rows"
-      :columns="pendingColumns"
+      :columns="trashQAColumns"
       tableTitle="近期刪除問題"
       rowKey="questionId"
     >
@@ -26,6 +26,7 @@
       @close="closeWarningDialog"
     />
   </div>
+  <HourglassLoading :showing="loading" />
 </template>
 
 <script setup lang="ts">
@@ -35,10 +36,11 @@ import {
   QA_TABLE_API,
   TRASH_QA_TABLE_STATUS,
 } from '../components/Table/data ';
-import { pendingColumns } from '../components/Table/Columns';
+import { trashQAColumns } from '../components/Table/Columns';
 import RoundBtn from 'src/components/Button/IconBtn/RoundBtn.vue';
 import { useTableStore } from 'src/stores/Table/table';
 import useTableApi from 'src/composables/Table/useTableApi';
+import HourglassLoading from 'src/components/Loading/HourglassLoading.vue';
 import WarningDialog from 'src/components/Dialog/WarningDialog.vue';
 import useWarningDialog from 'src/composables/Dialog/useWarningDialog';
 import useTableAction from 'src/composables/Table/useTableAction';
@@ -52,7 +54,6 @@ const {
 } = useWarningDialog();
 const { recoverQa, permanentDelQa, loading } = useTableAction();
 const { fetchRows } = useTableApi(QA_TABLE_API, TRASH_QA_TABLE_STATUS);
-
 //fetch rows
 fetchRows();
 

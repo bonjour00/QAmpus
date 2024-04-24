@@ -52,7 +52,11 @@
           :filterFn="filterFn"
           :filterOption="registerDialogStore.filterOption"
         />
-        <DialogButton btnName="取消" @clicked="closeRegisterDialog" />
+        <DialogButton
+          btnName="取消"
+          @clicked="closeRegisterDialog"
+          :flat="true"
+        />
         <DialogButton btnName="註冊" @clicked="signupMember" />
       </q-card-actions>
       <HourglassLoading :showing="registerDialogStore.loading" />

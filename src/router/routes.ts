@@ -21,6 +21,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           role: ['assigner'],
         },
+        name: 'assign',
         component: () => import('pages/AssignQa.vue'),
       },
       {
@@ -43,11 +44,37 @@ const routes: RouteRecordRaw[] = [
         name: 'member',
         component: () => import('pages/AdminMember.vue'),
       },
+      {
+        path: 'setting',
+
+        meta: {
+          role: ['admin', 'assigner', 'user'],
+        },
+        children: [
+          {
+            path: '',
+            name: 'setting',
+            component: () => import('pages/PersonSetting.vue'),
+          },
+          {
+            path: 'vertify-pwd',
+            name: 'vertify-pwd',
+            component: () => import('pages/VertifyPwd.vue'),
+          },
+          {
+            path: 'reset-person-pwd',
+            name: 'reset-person-pwd',
+            component: () => import('pages/PersonPwd.vue'),
+          },
+        ],
+      },
     ],
   },
   {
     path: '/chat',
-    meta: { requiresAuth: true, role: ['user'] },
+    meta: {
+      needIdentify: true,
+    },
     component: () => import('layouts/UserLayout.vue'),
     children: [
       {

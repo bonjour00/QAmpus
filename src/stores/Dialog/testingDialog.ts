@@ -45,7 +45,7 @@ export const useTestingDialogStore = defineStore('testingDialog', () => {
       status.value = tableStatus;
       testingQaMuti(data);
     } else {
-      notifyWarning('尚未選取測試內容');
+      notifyWarning('尚未選取核准內容');
     }
   };
 
