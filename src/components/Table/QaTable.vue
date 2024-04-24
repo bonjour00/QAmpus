@@ -58,7 +58,8 @@
       <q-td :props="props">
         <q-chip
           square
-          class="q-my-xs"
+          :ripple="false"
+          class="q-my-xs text-weight-bold"
           :color="vertifyColor(props.value)"
           text-color="white"
           >{{ props.value ? '已驗證' : '未驗證' }}</q-chip
@@ -111,9 +112,9 @@ defineEmits(['download']);
 
 const vertifyColor = (data: any) => {
   if (data) {
-    return 'primary';
+    return 'green';
   }
-  return 'secondary';
+  return 'red';
 };
 //toolBar
 const title = '分類'; //optionTitle(prepend前綴)

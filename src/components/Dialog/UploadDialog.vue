@@ -94,7 +94,7 @@
         <DialogButton
           :btnName="
             uploadDialogStore.tab == 'url'
-              ? '付費訂閱'
+              ? '付費解鎖'
               : uploadDialogStore.btnName
           "
           @clicked="uploadResource"

@@ -10,28 +10,27 @@
     </div>
 
     <div class="sidebar" :class="{ toggled: isSidebarToggled }">
+      <div class="toggle-button-container">
+        <button
+          class="toggle-button"
+          @click="toggleSidebar"
+          align="right"
+          :class="{ 'rotate-icon': isSidebarToggled }"
+        >
+          <q-icon size="20px" name="arrow_forward_ios" class="chevron-icon" />
+        </button>
+      </div>
+      <div class="logo-container">
+        <img
+          class="logo"
+          :src="logoSource"
+          :class="{
+            'expanded-logo': isSidebarToggled,
+            'collapsed-logo': !isSidebarToggled,
+          }"
+        />
+      </div>
       <div class="sidebar-list">
-        <div class="toggle-button-container">
-          <button
-            class="toggle-button"
-            @click="toggleSidebar"
-            align="right"
-            :class="{ 'rotate-icon': isSidebarToggled }"
-          >
-            <q-icon size="20px" name="arrow_forward_ios" class="chevron-icon" />
-          </button>
-        </div>
-        <div class="logo-container">
-          <img
-            class="logo"
-            :src="logoSource"
-            :class="{
-              'expanded-logo': isSidebarToggled,
-              'collapsed-logo': !isSidebarToggled,
-            }"
-          />
-        </div>
-
         <q-btn
           align="left"
           flat
@@ -61,9 +60,9 @@
           </div>
         </q-btn>
         <q-btn
-          align="left"
+          class="logout-button"
           flat
-          class="sidebar-button"
+          align="left"
           :class="{
             toggled: isSidebarToggled,
           }"
@@ -87,6 +86,7 @@
         </q-btn>
       </div>
     </div>
+
     <div v-if="isSidebarUnder885" class="dark-overlay"></div>
 
     <div class="content">
@@ -234,6 +234,7 @@ const logout = async () => {
     display: block;
     position: absolute;
     z-index: 3;
+    transition: width 0.3s ease;
   }
 }
 
@@ -254,13 +255,15 @@ const logout = async () => {
 .sidebar-list {
   display: flex;
   flex-direction: column;
+  padding-top: 10rem;
+  padding-bottom: 3rem;
 }
 
 .sidebar-icon {
   margin-left: 0.5rem;
 }
 .sidebar-button {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   width: 70% !important;
   height: 3.5rem;
   border: 0;
@@ -274,6 +277,7 @@ const logout = async () => {
   transition: 0.2s;
   color: white;
 }
+
 .sidebar-button.active {
   background-color: #79a0bd;
   color: white;
@@ -314,8 +318,6 @@ const logout = async () => {
 }
 
 .toggle-button {
-  left: 4.5rem;
-  width: 1rem;
   background-color: transparent;
   border: 0;
   cursor: pointer;
@@ -332,6 +334,7 @@ const logout = async () => {
 .toggled .toggle-button-container {
   left: 18.5rem;
   transition: left 0.3s ease;
+  position: fixed;
 }
 .chevron-icon {
   color: #9197b3;
@@ -355,20 +358,34 @@ const logout = async () => {
   color: white;
 }
 .expanded-logo {
+  position: absolute;
   width: 15rem;
-}
-.collapsed-logo {
-  width: 3.5rem;
-  height: 3.5rem;
-  margin-bottom: 0.8rem;
+  left: 2.5rem;
   transition: transform 0.3s ease-in-out;
 }
+.collapsed-logo {
+  position: absolute;
+  width: 3.5rem;
+  height: 3.5rem;
+  left: 1.5rem;
+  margin-bottom: 0.8rem;
+}
 .logo-container {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: 1rem;
-  margin-bottom: 3rem;
+  position: fixed;
+  height: 8rem;
+  padding-top: 3rem;
+  width: 100px;
+  background-color: white;
+  z-index: 3;
+  transition: width 0.3s ease;
+}
+.toggled .logo-container {
+  width: 20rem;
+}
+.logout-button {
+  position: fixed;
+
+  background-color: white;
+  bottom: 0;
 }
 </style>
