@@ -59,37 +59,17 @@
             </p>
           </div>
         </q-btn>
-        <q-btn
-          class="logout-button"
-          flat
-          align="left"
-          :class="{
-            toggled: isSidebarToggled,
-          }"
-          @click="logout"
-        >
-          <div class="button-content">
-            <q-icon
-              name="logout"
-              :class="{ toggled: isSidebarToggled }"
-              class="sidebar-icon"
-            />
-
-            <p
-              v-show="isSidebarToggled"
-              :class="{ toggled: isSidebarToggled }"
-              class="sidebar-title"
-            >
-              登出
-            </p>
-          </div>
-        </q-btn>
       </div>
     </div>
 
     <div v-if="isSidebarUnder885" class="dark-overlay"></div>
 
     <div class="content">
+      <button class="logout-button" @click="logout">
+        <q-icon name="logout" class="logout-icon" />
+
+        <p class="sidebar-title">登出</p>
+      </button>
       <router-view />
     </div>
   </div>
@@ -270,6 +250,7 @@ const logout = async () => {
   left: 15%;
   border-radius: 8px;
   color: #9197b3;
+  font-weight: bolder;
 }
 
 .sidebar-button:hover {
@@ -311,8 +292,9 @@ const logout = async () => {
 
 .content {
   flex: 1;
-  margin: 10px;
   transition: margin-left 0.3s;
+  padding-left: 5px;
+  padding-right: 5px;
 
   overflow-x: auto;
 }
@@ -361,7 +343,6 @@ const logout = async () => {
   position: absolute;
   width: 15rem;
   left: 2.5rem;
-  transition: transform 0.3s ease-in-out;
 }
 .collapsed-logo {
   position: absolute;
@@ -382,10 +363,20 @@ const logout = async () => {
 .toggled .logo-container {
   width: 20rem;
 }
-.logout-button {
-  position: fixed;
 
-  background-color: white;
-  bottom: 0;
+.logout-button {
+  background-color: transparent;
+  font-size: 1.2rem;
+  position: absolute;
+  border: 0;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  width: 4.5rem;
+  right: 2rem;
+  top: 3%;
+  align-items: center;
+  color: #1769a0;
+  font-weight: 600;
 }
 </style>

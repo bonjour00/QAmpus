@@ -7,7 +7,7 @@
     hide-pagination
     :rows-per-page-options="[tableStore.perPage]"
     :loading="tableStore.loading"
-    style="border-radius: 25px; padding: 20px; height: 92vh"
+    style="border-radius: 25px; padding: 20px; height: 87vh; margin-top: 7vh"
     :selection="selection || 'none'"
     v-model:selected="tableStore.selected"
   >
