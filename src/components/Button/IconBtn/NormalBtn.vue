@@ -1,5 +1,10 @@
 <template>
-  <q-btn unelevated color="primary" @click="clicked" style="min-width: 115px">
+  <q-btn
+    unelevated
+    color="primary"
+    @click="clicked"
+    style="min-width: 115px; border-radius: 8px; font-weight: bolder"
+  >
     <q-icon :name="icon" />{{ btnName }}
   </q-btn>
 </template>

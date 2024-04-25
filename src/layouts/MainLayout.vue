@@ -112,6 +112,9 @@ window.addEventListener('resize', () => {
 });
 
 const currentChange = (label: string) => {
+  if (screenWidth.value <= 885) {
+    isSidebarToggled.value = false;
+  }
   router.push({ path: label });
 };
 const toggleSidebar = () => {
@@ -246,7 +249,7 @@ const logout = async () => {
 .sidebar-button {
   margin-top: 2rem;
   width: 70% !important;
-  height: 3rem;
+  height: 3.5rem;
   border: 0;
   left: 15%;
   border-radius: 8px;
@@ -293,17 +296,17 @@ const logout = async () => {
 
 .content {
   flex: 1;
-  padding: 20px;
   transition: margin-left 0.3s;
   padding-left: 5px;
   padding-right: 5px;
-
   overflow-x: auto;
 }
 
 .toggle-button {
   background-color: transparent;
   border: 0;
+  box-shadow: 0px 3px 5px 0px rgba(171, 170, 170, 0.5);
+  border-radius: 50%;
   cursor: pointer;
 }
 .toggle-button-container {
@@ -325,7 +328,7 @@ const logout = async () => {
   width: 40px;
   height: 40px;
   font-weight: 900;
-  background-color: rgb(255, 255, 255);
+  background-color: white;
   border-radius: 50%;
 }
 .chevron-icon:hover {

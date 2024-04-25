@@ -37,7 +37,7 @@
                 @click="copy(index)"
               />
               <q-btn
-                icon="thumb_down"
+                icon="o_thumb_down"
                 unelevated
                 ripple
                 round
@@ -52,12 +52,15 @@
     <div class="messagebar column">
       <q-input
         v-model="chatStore.question"
-        filled
+        standout
         autogrow
         placeholder="傳訊息給QAmpus...."
         class="bar-input"
         @keydown.enter.exact.prevent="sendMessage"
-        :input-style="{ color: 'white', maxHeight: '150px' }"
+        :input-style="{
+          color: 'white',
+          maxHeight: '150px',
+        }"
         :disable="chatStore.loading"
       >
         <template v-slot:append>
@@ -159,6 +162,7 @@ const copy = (index: number) => {
   align-items: center;
   justify-content: space-between;
   width: 60vw;
+  border-radius: 10px;
 }
 
 .messagebar button {
@@ -183,7 +187,6 @@ const copy = (index: number) => {
 .qampus-greet img {
   width: 60px;
   height: 60px;
-  border-radius: 50%;
 }
 .greet-text {
   margin: 10px;
