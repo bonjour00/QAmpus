@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { Ref, ref } from 'vue';
+import { Ref, computed, ref } from 'vue';
 import { api } from 'src/boot/axios';
 import { useRouter } from 'vue-router';
 import { adminMenu, assignerMenu } from 'src/components/Layout/data';
@@ -12,7 +12,7 @@ export const useUserStore = defineStore('user', () => {
   const userEmail: Ref<string | null> = ref(null);
   const officeId: Ref<number | null> = ref(null); //165
   const officeName: Ref<string | null> = ref(null); //'資管系'
-  const layoutMenu = ref(adminMenu);
+  // const layoutMenu = ref(adminMenu);
 
   const $reset = () => {
     userPermission.value = '';
@@ -21,6 +21,10 @@ export const useUserStore = defineStore('user', () => {
     officeName.value = null;
     userEmail.value = null;
   };
+
+  const layoutMenu = computed(() => {
+    return userPermission.value === 'assigner' ? assignerMenu : adminMenu;
+  });
 
   const tokenAnalyzation = async () => {
     try {
@@ -44,27 +48,30 @@ export const useUserStore = defineStore('user', () => {
     } catch (error: any) {
       console.log('errorAuth:', error);
       localStorage.removeItem('token');
-      router.push({ path: '/login' });
+      router.push({ path: '/chat' });
     }
   };
-  const initialMenu = () => {
-    layoutMenu.value =
-      userPermission.value == 'assigner' ? assignerMenu : adminMenu;
-  };
+  // const initialMenu = () => {
+  //   layoutMenu.value =
+  //     userPermission.value == 'assigner' ? assignerMenu : adminMenu;
+  // };
 
   const logout = async () => {
+    const token = localStorage.getItem('token');
+    $reset();
+    localStorage.removeItem('token');
+    router.push({ path: '/chat' });
     try {
       const result = await api.post(
         '/User/logout',
         {},
         {
-          headers: { Authorization: localStorage.getItem('token') },
+          headers: { Authorization: token },
         }
       );
-      $reset();
-      localStorage.removeItem('token');
-      router.push({ path: '/login' });
     } catch (e) {
+      localStorage.removeItem('token');
+      router.push({ path: '/chat' });
       console.log('error', e);
     }
   };
@@ -75,7 +82,6 @@ export const useUserStore = defineStore('user', () => {
     userEmail,
     officeId,
     officeName,
-    initialMenu,
     tokenAnalyzation,
     logout,
   };

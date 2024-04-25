@@ -11,8 +11,15 @@
         <div class="text-body1">{{ description }}</div>
       </q-card-section>
       <q-card-actions align="center">
-        <DialogButton btnName="取消" @clicked="closeWarningDialog" />
-        <DialogButton btnName="刪除" @clicked="warningDialogConfirm" />
+        <DialogButton
+          btnName="取消"
+          @clicked="closeWarningDialog"
+          :flat="true"
+        />
+        <DialogButton
+          :btnName="btnName || '刪除'"
+          @clicked="warningDialogConfirm"
+        />
       </q-card-actions>
       <HourglassLoading :showing="loading" />
     </q-card>
@@ -28,7 +35,8 @@ const props = defineProps<{
   open: boolean;
   title: string;
   description: string;
-  loading: boolean;
+  loading?: boolean;
+  btnName?: string;
 }>();
 const emit = defineEmits(['warningDialogConfirm', 'close']);
 

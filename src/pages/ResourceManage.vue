@@ -36,6 +36,7 @@
     />
     <UploadDialog />
   </div>
+  <HourglassLoading :showing="loading" />
 </template>
 
 <script setup lang="ts">
@@ -55,6 +56,7 @@ import SlotBtn from 'src/components/Button/Table/SlotBtn.vue';
 import useWarningDialog from 'src/composables/Dialog/useWarningDialog';
 import useTableAction from 'src/composables/Table/useTableAction';
 import WarningDialog from 'src/components/Dialog/WarningDialog.vue';
+import HourglassLoading from 'src/components/Loading/HourglassLoading.vue';
 import { useUploadDialogStore } from 'src/stores/Dialog/uploadDialog';
 
 const tableStore = useTableStore();

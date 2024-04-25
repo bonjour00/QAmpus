@@ -1,152 +1,133 @@
 <template>
-  <div class="chatbox-wrapper">
+  <div class="flex flex-center container">
     <div class="message-box">
-      <div class="qampus-greet" v-if="qaList.length == 0">
+      <div class="qampus-greet" v-if="chatStore.qaList.length == 0">
         <img :src="collapsedLogo" />
         <span class="greet-text"><b>How can I help you today?</b></span>
       </div>
-      <div v-for="(qa, index) in qaList" :key="index">
-        <div class="chat message">
+      <div v-for="(qa, index) in chatStore.qaList" :key="index">
+        <div class="chat">
           <img src="../assets/user.png" />
-          <span
-            ><b>您</b> <br />
+          <span>
+            <b>您</b>
+            <br />
             {{ qa.question }}
           </span>
         </div>
-        <div class="chat response">
+        <div class="chat">
           <img :src="collapsedLogo" />
-          <span
-            ><b>QAmpus</b> <br />
-            {{ typeof qa.answer == 'object' ? qa.answer.qaAnswer : qa.answer }}
+          <span>
+            <b>QAmpus</b>
             <br />
+            <div class="q-mt-md" v-if="qa.loading"><DotFlashing /></div>
+            <div v-else>{{ qa.answer }}</div>
             <div
-              v-if="
-                typeof qa.answer == 'object' &&
-                qa.answer.source &&
-                qa.answer.sourcePhrase
-              "
+              class="toolbar flex"
+              v-if="!qa.loading"
+              :style="{
+                display: index === chatStore.qaList.length - 1 ? 'block' : '',
+              }"
             >
-              來源: {{ typeof qa.answer == 'object' && qa.answer.source }}
-              <br />
-              來源訓練句:{{
-                typeof qa.answer == 'object' && qa.answer.sourcePhrase
-              }}
+              <q-btn
+                :icon="qa.copyIcon"
+                unelevated
+                ripple
+                round
+                size="10px"
+                @click="copy(index)"
+              />
+              <q-btn
+                icon="thumb_down"
+                unelevated
+                ripple
+                round
+                size="10px"
+                @click="handleThumbDown(index)"
+              />
             </div>
-            <q-btn
-              icon="thumb_down"
-              unelevated
-              ripple
-              round
-              size="10px"
-              v-if="qa.answer != '...'"
-              @click="handleThumbDown(index)"
-            />
           </span>
         </div>
       </div>
     </div>
-    <div class="messagebar">
-      <div class="bar-wrapper">
-        <input
-          type="text"
-          placeholder="您想問什麼 ..."
-          v-model="question"
-          autogrow
-          @keydown.enter.prevent="sendMessage"
-        />
-        <q-btn icon="send" unelevated ripple round @click="sendMessage" />
-      </div>
+    <div class="messagebar column">
+      <q-input
+        v-model="chatStore.question"
+        filled
+        autogrow
+        placeholder="傳訊息給QAmpus...."
+        class="bar-input"
+        @keydown.enter.exact.prevent="sendMessage"
+        :input-style="{ color: 'white', maxHeight: '150px' }"
+        :disable="chatStore.loading"
+      >
+        <template v-slot:append>
+          <RoundBtn icon="send" @clicked="sendMessage" />
+        </template>
+      </q-input>
+      <span style="padding: 5px"
+        >QAmpus 可能會發生錯誤。建議你查核重要資訊。</span
+      >
     </div>
   </div>
+  <WarningDialog
+    v-model:open="chatStore.open"
+    @close="chatStore.open = false"
+    :title="title"
+    :description="description"
+    btnName="去登入"
+    @warningDialogConfirm="confirm"
+  />
 </template>
 
 <script setup lang="ts">
-import { Ref, ref } from 'vue';
-import { successs } from 'src/components/AnimateAction/AnimateAction';
 import collapsedLogo from '../assets/collapsed-logo.png';
-import { api } from 'src/boot/axios';
+import RoundBtn from 'src/components/Button/IconBtn/RoundBtn.vue';
+import DotFlashing from 'src/components/Loading/DotFlashing.vue';
+import { useChatStore } from 'src/stores/Chat/chat';
+import WarningDialog from 'src/components/Dialog/WarningDialog.vue';
 
-//暫時
-type MessageQA = {
-  question: string;
-  answer: string | QuestionAnswering;
-};
-type QuestionAnswering = {
-  qaAnswer: string;
-  source: string;
-  sourcePhrase: string;
-};
-const question = ref('');
-const qaList: Ref<MessageQA[]> = ref([]);
-const boxRef = ref(null);
-const scrollToBottom = () => {
-  const messageBox = document.querySelector('.message-box');
-  if (messageBox) {
-    // 滾動到最底部
-    messageBox.scrollTop = messageBox.scrollHeight;
-  }
-};
-const sendMessage = async () => {
-  if (question.value.trim() !== '') {
-    const q = question.value;
-    question.value = '';
-    qaList.value.push({ question: q, answer: '...' });
+const chatStore = useChatStore();
 
-    try {
-      const result = await api.post('/Question/ask', {
-        question: q,
-      });
-      qaList.value[qaList.value.length - 1].answer = result.data.answer;
-      console.log(result);
-
-      scrollToBottom();
-    } catch (e) {
-      console.log('error', e);
-    }
-  }
+const title = '請先登入';
+const description =
+  '登入後即可享有倒讚後的人工審核功能，當您的問題經確認後，我們將會發信通知您~';
+const sendMessage = () => {
+  chatStore.sendMessage();
 };
-const handleThumbDown = async (index: number) => {
-  console.log({
-    questionQuestion: qaList.value[index].question,
-    questionAnswer:
-      typeof qaList.value[index].answer == 'object'
-        ? (qaList.value[index].answer as QuestionAnswering).qaAnswer
-        : qaList.value[index].answer,
-    officeId: 3,
-  });
-  const result = await api.post(
-    '/Question',
-    {
-      questionQuestion: qaList.value[index].question,
-      questionAnswer:
-        typeof qaList.value[index].answer == 'object'
-          ? (qaList.value[index].answer as QuestionAnswering).qaAnswer
-          : qaList.value[index].answer,
-      officeId: 165,
-    },
-    {
-      headers: {
-        Authorization: localStorage.getItem('token'),
-      },
-    }
-  );
-
-  successs('已幫您轉送至相關單位');
+const confirm = () => {
+  chatStore.confirm();
 };
+const handleThumbDown = (index: number) => {
+  chatStore.handleThumbDown(index);
+};
+const copy = (index: number) => {
+  chatStore.copy(index);
+};
+
+// const scrollToBottom = () => {
+//   const container = document.querySelector('.container');
+//   if (container) {
+//     // 滾動到最底部
+//     container.scrollTop = container.scrollHeight;
+//     console.log(container!.scrollHeight);
+//   }
+// };
 </script>
 <style scoped>
-body {
-  width: 100%;
-  height: 100vh;
+.container {
+  overflow-y: auto;
 }
-
+.message-box {
+  height: calc(100vh - 10rem);
+  width: 60vw;
+}
 .chat {
   display: flex;
   gap: 20px;
   padding: 25px;
   color: black;
   font-size: 15px;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .chat img {
@@ -154,43 +135,30 @@ body {
   height: 35px;
   border-radius: 50%;
 }
-
-.response {
-  background-color: #f5f7fc;
+.chat:hover .toolbar {
+  display: block;
 }
 
+.toolbar {
+  display: none; /* 初始隐藏 */
+}
 .messagebar {
   position: fixed;
   bottom: 0;
-  height: 5rem;
+  /* height: 100px; */
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f5f7fc;
 }
 
-.messagebar .bar-wrapper {
+.messagebar .bar-input {
   background-color: #494b59;
   border-radius: 5px;
-  padding: 5px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.bar-wrapper input {
-  width: 100%;
-  padding: 5px;
-  border: none;
-  outline: none;
-  font-size: 14px;
-  background: none;
-  color: #ccc;
-}
-
-.bar-wrapper input::placeholder {
-  color: #ccc;
+  width: 60vw;
 }
 
 .messagebar button {
@@ -203,34 +171,13 @@ body {
   cursor: pointer;
 }
 
-.message-box {
-  height: calc(100vh - 5rem);
-  overflow-y: auto;
-}
-/* 在PC時留下40%vw的空間 */
-@media (min-width: 768px) {
-  .message-box {
-    width: calc(100vw - 40vw);
-    margin-left: 20vw;
-    margin-right: 20vw;
-  }
-  .messagebar .bar-wrapper {
-    width: 60vw;
-  }
-}
-
-/* 在手機時留下10vw的空間 */
-@media (max-width: 767px) {
-  .messagebar .bar-wrapper {
-    width: 90vw;
-  }
-}
 .qampus-greet {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
+  margin-top: -70px;
 }
 
 .qampus-greet img {
@@ -241,5 +188,15 @@ body {
 .greet-text {
   margin: 10px;
   font-size: 20px;
+}
+
+/* 在手機時留下10vw的空間 */
+@media (max-width: 768px) {
+  .message-box {
+    width: 90vw;
+  }
+  .messagebar .bar-input {
+    width: 90vw;
+  }
 }
 </style>

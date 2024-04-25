@@ -8,6 +8,8 @@ export type QA = {
   officeId: number;
   officeName: string;
   time?: number; //轉移次數
+  questionDeletedtime: Date;
+  questoinFinalassign: boolean;
 };
 
 export type Resource = {
@@ -21,6 +23,7 @@ export type Resource = {
   dataFiletype: string;
   officeId: number;
   officeName: string;
+  dataDeletedTime: Date;
 };
 
 export type Member = {

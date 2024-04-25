@@ -7,7 +7,7 @@
     hide-pagination
     :rows-per-page-options="[tableStore.perPage]"
     :loading="tableStore.loading"
-    style="border-radius: 25px; padding: 20px; height: 87vh; margin-top: 7vh"
+    style="border-radius: 25px; padding: 20px; height: 92vh"
     :selection="selection || 'none'"
     v-model:selected="tableStore.selected"
   >
@@ -58,12 +58,11 @@
       <q-td :props="props">
         <q-chip
           square
-          :ripple="false"
-          class="q-my-xs text-weight-bold"
+          class="q-my-xs"
           :color="vertifyColor(props.value)"
-          text-color="white"
-          >{{ props.value ? '已驗證' : '未驗證' }}</q-chip
-        >
+          textColor="white"
+          :text="props.value ? '已驗證' : '未驗證'"
+        />
       </q-td>
     </template>
     <template v-slot:body-cell-dataFilename="props">
@@ -93,6 +92,7 @@ import OptionSelect from './Toolbar/OptionSelect.vue';
 import PaginationTable from './Pagination/PaginationTable.vue';
 import FilterSelect from '../Select/FilterSelect.vue';
 import { QA, Resource, Member } from './data ';
+import QuasarChip from '../Chip/QuasarChip.vue';
 import { useTableStore } from 'src/stores/Table/table';
 import { useUserStore } from 'src/stores/Auth/user';
 
@@ -114,7 +114,7 @@ const vertifyColor = (data: any) => {
   if (data) {
     return 'green';
   }
-  return 'red';
+  return 'secondary';
 };
 //toolBar
 const title = '分類'; //optionTitle(prepend前綴)

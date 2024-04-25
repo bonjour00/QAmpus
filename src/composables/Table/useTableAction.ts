@@ -94,7 +94,7 @@ export default function useTableAction() {
       loading.value = true;
       const fileName = row.dataFilename;
       const realFileName = fileName.replace(/^\d+-/, '');
-      const result = await api.get(`/Blob/fileName?filename=${fileName}1`, {
+      const result = await api.get(`/Blob/fileName?filename=${fileName}`, {
         responseType: 'blob',
       });
       const fileURL = URL.createObjectURL(new Blob([result.data]));

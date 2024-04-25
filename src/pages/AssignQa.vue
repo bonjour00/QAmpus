@@ -8,7 +8,11 @@
       rowKey="questionId"
     >
       <template v-slot:action>
-        <SlotBtn btnName="測試" @clicked="openTestingDialog()" />
+        <SlotBtn
+          btnName="批次測試"
+          @clicked="openTestingDialog()"
+          v-show="tableStore.selected.length > 0"
+        />
       </template>
       <template v-slot:btnAction="slotProps">
         <RoundBtn @clicked="openEditDialog(slotProps.props.row)" icon="edit" />

@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <Table
       :rows="tableStore.rows"
-      :columns="resourceColumns"
+      :columns="trashResouceColumns"
       tableTitle="近期刪除資源"
       rowKey="dataId"
     >
@@ -26,6 +26,7 @@
       @close="closeWarningDialog"
     />
   </div>
+  <HourglassLoading :showing="loading" />
 </template>
 
 <script setup lang="ts">
@@ -35,10 +36,11 @@ import {
   Resource,
   TRASH_BLOB_TABLE_STATUS,
 } from '../components/Table/data ';
-import { resourceColumns } from '../components/Table/Columns';
+import { trashResouceColumns } from '../components/Table/Columns';
 import RoundBtn from 'src/components/Button/IconBtn/RoundBtn.vue';
 import { useTableStore } from 'src/stores/Table/table';
 import useTableApi from 'src/composables/Table/useTableApi';
+import HourglassLoading from 'src/components/Loading/HourglassLoading.vue';
 import useWarningDialog from 'src/composables/Dialog/useWarningDialog';
 import useTableAction from 'src/composables/Table/useTableAction';
 import WarningDialog from 'src/components/Dialog/WarningDialog.vue';

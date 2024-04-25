@@ -44,7 +44,11 @@
       </q-card-section>
 
       <q-card-actions align="right">
-        <DialogButton btnName="取消" @clicked="closeEditMemberDialog" />
+        <DialogButton
+          btnName="取消"
+          @clicked="closeEditMemberDialog"
+          :flat="true"
+        />
         <DialogButton btnName="修改" @clicked="editMember" /> </q-card-actions
       ><HourglassLoading :showing="editMemberDialogStore.loading" />
     </q-card>

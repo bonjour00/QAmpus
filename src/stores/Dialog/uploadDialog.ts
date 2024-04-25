@@ -9,9 +9,14 @@ import { api } from 'src/boot/axios';
 import { successs } from 'src/components/AnimateAction/AnimateAction';
 import { useTableStore } from '../Table/table';
 import useNotify from 'src/composables/Notify/useNotify';
+import useOffice from 'src/composables/common/useOffice';
+import { useUserStore } from '../Auth/user';
 
 export const useUploadDialogStore = defineStore('uploadDialog', () => {
+  const userStore = useUserStore();
   const tableStore = useTableStore();
+  const { office, filterOption, setOfficeSelect, $officeReset, filterFn } =
+    useOffice();
   const { notifyFail, notifyWarning } = useNotify();
 
   const open = ref(false);
@@ -28,6 +33,10 @@ export const useUploadDialogStore = defineStore('uploadDialog', () => {
 
   const openUploadDialog = () => {
     open.value = true;
+    setOfficeSelect({
+      officeName: userStore.officeName,
+      officeId: userStore.officeId,
+    });
   };
   const openUploadWithData = (data: Resource) => {
     open.value = true;
@@ -35,6 +44,7 @@ export const useUploadDialogStore = defineStore('uploadDialog', () => {
     fileName.value = data.dataFilename.replace(/^\d+-/, '');
     tagFileName.value = data.dataFilename;
     btnName.value = '重新上傳';
+    // setOfficeSelect(data);
   };
   const $reset = () => {
     open.value = false;
@@ -48,6 +58,7 @@ export const useUploadDialogStore = defineStore('uploadDialog', () => {
     sourceNameRef.value = null;
     fileRef.value = null;
     loading.value = false;
+    $officeReset();
   };
 
   const closeUploadDialog = () => {
@@ -74,10 +85,22 @@ export const useUploadDialogStore = defineStore('uploadDialog', () => {
         Authorization: localStorage.getItem('token'),
       },
     });
+    console.log(response);
+  };
+  const updateDescription = async () => {
+    const response = await api.post(
+      `/Blob/editdescription?filename=${tagFileName.value}&description=${sourceName.value}`,
+      {},
+      {
+        headers: {
+          Authorization: localStorage.getItem('token'),
+        },
+      }
+    );
   };
   const uploadResource = async () => {
     if (tab.value == 'url') {
-      notifyWarning('訂閱可解鎖URL功能 ，詳情請聯絡QAmpus管理員~');
+      notifyWarning('付費即可解鎖URL功能 ，詳情請聯絡QAmpus管理員~');
       return;
     }
     fileRef.value?.validate();
@@ -90,13 +113,18 @@ export const useUploadDialogStore = defineStore('uploadDialog', () => {
           loading.value = true;
           if (fileName.value) {
             //reUpload
-
-            await upload(
-              `/Blob/reupload?originalfilename=${tagFileName.value}`
-            );
+            if (file.value != null) {
+              await upload(
+                `/Blob/reupload?originalfilename=${tagFileName.value}&description=${sourceName.value}`
+              );
+            } else {
+              await updateDescription();
+            }
           } else {
             //first upload
-            await upload(`/Blob/upload?description=${sourceName.value}`);
+            await upload(
+              `/Blob/upload?description=${sourceName.value}&assignofficeid=${office.value.value}`
+            );
           }
           loading.value = false;
           successs('上傳成功');
@@ -130,11 +158,14 @@ export const useUploadDialogStore = defineStore('uploadDialog', () => {
     sourceNameRef,
     fileRef,
     loading,
+    filterOption,
+    office,
     openUploadDialog,
     openUploadWithData,
     closeUploadDialog,
     rejected,
     uploadResource,
     reuploadRule,
+    filterFn,
   };
 });

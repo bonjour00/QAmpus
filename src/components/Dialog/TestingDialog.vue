@@ -5,13 +5,30 @@
   >
     <q-card>
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6 text-weight-bold">問答測試</div>
+        <div class="text-h6 text-weight-bold">批次問答測試</div>
         <q-space />
         <RoundBtn icon="close" @clicked="closeTestingDialog" />
       </q-card-section>
-      <div style="max-height: 80vh" class="scroll">
+      <q-card-section align="center" class="q-pb-none">
+        <div class="text-body1">
+          請<b>選取</b>可核准之問答，我們將發信通知發問者~
+        </div>
+        <q-banner class="bg-grey-3" dense>
+          <template v-slot:avatar>
+            <q-icon name="info" color="primary" />
+          </template>
+          <div class="flex flex-center q-gutter-lg">
+            <div v-for="(info, index) in infos" :key="index">
+              <q-icon :name="info.icon" :color="info.color" size="20px" />
+              <span
+                >表示<b>{{ info.label }}</b></span
+              >
+            </div>
+          </div>
+        </q-banner>
+      </q-card-section>
+      <div style="max-height: 70vh" class="scroll">
         <q-card-section>
-          {{ testingDialogStore.questionIds }}
           <q-list bordered class="rounded-borders">
             <q-expansion-item
               expand-separator
@@ -51,7 +68,11 @@
         </q-card-section>
       </div>
       <q-card-actions align="right">
-        <DialogButton btnName="取消" @clicked="closeTestingDialog" />
+        <DialogButton
+          btnName="取消"
+          @clicked="closeTestingDialog"
+          :flat="true"
+        />
         <DialogButton btnName="確認" @clicked="testingDialogConfirm" />
       </q-card-actions>
       <HourglassLoading :showing="testingDialogStore.loading" />
@@ -68,6 +89,18 @@ import InnerLoading from '../Loading/InnerLoading.vue';
 import { QA } from '../Table/data ';
 
 const testingDialogStore = useTestingDialogStore();
+const infos = [
+  {
+    icon: 'done',
+    label: '已核准',
+    color: 'green',
+  },
+  {
+    icon: 'question_mark',
+    label: '未核准',
+    color: 'primary',
+  },
+];
 
 const closeTestingDialog = () => {
   testingDialogStore.closeTestingDialog();
