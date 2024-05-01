@@ -3,7 +3,7 @@
     :modelValue="testingDialogStore.open"
     @update:model-value="closeTestingDialog"
   >
-    <q-card>
+    <q-card style="max-width: 550px" class="full-width">
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6 text-weight-bold">批次問答測試</div>
         <q-space />
@@ -11,7 +11,7 @@
       </q-card-section>
       <q-card-section align="center" class="q-pb-none">
         <div class="text-body1">
-          請<b>選取</b>可核准之問答，我們將發信通知發問者~
+          請<b>勾選</b>可核准之問答，我們將發信通知發問者核准之答覆~
         </div>
         <q-banner class="bg-grey-3" dense>
           <template v-slot:avatar>
@@ -42,7 +42,6 @@
                     v-model="testingDialogStore.questionIds"
                     :val="row.questionId"
                     checked-icon="done"
-                    unchecked-icon="question_mark"
                     :color="
                       testingDialogStore.questionIds.includes(row.questionId)
                         ? 'green'
@@ -68,12 +67,8 @@
         </q-card-section>
       </div>
       <q-card-actions align="right">
-        <DialogButton
-          btnName="取消"
-          @clicked="closeTestingDialog"
-          :flat="true"
-        />
-        <DialogButton btnName="確認" @clicked="testingDialogConfirm" />
+        <CancelBtn @clicked="closeTestingDialog" />
+        <ConfirmBtn btnName="確認" @clicked="testingDialogConfirm" />
       </q-card-actions>
       <HourglassLoading :showing="testingDialogStore.loading" />
     </q-card>
@@ -81,7 +76,8 @@
 </template>
 
 <script setup lang="ts">
-import DialogButton from 'src/components/Button/Dialog/DialogButton.vue';
+import CancelBtn from '../Button/Dialog/CancelBtn.vue';
+import ConfirmBtn from '../Button/Dialog/ConfirmBtn.vue';
 import RoundBtn from 'src/components/Button/IconBtn/RoundBtn.vue';
 import { useTestingDialogStore } from 'src/stores/Dialog/testingDialog';
 import HourglassLoading from '../Loading/HourglassLoading.vue';
@@ -92,14 +88,14 @@ const testingDialogStore = useTestingDialogStore();
 const infos = [
   {
     icon: 'done',
-    label: '已核准',
+    label: '已核准，並發信通知使用者',
     color: 'green',
   },
-  {
-    icon: 'question_mark',
-    label: '未核准',
-    color: 'primary',
-  },
+  // {
+  //   icon: 'question_mark',
+  //   label: '未核准',
+  //   color: 'primary',
+  // },
 ];
 
 const closeTestingDialog = () => {

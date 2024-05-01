@@ -7,6 +7,7 @@
     v-model="stepper"
   >
     <q-step
+      class="q-pa-lg"
       v-for="(x, index) in record"
       :name="index"
       :title="x.title"

@@ -59,10 +59,14 @@ const vertify = async () => {
         }
       );
       successs('驗證成功');
-      router.push({ name: 'reset-person-pwd' });
+      const paramsToken = result.data.split('token=')[1];
+      router.push({
+        path: 'reset-person-pwd',
+        query: { token: paramsToken },
+      });
     } catch (error: any) {
       console.log(error);
-      notifyFail(error.response.data, '驗證失敗');
+      notifyFail(error.response, '驗證失敗');
     }
     loadingShow.value = false;
   }

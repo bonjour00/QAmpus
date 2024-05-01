@@ -3,10 +3,7 @@
     :modelValue="uploadDialogStore.open"
     @update:model-value="closeUploadDialog"
   >
-    <q-card
-      style="border-radius: 10px; width: 600px; max-width: 90vh"
-      class="q-pa-sm"
-    >
+    <q-card style="max-width: 550px" class="full-width">
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6 text-weight-bold">上傳檔案</div>
         <q-space />
@@ -105,12 +102,8 @@
           :filterOption="uploadDialogStore.filterOption"
         />
         <q-space />
-        <DialogButton
-          btnName="取消"
-          @clicked="closeUploadDialog"
-          :flat="true"
-        />
-        <DialogButton
+        <CancelBtn @clicked="closeUploadDialog" />
+        <ConfirmBtn
           :btnName="
             uploadDialogStore.tab == 'url'
               ? '付費解鎖'
@@ -125,7 +118,8 @@
 </template>
 
 <script setup lang="ts">
-import DialogButton from 'src/components/Button/Dialog/DialogButton.vue';
+import CancelBtn from '../Button/Dialog/CancelBtn.vue';
+import ConfirmBtn from '../Button/Dialog/ConfirmBtn.vue';
 import HourglassLoading from '../Loading/HourglassLoading.vue';
 import RoundBtn from 'src/components/Button/IconBtn/RoundBtn.vue';
 import FilterSelect from '../Select/FilterSelect.vue';

@@ -64,7 +64,7 @@
 
     <div v-if="isSidebarUnder885" class="dark-overlay"></div>
 
-    <div class="content">
+    <div class="content" style="margin-top: 7vh">
       <button class="logout-button" @click="logout">
         <q-icon name="logout" class="logout-icon" />
 
@@ -87,7 +87,7 @@ import { useUserStore } from 'src/stores/Auth/user';
 const userStore = useUserStore();
 
 const router = useRouter();
-const isSidebarToggled = ref(true);
+const isSidebarToggled = ref(false);
 const screenWidth = ref(window.innerWidth);
 const isManuallyExpanded = ref(false);
 const isSidebarUnder885 = computed(
@@ -115,7 +115,7 @@ const currentChange = (label: string) => {
   if (screenWidth.value <= 885) {
     isSidebarToggled.value = false;
   }
-  router.push({ path: label });
+  router.push({ name: label });
 };
 const toggleSidebar = () => {
   isSidebarToggled.value = !isSidebarToggled.value;
@@ -142,34 +142,6 @@ const isMenuActive = (label: string) => {
 const logoSource = computed(() => {
   return isSidebarToggled.value ? expandedLogo : collapsedLogo;
 });
-
-const menus = [
-  {
-    title: '待解決問題',
-    icon: 'pending_actions',
-    label: 'pending',
-  },
-  {
-    title: '資源管理',
-    icon: 'create_new_folder',
-    label: 'resource',
-  },
-  {
-    title: '近期刪除問題',
-    icon: 'delete',
-    label: 'trash-qa',
-  },
-  {
-    title: '近期刪除資源',
-    icon: 'delete',
-    label: 'trash-resource',
-  },
-  {
-    title: '權限管理',
-    icon: 'groups',
-    label: 'member',
-  },
-];
 
 const logout = async () => {
   userStore.logout();
@@ -247,7 +219,7 @@ const logout = async () => {
   margin-left: 0.5rem;
 }
 .sidebar-button {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   width: 70% !important;
   height: 3.5rem;
   border: 0;
@@ -297,8 +269,8 @@ const logout = async () => {
 .content {
   flex: 1;
   transition: margin-left 0.3s;
-  padding-left: 5px;
-  padding-right: 5px;
+  /* padding-left: 5px; */
+  /* padding-right: 5px; */
   overflow-x: auto;
 }
 

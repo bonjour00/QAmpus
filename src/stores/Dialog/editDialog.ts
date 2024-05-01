@@ -1,9 +1,5 @@
 import { defineStore } from 'pinia';
-import {
-  PENDING_TABLE_STATUS,
-  QA,
-  QA_TABLE_API,
-} from 'src/components/Table/data ';
+import { QA } from 'src/components/Table/data ';
 import { Ref, computed, ref } from 'vue';
 import { successs } from 'src/components/AnimateAction/AnimateAction';
 import { api } from 'src/boot/axios';
@@ -21,12 +17,14 @@ export const useEditDialogStore = defineStore('editDialog', () => {
   const officeRecord: Ref = ref([]);
   const loading = ref(false);
   const needDirectAssign = ref(false);
-  const alreadyAssigntext = '您已被分配者指派回覆';
-  const needAssigntext = '將請分配者負責指派單位';
+  const url = ref('');
+  const status = ref('');
+  const text = '您已被分配者指派回覆';
+  // const needAssigntext = '將請分配者負責指派單位';
 
-  const text = computed(() => {
-    return needDirectAssign.value ? needAssigntext : alreadyAssigntext;
-  });
+  // const text = computed(() => {
+  //   return needDirectAssign.value ? needAssigntext : alreadyAssigntext;
+  // });
 
   const getOfficeRecord = async (data: QA) => {
     try {
@@ -45,9 +43,11 @@ export const useEditDialogStore = defineStore('editDialog', () => {
     }
   };
 
-  const openEditDialog = (data: QA) => {
+  const openEditDialog = (data: QA, tableUrl: string, tableStatus = '') => {
     open.value = true;
     row.value = data;
+    url.value = tableUrl;
+    status.value = tableStatus;
     setOfficeSelect(data);
   };
   const $reset = () => {
@@ -56,6 +56,8 @@ export const useEditDialogStore = defineStore('editDialog', () => {
     officeRecord.value = [];
     loading.value = false;
     needDirectAssign.value = false;
+    url.value = '';
+    status.value = '';
     $officeReset();
   };
   const closeEditDialog = () => {
@@ -71,9 +73,8 @@ export const useEditDialogStore = defineStore('editDialog', () => {
         await assignOffice();
       }
 
-      loading.value = true;
       successs('修改成功');
-      tableStore.fetchRows(QA_TABLE_API, PENDING_TABLE_STATUS);
+      tableStore.fetchRows(url.value, status.value);
     } catch (e: any) {
       notifyFail(e.response?.data);
     }

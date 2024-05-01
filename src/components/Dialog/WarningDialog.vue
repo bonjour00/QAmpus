@@ -1,6 +1,6 @@
 <template>
   <q-dialog :modelValue="open" @update:model-value="closeWarningDialog">
-    <q-card style="width: 300px; max-width: 90vw">
+    <q-card style="max-width: 300px" class="full-width">
       <q-card-section>
         <WarningAnimate />
       </q-card-section>
@@ -11,12 +11,8 @@
         <div class="text-body1">{{ description }}</div>
       </q-card-section>
       <q-card-actions align="center">
-        <DialogButton
-          btnName="取消"
-          @clicked="closeWarningDialog"
-          :flat="true"
-        />
-        <DialogButton
+        <CancelBtn @clicked="closeWarningDialog" />
+        <ConfirmBtn
           :btnName="btnName || '刪除'"
           @clicked="warningDialogConfirm"
         />
@@ -28,7 +24,8 @@
 
 <script setup lang="ts">
 import HourglassLoading from '../Loading/HourglassLoading.vue';
-import DialogButton from '../Button/Dialog/DialogButton.vue';
+import CancelBtn from '../Button/Dialog/CancelBtn.vue';
+import ConfirmBtn from '../Button/Dialog/ConfirmBtn.vue';
 import WarningAnimate from '../AnimateAction/WarningAnimate.vue';
 
 const props = defineProps<{

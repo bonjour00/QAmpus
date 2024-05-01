@@ -68,16 +68,26 @@ const reset = async () => {
   if (pwdRef.value.hasError || confirmPwdRef.value.hasError) {
     return;
   } else {
+    const route = router.currentRoute.value.name;
+    let url;
+    let name;
+    if (route == 'reset-person-pwd') {
+      url = '/User/reset-password-login';
+      name = 'setting';
+    } else {
+      url = '/User/reset-password';
+      name = 'login';
+    }
     loadingShow.value = true;
     try {
-      const result = await api.post('/User/reset-password', {
+      const result = await api.post(url, {
         token,
         newPassword: userPassword.value,
       });
       successs('修改成功');
-      router.push({ path: '/login' });
+      router.push({ name });
     } catch (error: any) {
-      notifyFail(error.response.data.errors.Token[0], '重設失敗');
+      notifyFail(error.response.data, '重設失敗');
     }
     loadingShow.value = false;
   }

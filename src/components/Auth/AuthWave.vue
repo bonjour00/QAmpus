@@ -3,7 +3,7 @@
     class="wave"
     id="wave"
     style="transform: rotate(0deg); transition: 0.3s"
-    viewBox="0 0 1440 180"
+    viewBox="0 0 1440 140"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
   >

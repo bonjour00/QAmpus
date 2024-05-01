@@ -11,11 +11,14 @@
         <SlotBtn
           btnName="批次測試"
           @clicked="openTestingDialog()"
-          v-show="tableStore.selected.length > 0"
+          :disable="!(tableStore.selected.length > 0)"
         />
       </template>
       <template v-slot:btnAction="slotProps">
-        <RoundBtn @clicked="openEditDialog(slotProps.props.row)" icon="edit" />
+        <RoundBtn
+          @clicked="openEditDialog(slotProps.props.row)"
+          :icon="viewIcon(slotProps.props.row)"
+        />
         <RoundBtn
           v-if="
             userStore.userPermission == 'assigner' ||
@@ -78,7 +81,7 @@ fetchRows();
 
 //actionBtn clicked (openEditDialog)
 const openEditDialog = (row: QA) => {
-  editDialogStore.openEditDialog(row);
+  editDialogStore.openEditDialog(row, QA_TABLE_API, PENDING_TABLE_STATUS);
 };
 //actionBtn clicked (openTestingDialog)
 const openTestingDialog = () => {
@@ -95,5 +98,12 @@ const deleteQaSubmit = async () => {
   await deleteQa(row.value as QA);
   closeDialog();
   fetchRows();
+};
+
+const viewIcon = (row: QA) => {
+  if (userStore.userPermission == 'admin' && row.questoinFinalassign) {
+    return 'visibility';
+  }
+  return 'edit';
 };
 </script>

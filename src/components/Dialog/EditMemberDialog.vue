@@ -3,7 +3,7 @@
     :modelValue="editMemberDialogStore.open"
     @update:model-value="closeEditMemberDialog"
   >
-    <q-card style="border-radius: 10px; width: 300px; max-width: 90vh">
+    <q-card style="max-width: 550px" class="full-width">
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6 text-weight-bold">
           修改{{ ' ' + editMemberDialogStore.userName + ' ' }}單位權限
@@ -44,19 +44,16 @@
       </q-card-section>
 
       <q-card-actions align="right">
-        <DialogButton
-          btnName="取消"
-          @clicked="closeEditMemberDialog"
-          :flat="true"
-        />
-        <DialogButton btnName="修改" @clicked="editMember" /> </q-card-actions
+        <CancelBtn @clicked="closeEditMemberDialog" />
+        <ConfirmBtn btnName="修改" @clicked="editMember" /> </q-card-actions
       ><HourglassLoading :showing="editMemberDialogStore.loading" />
     </q-card>
   </q-dialog>
 </template>
 
 <script setup lang="ts">
-import DialogButton from 'src/components/Button/Dialog/DialogButton.vue';
+import CancelBtn from '../Button/Dialog/CancelBtn.vue';
+import ConfirmBtn from '../Button/Dialog/ConfirmBtn.vue';
 import RoundBtn from 'src/components/Button/IconBtn/RoundBtn.vue';
 import FilterSelect from '../Select/FilterSelect.vue';
 import HourglassLoading from '../Loading/HourglassLoading.vue';

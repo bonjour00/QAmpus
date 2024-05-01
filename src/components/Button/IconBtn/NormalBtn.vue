@@ -3,7 +3,8 @@
     unelevated
     color="primary"
     @click="clicked"
-    style="min-width: 115px; border-radius: 8px; font-weight: bolder"
+    style="min-width: 115px"
+    class="radius-8 text-weight-bold"
   >
     <q-icon :name="icon" />{{ btnName }}
   </q-btn>

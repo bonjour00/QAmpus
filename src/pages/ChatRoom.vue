@@ -1,9 +1,33 @@
 <template>
   <div class="flex flex-center container">
     <div class="message-box">
-      <div class="qampus-greet" v-if="chatStore.qaList.length == 0">
+      <div
+        class="qampus-greet relative-position"
+        v-if="chatStore.qaList.length == 0"
+      >
         <img :src="collapsedLogo" />
         <span class="greet-text"><b>How can I help you today?</b></span>
+        <div class="row full-width absolute-bottom">
+          <q-intersection
+            v-for="(example, index) in chatStore.exampleList"
+            :key="index"
+            transition="scale"
+            transition-duration="800"
+            class="col-xs-12 col-sm-6 col-6"
+          >
+            <q-card
+              flat
+              bordered
+              class="q-ma-sm radius-8 cursor-pointer example"
+              @click="sendExample(example.subTitle)"
+            >
+              <q-card-section>
+                <div class="text-caption">{{ example.label }}</div>
+                <div class="text-caption">{{ example.subTitle }}</div>
+              </q-card-section>
+            </q-card>
+          </q-intersection>
+        </div>
       </div>
       <div v-for="(qa, index) in chatStore.qaList" :key="index">
         <div class="chat">
@@ -51,12 +75,14 @@
     </div>
     <div class="messagebar column">
       <q-input
+        ref="inputRef"
+        autofocus
         v-model="chatStore.question"
-        standout
         autogrow
         placeholder="傳訊息給QAmpus...."
-        class="bar-input"
-        @keydown.enter.exact.prevent="sendMessage"
+        class="bar-input q-px-md"
+        borderless
+        @keydown.enter.exact.prevent="handleInputDevice"
         :input-style="{
           color: 'white',
           maxHeight: '150px',
@@ -80,6 +106,7 @@
     btnName="去登入"
     @warningDialogConfirm="confirm"
   />
+  <UserDislikeDialog />
 </template>
 
 <script setup lang="ts">
@@ -88,14 +115,22 @@ import RoundBtn from 'src/components/Button/IconBtn/RoundBtn.vue';
 import DotFlashing from 'src/components/Loading/DotFlashing.vue';
 import { useChatStore } from 'src/stores/Chat/chat';
 import WarningDialog from 'src/components/Dialog/WarningDialog.vue';
+import UserDislikeDialog from 'src/components/Dialog/UserDislikeDialog.vue';
+import { storeToRefs } from 'pinia';
 
 const chatStore = useChatStore();
-
+const { inputRef } = storeToRefs(chatStore);
 const title = '請先登入';
 const description =
   '登入後即可享有倒讚後的人工審核功能，當您的問題經確認後，我們將會發信通知您~';
-const sendMessage = () => {
-  chatStore.sendMessage();
+const sendMessage = async () => {
+  await chatStore.sendMessage();
+};
+const handleInputDevice = () => {
+  chatStore.handleInputDevice();
+};
+const sendExample = (q: string) => {
+  chatStore.sendExample(q);
 };
 const confirm = () => {
   chatStore.confirm();
@@ -121,7 +156,7 @@ const copy = (index: number) => {
   overflow-y: auto;
 }
 .message-box {
-  height: calc(100vh - 10rem);
+  height: calc(100vh - 155px);
   width: 60vw;
 }
 .chat {
@@ -157,7 +192,6 @@ const copy = (index: number) => {
 
 .messagebar .bar-input {
   background-color: #494b59;
-  border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -181,7 +215,7 @@ const copy = (index: number) => {
   align-items: center;
   justify-content: center;
   height: 100%;
-  margin-top: -70px;
+  margin-top: -40px;
 }
 
 .qampus-greet img {
@@ -192,7 +226,9 @@ const copy = (index: number) => {
   margin: 10px;
   font-size: 20px;
 }
-
+.example:hover {
+  background-color: rgb(248, 246, 246);
+}
 /* 在手機時留下10vw的空間 */
 @media (max-width: 768px) {
   .message-box {

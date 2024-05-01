@@ -1,17 +1,16 @@
 <template>
   <q-btn
-    :flat="flat"
-    :label="btnName"
+    v-bind="props"
+    @click="clicked"
     unelevated
     color="primary"
-    @click="clicked"
+    class="radius-8 text-weight-bold"
   />
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
-  btnName: string;
-  flat?: boolean;
+const { props } = defineProps<{
+  props: any;
 }>();
 const emit = defineEmits(['clicked']);
 const clicked = () => {

@@ -11,7 +11,7 @@
         <SlotBtn
           btnName="批次測試"
           @clicked="openTestingDialog()"
-          v-show="tableStore.selected.length > 0"
+          :disable="!(tableStore.selected.length > 0)"
         />
       </template>
       <template v-slot:btnAction="slotProps">
@@ -73,7 +73,7 @@ tableStore.setAssignSelect();
 
 //actionBtn clicked (openEditDialog)
 const openEditDialog = (row: QA) => {
-  editDialogStore.openEditDialog(row);
+  editDialogStore.openEditDialog(row, QA_ASSIGN_TABLE_API, ASSIGN_TABLE_STATUS);
   editDialogStore.getOfficeRecord(row);
 };
 //actionBtn clicked (openTestingDialog)
@@ -96,4 +96,3 @@ const deleteQaSubmit = async () => {
   fetchRows();
 };
 </script>
-<style scoped></style>

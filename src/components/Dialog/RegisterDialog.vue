@@ -3,7 +3,7 @@
     :modelValue="registerDialogStore.open"
     @update:model-value="closeRegisterDialog"
   >
-    <q-card>
+    <q-card style="max-width: 550px" class="full-width">
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6 text-weight-bold">新增管理者</div>
         <q-space />
@@ -52,12 +52,8 @@
           :filterFn="filterFn"
           :filterOption="registerDialogStore.filterOption"
         />
-        <DialogButton
-          btnName="取消"
-          @clicked="closeRegisterDialog"
-          :flat="true"
-        />
-        <DialogButton btnName="註冊" @clicked="signupMember" />
+        <CancelBtn @clicked="closeRegisterDialog" />
+        <ConfirmBtn btnName="註冊" @clicked="signupMember" />
       </q-card-actions>
       <HourglassLoading :showing="registerDialogStore.loading" />
     </q-card>
@@ -65,7 +61,8 @@
 </template>
 
 <script setup lang="ts">
-import DialogButton from 'src/components/Button/Dialog/DialogButton.vue';
+import CancelBtn from '../Button/Dialog/CancelBtn.vue';
+import ConfirmBtn from '../Button/Dialog/ConfirmBtn.vue';
 import OptionSelect from '../Table/Toolbar/OptionSelect.vue';
 import FilterSelect from '../Select/FilterSelect.vue';
 import { notEmpty } from 'src/components/Input/rules';

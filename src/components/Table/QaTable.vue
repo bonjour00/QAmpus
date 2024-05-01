@@ -7,7 +7,8 @@
     hide-pagination
     :rows-per-page-options="[tableStore.perPage]"
     :loading="tableStore.loading"
-    style="border-radius: 25px; padding: 20px; height: 87vh; margin-top: 7vh"
+    style="border-radius: 25px; height: 87vh"
+    class="q-pa-md"
     :selection="selection || 'none'"
     v-model:selected="tableStore.selected"
   >
@@ -56,6 +57,7 @@
     </template>
     <template v-slot:body-cell-emailVerified="props">
       <q-td :props="props">
+        {{ props.value }}
         <q-chip
           square
           class="q-my-xs"

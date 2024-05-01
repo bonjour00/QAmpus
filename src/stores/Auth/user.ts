@@ -47,6 +47,7 @@ export const useUserStore = defineStore('user', () => {
         : null;
     } catch (error: any) {
       console.log('errorAuth:', error);
+      $reset();
       localStorage.removeItem('token');
       router.push({ path: '/chat' });
     }

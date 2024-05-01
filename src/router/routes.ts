@@ -46,7 +46,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'setting',
-
+        component: () => import('layouts/UserLayout.vue'),
         meta: {
           role: ['admin', 'assigner', 'user'],
         },
@@ -64,7 +64,7 @@ const routes: RouteRecordRaw[] = [
           {
             path: 'reset-person-pwd',
             name: 'reset-person-pwd',
-            component: () => import('pages/PersonPwd.vue'),
+            component: () => import('pages/ResetPwd.vue'),
           },
         ],
       },

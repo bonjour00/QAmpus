@@ -21,16 +21,21 @@ export const useTestingDialogStore = defineStore('testingDialog', () => {
   const status = ref('');
   const loading = ref(false);
 
-  const testingQa = async (QA: QA) => {
-    const result = await api.post('/Question/ask', {
-      question: QA.questionQuestion,
-    });
-    return result.data.answer;
+  const testingQa = async (QA: QA, index: number) => {
+    try {
+      const result = await api.post('/Question/ask', {
+        question: QA.questionQuestion,
+      });
+      return result.data.answer;
+    } catch (e) {
+      console.log(e, index);
+      return '發生錯誤，請稍後再試一次';
+    }
   };
   const testingQaMuti = async (data: QA[]) => {
     try {
       for (let i = 0; i < data.length; i++) {
-        rows.value[i].questionAnswer = (await testingQa(data[i])) as string;
+        rows.value[i].questionAnswer = (await testingQa(data[i], i)) as string;
       }
     } catch (e) {
       console.log(e, 'ppppppppp');
@@ -45,7 +50,7 @@ export const useTestingDialogStore = defineStore('testingDialog', () => {
       status.value = tableStatus;
       testingQaMuti(data);
     } else {
-      notifyWarning('尚未選取核准內容');
+      notifyWarning('尚未勾選可核准之問答');
     }
   };
 
@@ -87,7 +92,7 @@ export const useTestingDialogStore = defineStore('testingDialog', () => {
         successs('已確認，並送信');
         tableStore.selected = [];
         closeTestingDialog();
-        tableStore.fetchRows(QA_TABLE_API, PENDING_TABLE_STATUS);
+        tableStore.fetchRows(url.value, status.value);
       } else {
         notifyWarning('尚未選取測試內容');
       }

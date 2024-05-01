@@ -3,14 +3,14 @@
     :modelValue="editDialogStore.open"
     @update:model-value="closeEditDialog"
   >
-    <q-card>
+    <q-card style="max-width: 550px" class="full-width">
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6 text-weight-bold">問答</div>
         <q-space />
         <RoundBtn icon="close" @clicked="closeEditDialog" />
       </q-card-section>
 
-      <q-card-section style="max-height: 50vh; min-width: 300px" class="scroll">
+      <q-card-section>
         <q-input
           :model-value="
             editDialogStore.row && editDialogStore.row.questionQuestion
@@ -37,9 +37,9 @@
 
       <q-card-section
         style="max-height: 20vh"
-        class="scroll"
+        class="scroll q-py-none"
         v-if="editDialogStore.officeRecord.length != 0"
-      >
+        ><div class="text-subtitle1 text-weight-bold">轉移單位歷史紀錄</div>
         <OfficeRecord :record="editDialogStore.officeRecord" />
       </q-card-section>
       <q-card-section v-if="canDirectAssign()" class="q-py-none">
@@ -57,14 +57,14 @@
           :filterOption="editDialogStore.filterOption"
         />
         <QuasarChip
-          v-else
+          v-if="hasDirectAssign()"
           color="pink-5"
           textColor="white"
           :text="editDialogStore.text"
         />
         <q-space />
-        <DialogButton btnName="取消" @clicked="closeEditDialog" :flat="true" />
-        <DialogButton
+        <CancelBtn @clicked="closeEditDialog" />
+        <ConfirmBtn
           :btnName="btnName"
           @clicked="editSubmit"
           v-if="canTrans() || editDialogStore.needDirectAssign"
@@ -76,7 +76,8 @@
 </template>
 
 <script setup lang="ts">
-import DialogButton from 'src/components/Button/Dialog/DialogButton.vue';
+import CancelBtn from '../Button/Dialog/CancelBtn.vue';
+import ConfirmBtn from '../Button/Dialog/ConfirmBtn.vue';
 import RoundBtn from 'src/components/Button/IconBtn/RoundBtn.vue';
 import FilterSelect from '../Select/FilterSelect.vue';
 import OfficeRecord from '../TransRecord/OfficeRecord.vue';
@@ -115,6 +116,13 @@ const canDirectAssign = () => {
     userStore.userPermission != 'assigner' &&
     editDialogStore.row &&
     !editDialogStore.row.questoinFinalassign
+  );
+};
+const hasDirectAssign = () => {
+  return (
+    userStore.userPermission != 'assigner' &&
+    editDialogStore.row &&
+    editDialogStore.row.questoinFinalassign
   );
 };
 </script>
