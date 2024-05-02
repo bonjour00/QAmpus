@@ -27,7 +27,7 @@
           </div>
         </q-banner>
       </q-card-section>
-      <div style="max-height: 70vh" class="scroll">
+      <div style="max-height: 65vh" class="scroll">
         <q-card-section>
           <q-list bordered class="rounded-borders">
             <q-expansion-item

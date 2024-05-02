@@ -28,7 +28,7 @@
           </div>
         </q-banner>
       </q-card-section>
-      <q-card-section style="max-height: 50vh" class="scroll">
+      <q-card-section style="max-height: 45vh" class="scroll">
         <q-input v-model="userDislikeDialogStore.question" dense autogrow
           ><template v-slot:prepend>
             <span class="text-subtitle1">Q:&nbsp;</span>

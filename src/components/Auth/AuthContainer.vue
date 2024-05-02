@@ -1,6 +1,6 @@
 <template>
-  <div class="column window-height">
-    <div class="col-10 flex items-center justify-center">
+  <div class="column window-height" >
+    <div class="col-10 flex items-center justify-center" style="z-index: 5">
       <div class="container column">
         <LogoTitle :title="title" />
         <div class="column">

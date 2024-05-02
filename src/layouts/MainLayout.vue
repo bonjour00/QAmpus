@@ -173,7 +173,7 @@ const logout = async () => {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1;
+  z-index: 10;
 }
 @media (max-width: 885px) {
   .expand-button-container {
@@ -189,7 +189,7 @@ const logout = async () => {
   .sidebar.toggled {
     display: block;
     position: absolute;
-    z-index: 3;
+    z-index: 30;
     transition: width 0.3s ease;
   }
 }
@@ -334,7 +334,7 @@ const logout = async () => {
   padding-top: 3rem;
   width: 100px;
   background-color: white;
-  z-index: 3;
+  z-index: 30;
   transition: width 0.3s ease;
 }
 .toggled .logo-container {

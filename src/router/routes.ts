@@ -46,7 +46,6 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'setting',
-        component: () => import('layouts/UserLayout.vue'),
         meta: {
           role: ['admin', 'assigner', 'user'],
         },
