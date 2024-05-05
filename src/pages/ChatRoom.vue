@@ -156,7 +156,7 @@ const copy = (index: number) => {
   overflow-y: auto;
 }
 .message-box {
-  height: calc(100vh - 10rem);
+  height: calc(100vh - 11.5rem);
   width: 60vw;
 }
 .chat {

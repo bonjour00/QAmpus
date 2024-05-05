@@ -7,7 +7,7 @@
     hide-pagination
     :rows-per-page-options="[tableStore.perPage]"
     :loading="tableStore.loading"
-    style="border-radius: 25px; height: 84vh"
+    style="border-radius: 25px; height: 83vh"
     class="q-pa-md"
     :selection="selection || 'none'"
     v-model:selected="tableStore.selected"
@@ -57,11 +57,7 @@
     </template>
     <template v-slot:body-cell-emailVerified="props">
       <q-td :props="props">
-        {{ props.value }}
-        <q-chip
-          square
-          class="q-my-xs"
-          :ripple="false"
+        <QuasarChip
           :color="vertifyColor(props.value)"
           textColor="white"
           :text="props.value ? '已驗證' : '未驗證'"
