@@ -3,6 +3,7 @@
     <div
       v-if="!isSidebarToggled && screenWidth <= 885"
       class="expand-button-container"
+      style="z-index: 999"
     >
       <button class="toggle-button" @click="expandSidebar">
         <q-icon size="20px" name="arrow_forward_ios" class="chevron-icon" />
@@ -16,6 +17,7 @@
           @click="toggleSidebar"
           align="right"
           :class="{ 'rotate-icon': isSidebarToggled }"
+          style="z-index: 999"
         >
           <q-icon size="20px" name="arrow_forward_ios" class="chevron-icon" />
         </button>
@@ -30,6 +32,16 @@
           }"
         />
       </div>
+      <!-- <div class="logo-container">
+        <img
+          class="logo"
+          :src="logoSource"
+          :class="{
+            'expanded-logo': isSidebarToggled,
+            'collapsed-logo': !isSidebarToggled,
+          }"
+        />
+      </div> -->
       <div class="sidebar-list">
         <q-btn
           align="left"
@@ -63,15 +75,35 @@
     </div>
 
     <div v-if="isSidebarUnder885" class="dark-overlay"></div>
+    <q-layout view="lHh lpr lFf" container>
+      <q-header class="q-pa-sm" style="background-color: rgb(245, 247, 252)">
+        <q-toolbar>
+          <q-space />
+          <button class="logout-button" @click="logout" style="z-index: 10">
+            <q-icon name="logout" class="logout-icon" />
+            <p class="sidebar-title">登出</p>
+          </button>
+        </q-toolbar>
+      </q-header>
 
-    <div class="content" style="margin-top: 7vh">
-      <button class="logout-button" @click="logout">
-        <q-icon name="logout" class="logout-icon" />
+      <q-page-container>
+        <q-page> <router-view /> </q-page>
+      </q-page-container>
+    </q-layout>
 
-        <p class="sidebar-title">登出</p>
-      </button>
-      <router-view />
-    </div>
+    <!-- <q-layout
+      ><q-header elevated>
+        <button class="logout-button" @click="logout" style="z-index: 10">
+          <q-icon name="logout" class="logout-icon" />
+          <p class="sidebar-title">登出</p>
+        </button>
+      </q-header>
+      <q-page-container>
+        <q-page>
+          <router-view />
+        </q-page>
+      </q-page-container>
+    </q-layout> -->
   </div>
 </template>
 
@@ -173,7 +205,7 @@ const logout = async () => {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 10;
+  z-index: 11;
 }
 @media (max-width: 885px) {
   .expand-button-container {
@@ -189,7 +221,7 @@ const logout = async () => {
   .sidebar.toggled {
     display: block;
     position: absolute;
-    z-index: 30;
+    z-index: 40;
     transition: width 0.3s ease;
   }
 }
@@ -211,7 +243,7 @@ const logout = async () => {
 .sidebar-list {
   display: flex;
   flex-direction: column;
-  padding-top: 10rem;
+  padding-top: 9rem;
   padding-bottom: 3rem;
 }
 
@@ -331,8 +363,8 @@ const logout = async () => {
 .logo-container {
   position: fixed;
   height: 8rem;
+  width: 15rem;
   padding-top: 3rem;
-  width: 100px;
   background-color: white;
   z-index: 30;
   transition: width 0.3s ease;
@@ -351,7 +383,6 @@ const logout = async () => {
   justify-content: space-between;
   width: 4.5rem;
   right: 2rem;
-  top: 3%;
   align-items: center;
   color: #1769a0;
   font-weight: 600;
