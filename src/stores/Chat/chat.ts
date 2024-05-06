@@ -17,6 +17,8 @@ export const useChatStore = defineStore('chat', () => {
     answer: string;
     loading: boolean;
     copyIcon: string;
+    officeId: number;
+    officeName: string | null;
   };
   const question = ref('');
   const qaList: Ref<MessageQA[]> = ref([]);
@@ -24,6 +26,8 @@ export const useChatStore = defineStore('chat', () => {
   const open = ref(false);
   const copyRef: Ref<HTMLElement | null> = ref(null);
   const inputRef: Ref<HTMLElement | null> = ref(null);
+  const barRef = ref<HTMLDivElement | null>(null);
+  const barHeight = ref(87);
   const examples = [
     { label: '問科系資訊0', subTitle: '資管系課程大綱' },
     { label: '問科系資訊1', subTitle: '資管系課程大綱' },
@@ -42,6 +46,7 @@ export const useChatStore = defineStore('chat', () => {
     open.value = false;
     copyRef.value = null;
     inputRef.value = null;
+    barRef.value = null;
   };
   const submitQuestion = async (q: string) => {
     qaList.value.push({
@@ -49,13 +54,18 @@ export const useChatStore = defineStore('chat', () => {
       answer: '',
       loading: true,
       copyIcon: 'content_copy',
+      officeId: 0,
+      officeName: null,
     });
     try {
       loading.value = true;
       const result = await api.post('/Question/ask', {
         question: q,
       });
-      qaList.value[qaList.value.length - 1].answer = result.data.answer;
+      qaList.value[qaList.value.length - 1].answer =
+        result.data.originalResponse.answer;
+      qaList.value[qaList.value.length - 1].officeId = result.data.officeId;
+      qaList.value[qaList.value.length - 1].officeName = result.data.officeName;
       qaList.value[qaList.value.length - 1].loading = false;
       loading.value = false;
     } catch (e) {
@@ -91,8 +101,8 @@ export const useChatStore = defineStore('chat', () => {
     const questionQuestion = qaList.value[index].question;
     const questionAnswer = qaList.value[index].answer;
     const maybeOffice = {
-      officeName: '資管系',
-      officeId: 165,
+      officeName: qaList.value[index].officeName,
+      officeId: qaList.value[index].officeId,
     };
     userDislikeDialogStore.question = questionQuestion;
     userDislikeDialogStore.answer = questionAnswer;
@@ -129,6 +139,8 @@ export const useChatStore = defineStore('chat', () => {
     copyRef,
     inputRef,
     exampleList,
+    barRef,
+    barHeight,
     copy,
     sendMessage,
     handleInputDevice,

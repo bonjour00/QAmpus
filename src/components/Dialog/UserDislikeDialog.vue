@@ -11,7 +11,9 @@
       </q-card-section>
       <q-card-section align="center" class="q-pb-none">
         <div class="text-body1">
-          我們即將以下<b>問答資訊轉交至所屬單位</b>，待人工審核後將<b>發信通知您</b>核准之答覆~
+          我們只會將<b>以下問答資訊</b>提交給相關所屬單位，經人工審核後，我們會<b
+            >發信通知您核准後的答覆</b
+          >
         </div>
         <q-banner class="bg-grey-3" dense>
           <template v-slot:avatar>
@@ -20,16 +22,19 @@
           <div class="flex flex-center q-gutter-lg">
             <div>
               <span>
-                為求提高回覆品質，請您將您的<b>問題在下方補充、完整描述</b
-                ><br />
-                ，並<b>可修改該問答之可能所屬單位</b>
+                請提供<b>清晰、完整的問題描述</b>，以提高回覆品質，<br />
+                也<b>可修改該問答之可能所屬單位</b>
               </span>
             </div>
           </div>
         </q-banner>
       </q-card-section>
       <q-card-section style="max-height: 45vh" class="scroll">
-        <q-input v-model="userDislikeDialogStore.question" dense autogrow
+        <q-input
+          v-model="userDislikeDialogStore.question"
+          dense
+          autogrow
+          autofocus
           ><template v-slot:prepend>
             <span class="text-subtitle1">Q:&nbsp;</span>
           </template>

@@ -16,7 +16,7 @@
       <div class="q-gutter-sm flex">
         <FilterSelect
           v-if="userStore.userPermission == 'assigner'"
-          title="指派單位: "
+          :title="filterTitle || '所屬單位: '"
           v-model:currentOption="tableStore.office"
           :filterFn="filterFn"
           :filterOption="tableStore.filterOption"
@@ -102,6 +102,7 @@ const props = defineProps<{
   selection?: 'multiple';
   rowKey: string;
   fileCustom?: string;
+  filterTitle?: string;
 }>();
 
 const tableStore = useTableStore();

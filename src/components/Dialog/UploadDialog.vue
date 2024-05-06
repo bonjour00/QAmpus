@@ -96,7 +96,7 @@
             userStore.userPermission == 'assigner' &&
             !uploadDialogStore.fileName
           "
-          title="註冊單位: "
+          title="所屬單位: "
           v-model:currentOption="uploadDialogStore.office"
           :filterFn="filterFn"
           :filterOption="uploadDialogStore.filterOption"

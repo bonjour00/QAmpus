@@ -33,10 +33,17 @@ export const useUploadDialogStore = defineStore('uploadDialog', () => {
 
   const openUploadDialog = () => {
     open.value = true;
-    setOfficeSelect({
-      officeName: userStore.officeName,
-      officeId: userStore.officeId,
-    });
+    if (!tableStore.office.value) {
+      setOfficeSelect({
+        officeName: userStore.officeName,
+        officeId: userStore.officeId,
+      });
+    } else {
+      setOfficeSelect({
+        officeName: tableStore.office.label,
+        officeId: tableStore.office.value,
+      });
+    }
   };
   const openUploadWithData = (data: Resource) => {
     open.value = true;

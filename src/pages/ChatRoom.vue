@@ -1,13 +1,23 @@
 <template>
   <div class="flex flex-center container">
-    <div class="message-box">
+    <div
+      class="message-box"
+      :style="{ height: `calc(100vh - 70px - ${barHeight}px)` }"
+    >
       <div
-        class="qampus-greet relative-position"
+        class="relative-position full-height"
         v-if="chatStore.qaList.length == 0"
       >
-        <img :src="collapsedLogo" />
-        <span class="greet-text"><b>How can I help you today?</b></span>
-        <div class="row full-width absolute-bottom">
+        <div
+          class="qampus-greet"
+          :style="{
+            height: `calc(100% - ${exampleHeight}px)`,
+          }"
+        >
+          <img :src="collapsedLogo" />
+          <span class="greet-text"><b>How can I help you today?</b></span>
+        </div>
+        <div class="row full-width absolute-bottom q-mb-lg" ref="exampleRef">
           <q-intersection
             v-for="(example, index) in chatStore.exampleList"
             :key="index"
@@ -73,7 +83,7 @@
         </div>
       </div>
     </div>
-    <div class="messagebar column">
+    <div class="messagebar column" ref="barRef">
       <q-input
         ref="inputRef"
         autofocus
@@ -117,9 +127,18 @@ import { useChatStore } from 'src/stores/Chat/chat';
 import WarningDialog from 'src/components/Dialog/WarningDialog.vue';
 import UserDislikeDialog from 'src/components/Dialog/UserDislikeDialog.vue';
 import { storeToRefs } from 'pinia';
+import { ref } from 'vue';
 
 const chatStore = useChatStore();
-const { inputRef } = storeToRefs(chatStore);
+const { inputRef, barHeight } = storeToRefs(chatStore);
+const barRef = ref<HTMLDivElement | null>(null);
+const exampleRef = ref<HTMLDivElement | null>(null);
+const exampleHeight = ref(180);
+
+setTimeout(() => {
+  exampleHeight.value = exampleRef.value?.clientHeight || 180;
+  barHeight.value = barRef.value?.clientHeight || 87;
+}, 150);
 const title = '請先登入';
 const description =
   '登入後即可享有倒讚後的人工審核功能，當您的問題經確認後，我們將會發信通知您~';
@@ -154,9 +173,10 @@ const copy = (index: number) => {
 <style scoped>
 .container {
   overflow-y: auto;
+  height: 100%;
 }
 .message-box {
-  height: calc(100vh - 11.5rem);
+  /* height: calc(100vh - 11.5rem); */
   width: 60vw;
 }
 .chat {
@@ -166,6 +186,7 @@ const copy = (index: number) => {
   color: black;
   font-size: 15px;
   font-weight: 400;
+  white-space: pre-line;
 }
 
 .chat img {
@@ -215,7 +236,6 @@ const copy = (index: number) => {
   align-items: center;
   justify-content: center;
   height: 100%;
-  margin-top: -40px;
 }
 
 .qampus-greet img {

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { Ref, ref } from 'vue';
 import { successs } from 'src/components/AnimateAction/AnimateAction';
 import { api } from 'src/boot/axios';
 import useOffice from 'src/composables/common/useOffice';
@@ -11,20 +11,25 @@ export const useUserDislikeDialogStore = defineStore(
     const { office, filterOption, setOfficeSelect, $officeReset, filterFn } =
       useOffice();
     const { notifyFail } = useNotify();
+    type office = {
+      officeId: number;
+      officeName: string | null;
+    };
     const open = ref(false);
     const loading = ref(false);
     const needDirectAssign = ref(false);
     const question = ref('');
     const answer = ref('');
-    const maybeOffice = ref({
-      officeName: '',
-      officeId: -1,
+    const maybeOffice: Ref<office> = ref({
+      officeName: null,
+      officeId: 0,
     });
 
     const openDislikeDialog = () => {
       open.value = true;
-      //   question.value = data.question;
-      //   answer.value = data.answer;
+      if (!maybeOffice.value.officeId) {
+        needDirectAssign.value = true;
+      }
       setOfficeSelect(maybeOffice.value);
     };
     const $reset = () => {
@@ -34,8 +39,8 @@ export const useUserDislikeDialogStore = defineStore(
       question.value = '';
       answer.value = '';
       maybeOffice.value = {
-        officeName: '',
-        officeId: -1,
+        officeName: null,
+        officeId: 0,
       };
       $officeReset();
     };
@@ -45,45 +50,35 @@ export const useUserDislikeDialogStore = defineStore(
 
     const dislikeSubmit = async () => {
       loading.value = true;
+      const officeId =
+        office.value && (office.value.value as number) > 0
+          ? office.value.value
+          : null;
+
+      console.log({
+        questionQuestion: question.value,
+        questionAnswer: answer.value,
+        ...(officeId && !needDirectAssign.value && { officeId }),
+      });
       try {
-        if (needDirectAssign.value) {
-          await directAssign();
-        } else {
-          await assignOffice();
-        }
+        const result = await api.post(
+          '/Question',
+          {
+            questionQuestion: question.value,
+            questionAnswer: answer.value,
+            ...(officeId && !needDirectAssign.value && { officeId }),
+          },
+          {
+            headers: {
+              Authorization: localStorage.getItem('token'),
+            },
+          }
+        );
         successs('已幫您轉送至相關單位');
       } catch (e: any) {
         notifyFail(e.response?.data);
       }
       closeDislikeDialog();
-    };
-    const assignOffice = async () => {
-      console.log({
-        questionQuestion: question.value,
-        questionAnswer: answer.value,
-        officeId: office.value.value,
-      });
-      const result = await api.post(
-        '/Question',
-        {
-          questionQuestion: question.value,
-          questionAnswer: answer.value,
-          officeId: office.value.value,
-        },
-        {
-          headers: {
-            Authorization: localStorage.getItem('token'),
-          },
-        }
-      );
-    };
-
-    const directAssign = async () => {
-      console.log('directAssign');
-      //   const result = await api.patch(
-      //     `/Question/assigned/${row.value?.questionId}`
-      //   );
-      //   console.log(result);
     };
 
     return {

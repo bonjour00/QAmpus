@@ -10,17 +10,17 @@
         />
         <img class="user-layout-logo" src="../assets/expanded-logo.png" />
 
-        <div class="flex" v-if="userStore.userName">
+        <div class="flex fixed-top-right q-pa-sm" v-if="userStore.userName">
           <q-toolbar-title class="flex flex-center text-subtitle1">
             您好{{ userStore.userName }}
           </q-toolbar-title>
           <q-fab color="primary" icon="settings" direction="down">
             <q-fab-action color="secondary" icon="logout" @click="logout" />
-            <!-- <q-fab-action
+            <q-fab-action
               color="secondary"
               icon="manage_accounts"
               @click="router.push({ path: '/setting' })"
-            /> -->
+            />
           </q-fab>
         </div>
       </q-toolbar>

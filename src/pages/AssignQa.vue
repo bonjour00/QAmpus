@@ -6,6 +6,7 @@
       tableTitle="指派單位"
       selection="multiple"
       rowKey="questionId"
+      filterTitle="目前指派單位"
     >
       <template v-slot:action>
         <SlotBtn

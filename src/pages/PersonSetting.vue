@@ -6,8 +6,12 @@
     :loadingShow="false"
   >
     <q-list>
-      <q-item class="q-px-none" v-for="(user, index) in userInfo" :key="index">
-        <q-item-section>
+      <q-item
+        class="q-px-none"
+        v-for="(user, index) in userInfoFilter"
+        :key="index"
+      >
+        <q-item-section v-show="user.value">
           <q-item-label caption>
             <span class="text-weight-bold">{{ user.lable }}</span>
           </q-item-label>
@@ -25,6 +29,7 @@
 import { useRouter } from 'vue-router';
 import AuthContainer from 'src/components/Auth/AuthContainer.vue';
 import { useUserStore } from 'src/stores/Auth/user';
+import { computed } from 'vue';
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -43,6 +48,9 @@ const userInfo = [
     value: userStore.officeName,
   },
 ];
+const userInfoFilter = computed(() => {
+  return userInfo.filter((item) => item.value);
+});
 const resetPwdRoute = () => {
   router.push({ name: 'vertify-pwd' });
 };

@@ -44,28 +44,30 @@ const routes: RouteRecordRaw[] = [
         name: 'member',
         component: () => import('pages/AdminMember.vue'),
       },
+    ],
+  },
+  {
+    path: '/setting',
+    meta: {
+      requiresAuth: true,
+      role: ['admin', 'assigner', 'user'],
+    },
+    component: () => import('layouts/UserLayout.vue'),
+    children: [
       {
-        path: 'setting',
-        meta: {
-          role: ['admin', 'assigner', 'user'],
-        },
-        children: [
-          {
-            path: '',
-            name: 'setting',
-            component: () => import('pages/PersonSetting.vue'),
-          },
-          {
-            path: 'vertify-pwd',
-            name: 'vertify-pwd',
-            component: () => import('pages/VertifyPwd.vue'),
-          },
-          {
-            path: 'reset-person-pwd',
-            name: 'reset-person-pwd',
-            component: () => import('pages/ResetPwd.vue'),
-          },
-        ],
+        path: '',
+        name: 'setting',
+        component: () => import('pages/PersonSetting.vue'),
+      },
+      {
+        path: 'vertify-pwd',
+        name: 'vertify-pwd',
+        component: () => import('pages/VertifyPwd.vue'),
+      },
+      {
+        path: 'reset-person-pwd',
+        name: 'reset-person-pwd',
+        component: () => import('pages/ResetPwd.vue'),
       },
     ],
   },
