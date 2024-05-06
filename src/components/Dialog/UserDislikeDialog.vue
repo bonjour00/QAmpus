@@ -22,14 +22,15 @@
           <div class="flex flex-center q-gutter-lg">
             <div>
               <span>
-                請提供<b>清晰、完整的問題描述</b>，以提高回覆品質，<br />
-                也<b>可修改該問答之可能所屬單位</b>
+                請提供<b>清晰、完整的問題描述</b>，以提高回覆品質， 也<b
+                  >可修改該問答之可能所屬單位</b
+                >
               </span>
             </div>
           </div>
         </q-banner>
       </q-card-section>
-      <q-card-section style="max-height: 45vh" class="scroll">
+      <q-card-section style="max-height: 43vh" class="scroll">
         <q-input
           v-model="userDislikeDialogStore.question"
           dense
@@ -51,14 +52,15 @@
           label="不確定所屬單位"
         />
       </q-card-section>
-      <q-card-actions align="right" class="q-pa-md">
+      <q-card-section>
         <FilterSelect
           v-show="!userDislikeDialogStore.needDirectAssign"
-          title="指派單位: "
+          title="所屬單位: "
           v-model:currentOption="userDislikeDialogStore.office"
           :filterFn="filterFn"
           :filterOption="userDislikeDialogStore.filterOption"
-        />
+      /></q-card-section>
+      <q-card-actions align="right" class="q-pa-md">
         <q-space />
         <CancelBtn @clicked="closeDislikeDialog" />
         <ConfirmBtn btnName="提交" @clicked="dislikeSubmit" />

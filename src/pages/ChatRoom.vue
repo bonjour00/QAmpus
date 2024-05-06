@@ -1,8 +1,11 @@
 <template>
-  <div class="flex flex-center container">
+  <div class="flex flex-center container" style="border: 1px solid red">
     <div
       class="message-box"
-      :style="{ height: `calc(100vh - 70px - ${barHeight}px)` }"
+      style="border: 1px solid pink"
+      :style="{
+        height: `calc(100vh - ${layoutHeight}px - ${barHeight}px)`,
+      }"
     >
       <div
         class="relative-position full-height"
@@ -17,7 +20,7 @@
           <img :src="collapsedLogo" />
           <span class="greet-text"><b>How can I help you today?</b></span>
         </div>
-        <div class="row full-width absolute-bottom q-mb-lg" ref="exampleRef">
+        <div class="row full-width absolute-bottom" ref="exampleRef">
           <q-intersection
             v-for="(example, index) in chatStore.exampleList"
             :key="index"
@@ -127,22 +130,27 @@ import { useChatStore } from 'src/stores/Chat/chat';
 import WarningDialog from 'src/components/Dialog/WarningDialog.vue';
 import UserDislikeDialog from 'src/components/Dialog/UserDislikeDialog.vue';
 import { storeToRefs } from 'pinia';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import { useQuasar } from 'quasar';
 
 const chatStore = useChatStore();
+const $q = useQuasar();
 const { inputRef, barHeight } = storeToRefs(chatStore);
 const barRef = ref<HTMLDivElement | null>(null);
 const exampleRef = ref<HTMLDivElement | null>(null);
-const exampleHeight = ref(180);
+const exampleHeight = ref(90);
+const layoutHeight = ref(145);
 
 setTimeout(() => {
-  exampleHeight.value = exampleRef.value?.clientHeight || 180;
+  exampleHeight.value = exampleRef.value?.clientHeight || 185;
+  layoutHeight.value = $q.screen.lt.sm ? 145 : 70;
   barHeight.value = barRef.value?.clientHeight || 87;
 }, 150);
 const title = '請先登入';
 const description =
   '登入後即可享有倒讚後的人工審核功能，當您的問題經確認後，我們將會發信通知您~';
 const sendMessage = async () => {
+  scrollToBottom();
   await chatStore.sendMessage();
 };
 const handleInputDevice = () => {
@@ -160,15 +168,24 @@ const handleThumbDown = (index: number) => {
 const copy = (index: number) => {
   chatStore.copy(index);
 };
-
-// const scrollToBottom = () => {
-//   const container = document.querySelector('.container');
-//   if (container) {
-//     // 滾動到最底部
-//     container.scrollTop = container.scrollHeight;
-//     console.log(container!.scrollHeight);
-//   }
-// };
+watch(
+  () => chatStore.loading,
+  () => {
+    if (!chatStore.loading) {
+      setTimeout(() => {
+        scrollToBottom();
+      }, 50);
+    }
+  }
+);
+const scrollToBottom = () => {
+  const container = document.querySelector('.container');
+  if (container) {
+    // 滾動到最底部
+    container.scrollTop = container.scrollHeight;
+    console.log(container!.scrollHeight);
+  }
+};
 </script>
 <style scoped>
 .container {
@@ -182,7 +199,8 @@ const copy = (index: number) => {
 .chat {
   display: flex;
   gap: 20px;
-  padding: 25px;
+  padding-top: 25px;
+  padding-bottom: 25px;
   color: black;
   font-size: 15px;
   font-weight: 400;

@@ -15,12 +15,14 @@
             您好{{ userStore.userName }}
           </q-toolbar-title>
           <q-fab color="primary" icon="settings" direction="down">
-            <q-fab-action color="secondary" icon="logout" @click="logout" />
             <q-fab-action
+              v-for="(fab, index) in fabs"
+              :key="index"
               color="secondary"
-              icon="manage_accounts"
-              @click="router.push({ path: '/setting' })"
+              :icon="fab.icon"
+              @click="linkTo(fab.path)"
             />
+            <q-fab-action color="secondary" icon="logout" @click="logout" />
           </q-fab>
         </div>
       </q-toolbar>
@@ -41,8 +43,22 @@ import { useRouter } from 'vue-router';
 const userStore = useUserStore();
 const router = useRouter();
 const logout = async () => {
+  console.log(123);
   userStore.logout();
 };
+const linkTo = (path: string) => {
+  router.push({ path });
+};
+const fabs = [
+  {
+    icon: 'chat',
+    path: '/chat',
+  },
+  {
+    icon: 'manage_accounts',
+    path: '/setting',
+  },
+];
 </script>
 <style>
 .user-layout-logo {

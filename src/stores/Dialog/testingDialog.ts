@@ -26,7 +26,7 @@ export const useTestingDialogStore = defineStore('testingDialog', () => {
       const result = await api.post('/Question/ask', {
         question: QA.questionQuestion,
       });
-      return result.data.answer;
+      return result.data.originalResponse.answer;
     } catch (e) {
       console.log(e, index);
       return '發生錯誤，請稍後再試一次';
