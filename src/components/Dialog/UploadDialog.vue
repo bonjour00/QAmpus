@@ -90,7 +90,7 @@
           </q-tab-panels>
         </div>
       </q-card-section>
-      <q-card-actions align="right" class="q-pa-md">
+      <q-card-section>
         <FilterSelect
           v-show="
             userStore.userPermission == 'assigner' &&
@@ -101,7 +101,8 @@
           :filterFn="filterFn"
           :filterOption="uploadDialogStore.filterOption"
         />
-        <q-space />
+      </q-card-section>
+      <q-card-actions align="right" class="q-pa-md">
         <CancelBtn @clicked="closeUploadDialog" />
         <ConfirmBtn
           :btnName="

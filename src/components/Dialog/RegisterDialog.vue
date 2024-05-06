@@ -9,7 +9,7 @@
         <q-space />
         <q-btn icon="close" flat round dense @click="closeRegisterDialog" />
       </q-card-section>
-      <div style="max-height: 50vh" class="scroll">
+      <div style="max-height: 45vh" class="scroll">
         <q-card-section>
           <q-input
             v-model="registerDialogStore.userId"
@@ -41,7 +41,7 @@
           />
         </q-card-section>
       </div>
-      <q-card-actions align="right" class="q-pa-md">
+      <q-card-section>
         <FilterSelect
           v-show="
             registerDialogStore.userPermission == 'assigner' &&
@@ -52,6 +52,8 @@
           :filterFn="filterFn"
           :filterOption="registerDialogStore.filterOption"
         />
+      </q-card-section>
+      <q-card-actions align="right" class="q-pa-md">
         <CancelBtn @clicked="closeRegisterDialog" />
         <ConfirmBtn btnName="註冊" @clicked="signupMember" />
       </q-card-actions>

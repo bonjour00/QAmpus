@@ -11,7 +11,7 @@
       </q-card-section>
       <q-card-section align="center" class="q-pb-none">
         <div class="text-body1">
-          請<b>勾選</b>可核准之問答，我們將發信通知發問者核准之答覆~
+          請<b>勾選</b>可核准的問答，我們將發信通知發問者核准的答覆~
         </div>
         <q-banner class="bg-grey-3" dense>
           <template v-slot:avatar>
@@ -88,7 +88,7 @@ const testingDialogStore = useTestingDialogStore();
 const infos = [
   {
     icon: 'done',
-    label: '已核准，並發信通知使用者',
+    label: '已核准，可發信通知使用者',
     color: 'green',
   },
   // {

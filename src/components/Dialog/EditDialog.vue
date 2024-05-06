@@ -9,32 +9,32 @@
         <q-space />
         <RoundBtn icon="close" @clicked="closeEditDialog" />
       </q-card-section>
-
-      <q-card-section>
-        <q-input
-          :model-value="
-            editDialogStore.row && editDialogStore.row.questionQuestion
-          "
-          dense
-          autogrow
-          readonly
-          ><template v-slot:prepend>
-            <span class="text-subtitle1">Q:&nbsp;</span>
-          </template>
-        </q-input>
-        <q-input
-          :model-value="
-            editDialogStore.row && editDialogStore.row.questionAnswer
-          "
-          dense
-          autogrow
-          readonly
-          ><template v-slot:prepend>
-            <span class="text-subtitle1">A:&nbsp;</span>
-          </template>
-        </q-input>
-      </q-card-section>
-
+      <div style="max-height: 45vh" class="scroll">
+        <q-card-section>
+          <q-input
+            :model-value="
+              editDialogStore.row && editDialogStore.row.questionQuestion
+            "
+            dense
+            autogrow
+            readonly
+            ><template v-slot:prepend>
+              <span class="text-subtitle1">Q:&nbsp;</span>
+            </template>
+          </q-input>
+          <q-input
+            :model-value="
+              editDialogStore.row && editDialogStore.row.questionAnswer
+            "
+            dense
+            autogrow
+            readonly
+            ><template v-slot:prepend>
+              <span class="text-subtitle1">A:&nbsp;</span>
+            </template>
+          </q-input>
+        </q-card-section>
+      </div>
       <q-card-section
         style="max-height: 20vh"
         class="scroll q-py-none"
@@ -48,14 +48,15 @@
           label="不確定所屬單位，需轉移給分配者以負責指派"
         />
       </q-card-section>
-      <q-card-actions align="right" class="q-pa-md">
+      <q-card-section v-if="canTrans()" class="q-py-none">
         <FilterSelect
-          v-if="canTrans()"
           title="指派單位: "
           v-model:currentOption="editDialogStore.office"
           :filterFn="filterFn"
           :filterOption="editDialogStore.filterOption"
         />
+      </q-card-section>
+      <q-card-actions align="right" class="q-pa-md">
         <QuasarChip
           v-if="hasDirectAssign()"
           color="pink-5"
