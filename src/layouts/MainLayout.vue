@@ -3,13 +3,11 @@
     <div
       v-if="!isSidebarToggled && screenWidth <= 885"
       class="expand-button-container"
-      style="z-index: 999"
     >
       <button class="toggle-button" @click="expandSidebar">
         <q-icon size="20px" name="arrow_forward_ios" class="chevron-icon" />
       </button>
     </div>
-
     <div class="sidebar" :class="{ toggled: isSidebarToggled }">
       <div class="toggle-button-container">
         <button
@@ -17,7 +15,6 @@
           @click="toggleSidebar"
           align="right"
           :class="{ 'rotate-icon': isSidebarToggled }"
-          style="z-index: 999"
         >
           <q-icon size="20px" name="arrow_forward_ios" class="chevron-icon" />
         </button>
@@ -32,16 +29,6 @@
           }"
         />
       </div>
-      <!-- <div class="logo-container">
-        <img
-          class="logo"
-          :src="logoSource"
-          :class="{
-            'expanded-logo': isSidebarToggled,
-            'collapsed-logo': !isSidebarToggled,
-          }"
-        />
-      </div> -->
       <div class="sidebar-list">
         <q-btn
           align="left"
@@ -61,7 +48,6 @@
               :class="{ toggled: isSidebarToggled }"
               class="sidebar-icon"
             />
-
             <p
               v-show="isSidebarToggled"
               :class="{ toggled: isSidebarToggled }"
@@ -73,40 +59,16 @@
         </q-btn>
       </div>
     </div>
-
     <div v-if="isSidebarUnder885" class="dark-overlay"></div>
-    <q-layout view="lHh lpr lFf" container>
-      <q-header class="q-pa-sm" style="background-color: rgb(245, 247, 252)">
-        <q-toolbar>
-          <q-space />
-          <button class="logout-button" @click="logout" style="z-index: 10">
-            <q-icon name="logout" class="logout-icon" />
-            <p class="sidebar-title">登出</p>
-          </button>
-        </q-toolbar>
-      </q-header>
-
-      <q-page-container>
-        <q-page> <router-view /> </q-page>
-      </q-page-container>
-    </q-layout>
-
-    <!-- <q-layout
-      ><q-header elevated>
-        <button class="logout-button" @click="logout" style="z-index: 10">
-          <q-icon name="logout" class="logout-icon" />
-          <p class="sidebar-title">登出</p>
-        </button>
-      </q-header>
-      <q-page-container>
-        <q-page>
-          <router-view />
-        </q-page>
-      </q-page-container>
-    </q-layout> -->
+    <div class="content" style="margin-top: 7vh">
+      <button class="logout-button" @click="logout">
+        <q-icon name="logout" class="logout-icon" />
+        <p class="sidebar-title">登出</p>
+      </button>
+      <router-view />
+    </div>
   </div>
 </template>
-
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
@@ -115,9 +77,7 @@ import { watch } from 'vue';
 import expandedLogo from '../assets/expanded-logo.png';
 import collapsedLogo from '../assets/collapsed-logo.png';
 import { useUserStore } from 'src/stores/Auth/user';
-
 const userStore = useUserStore();
-
 const router = useRouter();
 const isSidebarToggled = ref(false);
 const screenWidth = ref(window.innerWidth);
@@ -125,7 +85,6 @@ const isManuallyExpanded = ref(false);
 const isSidebarUnder885 = computed(
   () => screenWidth.value <= 885 && isSidebarToggled.value
 );
-
 const updateSidebarState = () => {
   if (screenWidth.value <= 885 && !isManuallyExpanded.value) {
     isSidebarToggled.value = false;
@@ -136,13 +95,10 @@ const updateSidebarState = () => {
     }
   }
 };
-
 watch(screenWidth, updateSidebarState);
-
 window.addEventListener('resize', () => {
   screenWidth.value = window.innerWidth;
 });
-
 const currentChange = (label: string) => {
   if (screenWidth.value <= 885) {
     isSidebarToggled.value = false;
@@ -153,12 +109,10 @@ const toggleSidebar = () => {
   isSidebarToggled.value = !isSidebarToggled.value;
   isManuallyExpanded.value = isSidebarToggled.value;
 };
-
 const expandSidebar = () => {
   isSidebarToggled.value = true;
   isManuallyExpanded.value = true;
 };
-
 const isMenuActive = (label: string) => {
   const path = router.currentRoute.value.path;
   const pathArray = path.split('/');
@@ -170,16 +124,13 @@ const isMenuActive = (label: string) => {
     (path === '/' && `/${pathName}` === '/pending')
   );
 };
-
 const logoSource = computed(() => {
   return isSidebarToggled.value ? expandedLogo : collapsedLogo;
 });
-
 const logout = async () => {
   userStore.logout();
 };
 </script>
-
 <style scoped>
 .expand-button-container {
   display: none;
@@ -189,7 +140,6 @@ const logout = async () => {
   left: 1rem;
   z-index: 900;
 }
-
 .expand-button {
   background-color: #3498db;
   color: #fff;
@@ -205,7 +155,7 @@ const logout = async () => {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 11;
+  z-index: 10;
 }
 @media (max-width: 885px) {
   .expand-button-container {
@@ -217,21 +167,18 @@ const logout = async () => {
     height: 100%;
     box-shadow: none !important;
   }
-
   .sidebar.toggled {
     display: block;
     position: absolute;
-    z-index: 40;
+    z-index: 30;
     transition: width 0.3s ease;
   }
 }
-
 .custom-layout {
   display: flex;
   height: 100vh;
   overflow-x: hidden;
 }
-
 .sidebar {
   background-color: white;
   width: 100px;
@@ -239,14 +186,12 @@ const logout = async () => {
   box-shadow: 5px 0px 30px 0px rgba(226, 236, 249, 0.5);
   overflow-y: auto;
 }
-
 .sidebar-list {
   display: flex;
   flex-direction: column;
-  padding-top: 9rem;
+  padding-top: 10rem;
   padding-bottom: 3rem;
 }
-
 .sidebar-icon {
   margin-left: 0.5rem;
 }
@@ -260,13 +205,11 @@ const logout = async () => {
   color: #9197b3;
   font-weight: bolder;
 }
-
 .sidebar-button:hover {
   background-color: #79a0bd;
   transition: 0.2s;
   color: white;
 }
-
 .sidebar-button.active {
   background-color: #79a0bd;
   color: white;
@@ -280,7 +223,6 @@ const logout = async () => {
 .toggled .sidebar-icon {
   max-width: 2rem;
 }
-
 .toggled .sidebar-title {
   max-width: 6rem;
   margin-left: 1rem;
@@ -289,23 +231,17 @@ const logout = async () => {
   font-size: medium;
   align-items: center;
 }
-
 .toggled .button-content {
   display: flex;
 }
-
 .sidebar-title {
   margin: 0;
 }
-
 .content {
   flex: 1;
-  transition: margin-left 0.3s;
-  /* padding-left: 5px; */
-  /* padding-right: 5px; */
+  transition: margin-left 0.3s; /* padding-left: 5px; */ /* padding-right: 5px; */
   overflow-x: auto;
 }
-
 .toggle-button {
   background-color: transparent;
   border: 0;
@@ -363,8 +299,8 @@ const logout = async () => {
 .logo-container {
   position: fixed;
   height: 8rem;
-  width: 15rem;
   padding-top: 3rem;
+  width: 100px;
   background-color: white;
   z-index: 30;
   transition: width 0.3s ease;
@@ -372,7 +308,6 @@ const logout = async () => {
 .toggled .logo-container {
   width: 20rem;
 }
-
 .logout-button {
   background-color: transparent;
   font-size: 1.2rem;
@@ -383,6 +318,7 @@ const logout = async () => {
   justify-content: space-between;
   width: 4.5rem;
   right: 2rem;
+  top: 3%;
   align-items: center;
   color: #1769a0;
   font-weight: 600;
