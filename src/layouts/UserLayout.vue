@@ -11,7 +11,7 @@
           @clicked="router.push({ path: '/login' })"
         /> -->
         <button
-          class="login"
+          class="user-login"
           v-if="!userStore.userName"
           btnName="登入"
           @click="router.push({ path: '/login' })"
@@ -51,7 +51,7 @@ const logout = async () => {
 };
 </script>
 <style>
-.login {
+.user-login {
   cursor: pointer;
   background-color: transparent;
   border: 1.5px solid #1769a0;
@@ -60,7 +60,7 @@ const logout = async () => {
   font-weight: 600;
   color: #1769a0;
 }
-.login:hover {
+.user-login:hover {
   border: 1.5px solid #1769a0;
   background-color: #1769a0;
   color: white;

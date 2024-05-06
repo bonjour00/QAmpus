@@ -50,7 +50,12 @@
       </template>
     </q-input>
     <template #link>
-      <AuthLink toDescription="已經有帳號了？" to="/login" toLinkTitle="登入" />
+      <AuthLink
+        style="z-index: 999"
+        toDescription="已經有帳號了？"
+        to="/login"
+        toLinkTitle="登入"
+      />
     </template>
   </AuthContainer>
 </template>
@@ -113,3 +118,8 @@ const register = async () => {
   }
 };
 </script>
+<style>
+.q-field--with-bottom {
+  padding-bottom: 10px !important;
+}
+</style>

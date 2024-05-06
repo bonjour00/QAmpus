@@ -27,13 +27,14 @@
         />
       </template>
     </q-input>
+    <AuthLink
+      style="display: flex; justify-content: end; font-size: 13px"
+      toDescription=""
+      to="/forget-pwd"
+      toLinkTitle="忘記密碼？"
+    />
     <template #link>
       <AuthLink toDescription="沒有帳號？" to="/register" toLinkTitle="註冊" />
-      <AuthLink
-        toDescription="忘記密碼?"
-        to="/forget-pwd"
-        toLinkTitle="重設密碼"
-      />
     </template>
   </AuthContainer>
 </template>
@@ -46,6 +47,7 @@ import { notEmpty } from 'src/components/Input/rules';
 import { api } from 'src/boot/axios';
 import { useUserStore } from 'src/stores/Auth/user';
 import useNotify from 'src/composables/Notify/useNotify';
+import NormalBtn from 'src/components/Button/IconBtn/NormalBtn.vue';
 
 // const userStore = useUserStore();
 const { notifyFail } = useNotify();
@@ -84,3 +86,25 @@ const login = async () => {
   }
 };
 </script>
+<style>
+.button-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.login {
+  height: 3rem;
+  width: 47%;
+  border-radius: 8px;
+  border: none;
+}
+.login:hover {
+  border: 0;
+}
+
+.register {
+  width: 47%;
+  border-radius: 8px;
+  border: 1px solid;
+}
+</style>

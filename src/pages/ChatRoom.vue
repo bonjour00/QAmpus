@@ -52,14 +52,17 @@
     <div class="messagebar column">
       <q-input
         v-model="chatStore.question"
-        standout
+        standout="bg-grey-10 text-white"
         autogrow
         placeholder="傳訊息給QAmpus...."
         class="bar-input"
         @keydown.enter.exact.prevent="sendMessage"
         :input-style="{
           color: 'white',
+          fontWeight: 'bold',
+          fontSize: '16px',
           maxHeight: '150px',
+          paddingLeft: '10px',
         }"
         :disable="chatStore.loading"
       >
@@ -67,8 +70,8 @@
           <RoundBtn icon="send" @clicked="sendMessage" />
         </template>
       </q-input>
-      <span style="padding: 5px"
-        >QAmpus 可能會發生錯誤。建議你查核重要資訊。</span
+      <span style="padding: 10px; color: #bcbcbc; font-weight: bold"
+        >QAmpus 可能會發生錯誤。建議您確認重要資訊。</span
       >
     </div>
   </div>
@@ -191,6 +194,10 @@ const copy = (index: number) => {
 .greet-text {
   margin: 10px;
   font-size: 20px;
+}
+
+.messagebar.focused {
+  background-color: aqua;
 }
 
 /* 在手機時留下10vw的空間 */
