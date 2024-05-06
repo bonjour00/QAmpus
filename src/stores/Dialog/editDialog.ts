@@ -76,7 +76,7 @@ export const useEditDialogStore = defineStore('editDialog', () => {
       successs('修改成功');
       tableStore.fetchRows(url.value, status.value);
     } catch (e: any) {
-      notifyFail(e.response?.data);
+      notifyFail(e);
     }
 
     closeEditDialog();

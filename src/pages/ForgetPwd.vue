@@ -40,7 +40,7 @@ const forget = async () => {
       });
       successs('已發送重設密碼Email驗證信');
     } catch (error: any) {
-      notifyFail(error.response?.data, '發送驗證信失敗:');
+      notifyFail(error, '發送驗證信失敗:');
     }
     loadingShow.value = false;
   }

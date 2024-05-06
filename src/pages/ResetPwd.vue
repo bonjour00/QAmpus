@@ -87,7 +87,7 @@ const reset = async () => {
       successs('修改成功');
       router.push({ name });
     } catch (error: any) {
-      notifyFail(error.response.data, '重設失敗');
+      notifyFail(error, '重設失敗: ');
     }
     loadingShow.value = false;
   }

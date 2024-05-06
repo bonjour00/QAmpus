@@ -51,12 +51,12 @@
                     keep-color
                   />
                 </q-item-section>
-                <q-item-section>
+                <q-item-section style="white-space: pre-line">
                   {{ row.questionQuestion }}
                 </q-item-section>
               </template>
               <q-card>
-                <q-card-section class="q-ml-sm">
+                <q-card-section class="q-ml-sm" style="white-space: pre-line">
                   <q-icon name="emoji_objects" color="primary" size="1.5rem" />
                   <InnerLoading :showing="testingLoading(row)" />
                   {{ row.questionAnswer }}

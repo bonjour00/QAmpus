@@ -11,11 +11,13 @@ import { api } from 'src/boot/axios';
 import { useTableStore } from '../Table/table';
 import { useUserStore } from '../Auth/user';
 import useOffice from 'src/composables/common/useOffice';
+import useNotify from 'src/composables/Notify/useNotify';
 
 export const useEditMemberDialogStore = defineStore('editMemberDialog', () => {
   const tableStore = useTableStore();
   const userStore = useUserStore();
   const { officeName, officeId } = storeToRefs(userStore);
+  const { notifyFail } = useNotify();
 
   const { office, filterOption, setOfficeSelect, $officeReset, filterFn } =
     useOffice();
@@ -66,6 +68,7 @@ export const useEditMemberDialogStore = defineStore('editMemberDialog', () => {
       tableStore.fetchRows(MEMBER_TABLE_API, tableStore.role.value);
     } catch (e: any) {
       console.log(e, 'error');
+      notifyFail(e);
     }
     closeEditMemberDialog();
   };

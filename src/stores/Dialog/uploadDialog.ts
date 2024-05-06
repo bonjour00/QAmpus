@@ -140,7 +140,7 @@ export const useUploadDialogStore = defineStore('uploadDialog', () => {
         closeUploadDialog();
       } catch (error: any) {
         loading.value = false;
-        notifyFail(error.response?.data);
+        notifyFail(error);
       }
     }
   };

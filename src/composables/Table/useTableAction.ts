@@ -19,7 +19,7 @@ export default function useTableAction() {
       successs('刪除成功');
     } catch (e: any) {
       loading.value = false;
-      notifyFail(e.message);
+      notifyFail(e);
     }
   };
 
@@ -33,7 +33,7 @@ export default function useTableAction() {
       successs('已復原');
     } catch (e: any) {
       loading.value = false;
-      notifyFail(e.message);
+      notifyFail(e);
     }
   };
 
@@ -47,7 +47,7 @@ export default function useTableAction() {
       successs('刪除成功');
     } catch (e: any) {
       loading.value = false;
-      notifyFail(e.message);
+      notifyFail(e);
     }
   };
   //Blob
@@ -61,7 +61,7 @@ export default function useTableAction() {
       successs('刪除成功');
     } catch (e: any) {
       loading.value = false;
-      notifyFail(e.message);
+      notifyFail(e);
     }
   };
   const recoverFile = async (row: Resource) => {
@@ -73,7 +73,7 @@ export default function useTableAction() {
       successs('已復原');
     } catch (e: any) {
       loading.value = false;
-      notifyFail(e.message);
+      notifyFail(e);
     }
   };
   const permanentDelFile = async (row: Resource) => {
@@ -86,7 +86,7 @@ export default function useTableAction() {
       successs('刪除成功');
     } catch (e: any) {
       loading.value = false;
-      notifyFail(e.message);
+      notifyFail(e);
     }
   };
   const downloadResource = async (row: Resource) => {
@@ -111,7 +111,7 @@ export default function useTableAction() {
       successs('下載成功');
     } catch (e: any) {
       loading.value = false;
-      notifyFail(e.message);
+      notifyFail(e);
     }
   };
   //Member
@@ -126,7 +126,7 @@ export default function useTableAction() {
       successs('刪除成功');
     } catch (e: any) {
       loading.value = false;
-      notifyFail(e.message);
+      notifyFail(e);
     }
   };
   return {

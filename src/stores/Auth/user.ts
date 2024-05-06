@@ -3,9 +3,11 @@ import { Ref, computed, ref } from 'vue';
 import { api } from 'src/boot/axios';
 import { useRouter } from 'vue-router';
 import { adminMenu, assignerMenu } from 'src/components/Layout/data';
+import useNotify from 'src/composables/Notify/useNotify';
 
 export const useUserStore = defineStore('user', () => {
   const router = useRouter();
+  const { notifyFail } = useNotify();
 
   const userPermission: Ref<string> = ref('');
   const userName: Ref<string | null> = ref(null);
@@ -47,6 +49,7 @@ export const useUserStore = defineStore('user', () => {
         : null;
     } catch (error: any) {
       console.log('errorAuth:', error);
+      notifyFail(error);
       $reset();
       localStorage.removeItem('token');
       router.push({ path: '/chat' });

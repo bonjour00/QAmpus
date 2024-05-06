@@ -1,8 +1,7 @@
 <template>
-  <div class="flex flex-center container" style="border: 1px solid red">
+  <div class="flex flex-center container">
     <div
       class="message-box"
-      style="border: 1px solid pink"
       :style="{
         height: `calc(100vh - ${layoutHeight}px - ${barHeight}px)`,
       }"
@@ -20,7 +19,7 @@
           <img :src="collapsedLogo" />
           <span class="greet-text"><b>How can I help you today?</b></span>
         </div>
-        <div class="row full-width absolute-bottom" ref="exampleRef">
+        <div class="row full-width absolute-bottom q-mb-lg" ref="exampleRef">
           <q-intersection
             v-for="(example, index) in chatStore.exampleList"
             :key="index"
@@ -51,13 +50,21 @@
             {{ qa.question }}
           </span>
         </div>
-        <div class="chat">
+        <div
+          class="chat"
+          :style="{
+            marginBottom:
+              index === chatStore.qaList.length - 1 ? '25px' : '0px',
+          }"
+        >
           <img :src="collapsedLogo" />
           <span>
             <b>QAmpus</b>
             <br />
             <div class="q-mt-md" v-if="qa.loading"><DotFlashing /></div>
-            <div v-else>{{ qa.answer }}</div>
+            <div v-else>
+              {{ qa.answer }}
+            </div>
             <div
               class="toolbar flex"
               v-if="!qa.loading"
@@ -143,7 +150,7 @@ const layoutHeight = ref(145);
 
 setTimeout(() => {
   exampleHeight.value = exampleRef.value?.clientHeight || 185;
-  layoutHeight.value = $q.screen.lt.sm ? 145 : 70;
+  layoutHeight.value = $q.screen.lt.sm ? 160 : 83;
   barHeight.value = barRef.value?.clientHeight || 87;
 }, 150);
 const title = '請先登入';
@@ -179,7 +186,7 @@ watch(
   }
 );
 const scrollToBottom = () => {
-  const container = document.querySelector('.container');
+  const container = document.querySelector('.message-box');
   if (container) {
     // 滾動到最底部
     container.scrollTop = container.scrollHeight;
@@ -189,18 +196,19 @@ const scrollToBottom = () => {
 </script>
 <style scoped>
 .container {
-  overflow-y: auto;
   height: 100%;
 }
 .message-box {
-  /* height: calc(100vh - 11.5rem); */
-  width: 60vw;
+  overflow-y: auto;
+  width: 100%;
+  padding-left: 20vw;
+  padding-right: 20vw;
 }
 .chat {
   display: flex;
   gap: 20px;
-  padding-top: 25px;
-  padding-bottom: 25px;
+  padding-top: 15px;
+  padding-bottom: 15px;
   color: black;
   font-size: 15px;
   font-weight: 400;
@@ -270,7 +278,8 @@ const scrollToBottom = () => {
 /* 在手機時留下10vw的空間 */
 @media (max-width: 768px) {
   .message-box {
-    width: 90vw;
+    padding-left: 5vw;
+    padding-right: 5vw;
   }
   .messagebar .bar-input {
     width: 90vw;

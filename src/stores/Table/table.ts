@@ -9,9 +9,11 @@ import {
 import { api } from 'src/boot/axios';
 import useOffice from 'src/composables/common/useOffice';
 import { useUserStore } from '../Auth/user';
+import useNotify from 'src/composables/Notify/useNotify';
 
 export const useTableStore = defineStore('table', () => {
   const userStore = useUserStore();
+  const { notifyFail } = useNotify();
   const {
     office,
     filterOption,
@@ -30,6 +32,7 @@ export const useTableStore = defineStore('table', () => {
   const selected = ref([]);
   const defaultSelect: any = ref(null);
   const role = ref(initialMember);
+  const totalCount = ref(0);
 
   const roleOptions = computed(() => {
     return assignOptions.filter((x) => x.value != role.value.value);
@@ -38,9 +41,7 @@ export const useTableStore = defineStore('table', () => {
     orderOptions.filter((x) => x.value !== order.value.value)
   );
   const startIndex = computed(() => (page.value - 1) * perPage.value);
-  const totalPage = computed(() =>
-    Math.ceil(rows.value.length / perPage.value)
-  );
+  const totalPage = computed(() => Math.ceil(totalCount.value / perPage.value));
   const all = { label: '全部', value: '' };
 
   const setInitialRole = () => {
@@ -90,8 +91,10 @@ export const useTableStore = defineStore('table', () => {
         }
       );
       rows.value = result.data.data;
+      totalCount.value = result.data.totalCount;
       console.log(result.data, 'fetching');
     } catch (e) {
+      notifyFail(e);
       console.log('error', e);
     }
     loading.value = false;

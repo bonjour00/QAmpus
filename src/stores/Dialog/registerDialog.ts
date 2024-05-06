@@ -128,7 +128,7 @@ export const useRegisterDialogStore = defineStore('registerDialog', () => {
         closeRegisterDialog();
       } catch (error: any) {
         loading.value = false;
-        notifyFail(error.response?.data?.message, '註冊失敗: ');
+        notifyFail(error, '註冊失敗: ');
       }
     }
   };

@@ -60,7 +60,7 @@
       </div>
     </div>
     <div v-if="isSidebarUnder885" class="dark-overlay"></div>
-    <div class="content" style="margin-top: 7vh">
+    <div class="content">
       <button class="logout-button" @click="logout">
         <q-icon name="logout" class="logout-icon" />
         <p class="sidebar-title">登出</p>

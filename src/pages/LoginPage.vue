@@ -78,7 +78,7 @@ const login = async () => {
       router.push({ path: '/' });
       localStorage.setItem('token', result.data.token);
     } catch (error: any) {
-      notifyFail(error.response?.data, '登錄失敗:');
+      notifyFail(error, '登錄失敗:');
     }
     loadingShow.value = false;
   }

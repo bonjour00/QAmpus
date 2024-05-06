@@ -76,7 +76,7 @@ export const useUserDislikeDialogStore = defineStore(
         );
         successs('已幫您轉送至相關單位');
       } catch (e: any) {
-        notifyFail(e.response?.data);
+        notifyFail(e);
       }
       closeDislikeDialog();
     };
