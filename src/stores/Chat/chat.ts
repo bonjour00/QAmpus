@@ -113,7 +113,7 @@ export const useChatStore = defineStore('chat', () => {
       qaList.value[qaList.value.length - 1].loading = false;
       qaList.value[qaList.value.length - 1].officeId = result.data.officeId;
       qaList.value[qaList.value.length - 1].officeName = result.data.officeName;
-      // qaList.value[qaList.value.length - 1].fileName = result.data.fileName;
+      qaList.value[qaList.value.length - 1].fileName = result.data.fileName;
       loading.value = false;
     } catch (e) {
       console.log('error', e);
