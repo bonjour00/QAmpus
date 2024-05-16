@@ -13,14 +13,16 @@ body {
 .radius-8 {
   border-radius: 8px;
 }
-//custom scrollbar
-::-webkit-scrollbar {
-  width: 8px;
-}
-// ::-webkit-scrollbar-track {
-//   background: red;
-// }
-::-webkit-scrollbar-thumb {
-  background: #bac3cf;
-  border-radius: 10px;
+@media (min-width: 1024px) {
+  //custom scrollbar
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  // ::-webkit-scrollbar-track {
+  //   background: red;
+  // }
+  ::-webkit-scrollbar-thumb {
+    background: #bac3cf;
+    border-radius: 10px;
+  }
 }
