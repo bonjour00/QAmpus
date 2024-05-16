@@ -96,6 +96,15 @@
                 @click="copy(index)"
               />
               <q-btn
+                v-if="qa.fileName"
+                icon="download"
+                unelevated
+                ripple
+                round
+                size="10px"
+                @click="downloadFile(index)"
+              />
+              <q-btn
                 icon="o_thumb_down"
                 unelevated
                 ripple
@@ -151,6 +160,7 @@
     @warningDialogConfirm="confirm"
   />
   <UserDislikeDialog />
+  <HourglassLoading :showing="chatStore.isLoading" />
 </template>
 
 <script setup lang="ts">
@@ -164,6 +174,7 @@ import OnBoardingDialog from 'src/components/Dialog/OnBoardingDialog.vue';
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
 import { useQuasar } from 'quasar';
+import HourglassLoading from 'src/components/Loading/HourglassLoading.vue';
 
 const chatStore = useChatStore();
 const $q = useQuasar();
@@ -198,6 +209,9 @@ const handleThumbDown = (index: number) => {
 };
 const copy = (index: number) => {
   chatStore.copy(index);
+};
+const downloadFile = (index: number) => {
+  chatStore.downloadFile(index);
 };
 // const record = (index: number) => {
 //   chatStore.record();

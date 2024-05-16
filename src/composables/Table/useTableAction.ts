@@ -89,11 +89,12 @@ export default function useTableAction() {
       notifyFail(e);
     }
   };
-  const downloadResource = async (row: Resource) => {
+  const downloadResource = async (row: any) => {
     try {
       loading.value = true;
       const fileName = row.dataFilename;
       const realFileName = fileName.replace(/^\d+-/, '');
+      console.log(fileName);
       const result = await api.get(`/Blob/fileName?filename=${fileName}`, {
         responseType: 'blob',
       });
