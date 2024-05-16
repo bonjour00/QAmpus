@@ -11,6 +11,7 @@
       ref="emailRef"
       lazy-rules="ondemand"
       :rules="[notEmpty]"
+      @keyup.enter.exact.prevent="login"
     />
     <q-input
       v-model="userPassword"
@@ -19,6 +20,7 @@
       ref="pwdRef"
       lazy-rules="ondemand"
       :rules="[notEmpty]"
+      @keyup.enter.exact.prevent="login"
       ><template v-slot:append>
         <q-icon
           :name="isPwd ? 'visibility_off' : 'visibility'"

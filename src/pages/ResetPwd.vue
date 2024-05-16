@@ -12,6 +12,7 @@
       ref="pwdRef"
       lazy-rules="ondemand"
       :rules="[notEmpty, pwTooEasy, pwTooShort]"
+      @keyup.enter.exact.prevent="reset"
       ><template v-slot:append>
         <q-icon
           :name="isPwd ? 'visibility_off' : 'visibility'"
@@ -27,6 +28,7 @@
       ref="confirmPwdRef"
       lazy-rules="ondemand"
       :rules="[notEmpty, (val) => val === userPassword || '密碼不一致']"
+      @keyup.enter.exact.prevent="reset"
       ><template v-slot:append>
         <q-icon
           :name="isConfirmPwd ? 'visibility_off' : 'visibility'"

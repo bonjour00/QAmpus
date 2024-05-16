@@ -12,6 +12,7 @@
       ref="pwdRef"
       lazy-rules="ondemand"
       :rules="[notEmpty, pwTooEasy, pwTooShort]"
+      @keyup.enter.exact.prevent="vertify"
       ><template v-slot:append>
         <q-icon
           :name="isPwd ? 'visibility_off' : 'visibility'"

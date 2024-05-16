@@ -10,8 +10,8 @@ export const useUserDislikeDialogStore = defineStore(
   () => {
     const { office, filterOption, setOfficeSelect, $officeReset, filterFn } =
       useOffice();
-    const { notifyFail } = useNotify();
-    type office = {
+    const { notifyFail, notifyWarning } = useNotify();
+    type officeType = {
       officeId: number;
       officeName: string | null;
     };
@@ -20,7 +20,7 @@ export const useUserDislikeDialogStore = defineStore(
     const needDirectAssign = ref(false);
     const question = ref('');
     const answer = ref('');
-    const maybeOffice: Ref<office> = ref({
+    const maybeOffice: Ref<officeType> = ref({
       officeName: null,
       officeId: 0,
     });
@@ -49,6 +49,10 @@ export const useUserDislikeDialogStore = defineStore(
     };
 
     const dislikeSubmit = async () => {
+      if (!needDirectAssign.value && !(office.value && office.value.value)) {
+        notifyWarning('請勾選不確定所屬單位 或 選擇所屬單位');
+        return;
+      }
       loading.value = true;
       const officeId =
         office.value && (office.value.value as number) > 0

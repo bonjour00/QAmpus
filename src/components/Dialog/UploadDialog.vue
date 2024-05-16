@@ -90,12 +90,13 @@
           </q-tab-panels>
         </div>
       </q-card-section>
-      <q-card-section>
+      <q-card-section
+        v-show="
+          userStore.userPermission == 'assigner' && !uploadDialogStore.fileName
+        "
+      >
         <FilterSelect
-          v-show="
-            userStore.userPermission == 'assigner' &&
-            !uploadDialogStore.fileName
-          "
+          :disable="uploadDialogStore.tab == 'url'"
           title="所屬單位: "
           v-model:currentOption="uploadDialogStore.office"
           :filterFn="filterFn"

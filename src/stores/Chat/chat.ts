@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import { Ref, computed, ref } from 'vue';
 import { api } from 'src/boot/axios';
-import { successs } from 'src/components/AnimateAction/AnimateAction';
 import { useUserStore } from '../Auth/user';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
@@ -16,6 +15,7 @@ export const useChatStore = defineStore('chat', () => {
     question: string;
     answer: string;
     loading: boolean;
+    loadingFinish: boolean;
     copyIcon: string;
     officeId: number;
     officeName: string | null;
@@ -28,15 +28,27 @@ export const useChatStore = defineStore('chat', () => {
   const inputRef: Ref<HTMLElement | null> = ref(null);
   const barRef = ref<HTMLDivElement | null>(null);
   const barHeight = ref(87);
+  const recording = ref(false);
   const examples = [
-    { label: '問科系資訊0', subTitle: '資管系課程大綱' },
-    { label: '問科系資訊1', subTitle: '資管系課程大綱' },
-    { label: '問科系資訊2', subTitle: '資管系課程大綱' },
-    { label: '問科系資訊3', subTitle: '資管系課程大綱' },
+    { label: 'QAmpus回答範圍', subTitle: '我可以問QAmpus什麼問題?' },
+    { label: '問科系教授', subTitle: '資管系師資?' },
+    { label: '問科系畢業門檻', subTitle: '資管系畢業門檻?' },
+    { label: '問科系資訊', subTitle: '資管系課程大綱' },
   ];
+  // const recognition: any =
+  //   window.SpeechRecognition || window.webkitSpeechRecognition;
+  // recognition.lang = 'cmn-Hant-TW';
+  // recognition.continuous = true;
+  // recognition.onresult = (event: any) => {
+  //   const text = event.results[0][0].transcript;
+  //   question.value += text;
+  // };
 
   const exampleList = computed(() => {
     return $q.screen.lt.sm ? examples.slice(0, 2) : examples;
+  });
+  const recordIcon = computed(() => {
+    return recording.value ? 'stop_circle' : 'mic';
   });
 
   const $reset = () => {
@@ -47,8 +59,19 @@ export const useChatStore = defineStore('chat', () => {
     copyRef.value = null;
     inputRef.value = null;
     barRef.value = null;
+    recording.value = false;
+  };
+  const scrollToBottom = () => {
+    const container = document.querySelector('.message-box');
+    if (container) {
+      // 滾動到最底部
+      container.scrollTop = container.scrollHeight;
+      // console.log(container!.scrollHeight);
+    }
   };
   const submitQuestion = async (q: string) => {
+    // recognition.stop();
+    // recording.value = false;
     qaList.value.push({
       question: q,
       answer: '',
@@ -56,23 +79,46 @@ export const useChatStore = defineStore('chat', () => {
       copyIcon: 'content_copy',
       officeId: 0,
       officeName: null,
+      loadingFinish: false,
     });
     try {
       loading.value = true;
+
       const result = await api.post('/Question/ask', {
         question: q,
       });
-      qaList.value[qaList.value.length - 1].answer =
-        result.data.originalResponse.answer;
+      console.log(result.data);
+      const answer = result.data.originalResponse.answer;
+      const words: string[] = [];
+      //逐字輸出
+      for (let i = 0; i < answer.length; i += 10) {
+        words.push(answer.substr(i, 10));
+      }
+      const wordsLen = words.length;
+      for (let i = 0; i < wordsLen; i++) {
+        setTimeout(() => {
+          qaList.value[qaList.value.length - 1].answer += words[i];
+          if (wordsLen - 1 == i) {
+            qaList.value[qaList.value.length - 1].loadingFinish = true;
+          }
+          scrollToBottom();
+        }, i * 60);
+      }
+      // qaList.value[qaList.value.length - 1].answer =
+      //   result.data.originalResponse.answer;
+      qaList.value[qaList.value.length - 1].loading = false;
       qaList.value[qaList.value.length - 1].officeId = result.data.officeId;
       qaList.value[qaList.value.length - 1].officeName = result.data.officeName;
-      qaList.value[qaList.value.length - 1].loading = false;
       loading.value = false;
     } catch (e) {
       console.log('error', e);
-      qaList.value[qaList.value.length - 1].answer = '發生錯誤';
+      qaList.value[qaList.value.length - 1].answer =
+        '抱歉，目前QAmpus找不到相對應的答案';
       qaList.value[qaList.value.length - 1].loading = false;
+      qaList.value[qaList.value.length - 1].loadingFinish = true;
       loading.value = false;
+      // recognition.stop();
+      // recording.value = false;
     }
     setTimeout(() => {
       inputRef.value && inputRef.value.focus();
@@ -80,6 +126,9 @@ export const useChatStore = defineStore('chat', () => {
   };
   const sendMessage = async () => {
     if (question.value.trim() !== '') {
+      setTimeout(() => {
+        scrollToBottom();
+      }, 10);
       const q = question.value;
       question.value = '';
       await submitQuestion(q);
@@ -91,7 +140,7 @@ export const useChatStore = defineStore('chat', () => {
   const handleInputDevice = async () => {
     //如果手機按enter不會直接送出而是換行
     //電腦按enter則送出，shift+enter換行
-    if ($q.screen.lt.sm) {
+    if ($q.screen.lt.sm || $q.screen.lt.md) {
       question.value += '\n';
       return;
     }
@@ -131,6 +180,13 @@ export const useChatStore = defineStore('chat', () => {
       console.log(e);
     }
   };
+  // const record = () => {
+  //   recording.value = !recording.value;
+  //   if (recording.value) {
+  //     return recognition.start();
+  //   }
+  //   return recognition.stop();
+  // };
   return {
     question,
     qaList,
@@ -141,11 +197,13 @@ export const useChatStore = defineStore('chat', () => {
     exampleList,
     barRef,
     barHeight,
+    recordIcon,
     copy,
     sendMessage,
     handleInputDevice,
     handleThumbDown,
     confirm,
     sendExample,
+    // record,
   };
 });

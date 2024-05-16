@@ -61,7 +61,7 @@
     </div>
     <div v-if="isSidebarUnder885" class="dark-overlay"></div>
     <div class="content">
-      <button class="logout-button" @click="logout">
+      <button class="logout-button" @click="logout" style="z-index: 6">
         <q-icon name="logout" class="logout-icon" />
         <p class="sidebar-title">登出</p>
       </button>
@@ -238,6 +238,7 @@ const logout = async () => {
   margin: 0;
 }
 .content {
+  position: relative;
   flex: 1;
   transition: margin-left 0.3s; /* padding-left: 5px; */ /* padding-right: 5px; */
   overflow-x: auto;
@@ -248,6 +249,7 @@ const logout = async () => {
   box-shadow: 0px 3px 5px 0px rgba(171, 170, 170, 0.5);
   border-radius: 50%;
   cursor: pointer;
+  z-index: 999;
 }
 .toggle-button-container {
   display: flex;

@@ -14,15 +14,27 @@
           <q-toolbar-title class="flex flex-center text-subtitle1">
             您好{{ userStore.userName }}
           </q-toolbar-title>
-          <q-fab color="primary" icon="settings" direction="down">
+          <q-fab color="primary" icon="menu" direction="down">
             <q-fab-action
               v-for="(fab, index) in fabs"
+              label-class="bg-grey-3 text-grey-8 text-subtitle2"
+              external-label
+              label-position="left"
+              :label="fab.label"
               :key="index"
               color="secondary"
               :icon="fab.icon"
               @click="linkTo(fab.path)"
             />
-            <q-fab-action color="secondary" icon="logout" @click="logout" />
+            <q-fab-action
+              color="secondary"
+              icon="logout"
+              @click="logout"
+              label-class="bg-grey-3 text-grey-8 text-subtitle2"
+              external-label
+              label-position="left"
+              label="登出"
+            />
           </q-fab>
         </div>
       </q-toolbar>
@@ -53,10 +65,12 @@ const fabs = [
   {
     icon: 'chat',
     path: '/chat',
+    label: '聊天室',
   },
   {
     icon: 'manage_accounts',
     path: '/setting',
+    label: '個人設置',
   },
 ];
 </script>

@@ -11,7 +11,7 @@ export const useEditDialogStore = defineStore('editDialog', () => {
   const tableStore = useTableStore();
   const { office, filterOption, setOfficeSelect, $officeReset, filterFn } =
     useOffice();
-  const { notifyFail } = useNotify();
+  const { notifyFail, notifyWarning } = useNotify();
   const open = ref(false);
   const row: Ref<QA | null> = ref(null);
   const officeRecord: Ref = ref([]);
@@ -65,6 +65,10 @@ export const useEditDialogStore = defineStore('editDialog', () => {
   };
   //轉單位
   const editSubmit = async () => {
+    if (!needDirectAssign.value && !(office.value && office.value.value)) {
+      notifyWarning('尚未選取指派單位');
+      return;
+    }
     loading.value = true;
     try {
       if (needDirectAssign.value) {

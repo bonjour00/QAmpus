@@ -6,6 +6,11 @@
         height: `calc(100vh - ${layoutHeight}px - ${barHeight}px)`,
       }"
     >
+      <img
+        v-if="chatStore.qaList.length != 0"
+        src="../assets/fju.png"
+        class="absolute-center fju"
+      />
       <div
         class="relative-position full-height"
         v-if="chatStore.qaList.length == 0"
@@ -17,7 +22,7 @@
           }"
         >
           <img :src="collapsedLogo" />
-          <span class="greet-text"><b>How can I help you today?</b></span>
+          <span class="greet-text"><b>請問您對輔大有什麼疑問?</b></span>
         </div>
         <div class="row full-width absolute-bottom q-mb-lg" ref="exampleRef">
           <q-intersection
@@ -34,7 +39,17 @@
               @click="sendExample(example.subTitle)"
             >
               <q-card-section>
-                <div class="text-caption">{{ example.label }}</div>
+                <q-icon
+                  v-if="index == 0"
+                  name="workspace_premium"
+                  size="2.5em"
+                  color="primary"
+                  class="absolute-top"
+                  style="margin-top: -1rem; margin-left: -1rem"
+                />
+                <div class="text-caption text-weight-bold">
+                  {{ example.label }}
+                </div>
                 <div class="text-caption">{{ example.subTitle }}</div>
               </q-card-section>
             </q-card>
@@ -67,7 +82,7 @@
             </div>
             <div
               class="toolbar flex"
-              v-if="!qa.loading"
+              v-if="qa.loadingFinish"
               :style="{
                 display: index === chatStore.qaList.length - 1 ? 'block' : '',
               }"
@@ -110,6 +125,7 @@
         :disable="chatStore.loading"
       >
         <template v-slot:append>
+          <!-- <RoundBtn :icon="chatStore.recordIcon" @click="record" /> -->
           <RoundBtn icon="send" @clicked="sendMessage" />
         </template>
       </q-input>
@@ -118,6 +134,14 @@
       >
     </div>
   </div>
+  <!-- <q-btn
+    fab
+    icon="question_mark"
+    color="primary"
+    class="absolute-bottom-right"
+    style="margin-bottom: 15px; margin-right: 10px"
+  /> -->
+  <OnBoardingDialog />
   <WarningDialog
     v-model:open="chatStore.open"
     @close="chatStore.open = false"
@@ -136,8 +160,9 @@ import DotFlashing from 'src/components/Loading/DotFlashing.vue';
 import { useChatStore } from 'src/stores/Chat/chat';
 import WarningDialog from 'src/components/Dialog/WarningDialog.vue';
 import UserDislikeDialog from 'src/components/Dialog/UserDislikeDialog.vue';
+import OnBoardingDialog from 'src/components/Dialog/OnBoardingDialog.vue';
 import { storeToRefs } from 'pinia';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { useQuasar } from 'quasar';
 
 const chatStore = useChatStore();
@@ -150,14 +175,13 @@ const layoutHeight = ref(145);
 
 setTimeout(() => {
   exampleHeight.value = exampleRef.value?.clientHeight || 185;
-  layoutHeight.value = $q.screen.lt.sm ? 160 : 83;
+  layoutHeight.value = $q.screen.lt.sm || $q.screen.lt.md ? 160 : 83;
   barHeight.value = barRef.value?.clientHeight || 87;
 }, 150);
 const title = '請先登入';
 const description =
   '登入後即可享有倒讚後的人工審核功能，當您的問題經確認後，我們將會發信通知您~';
 const sendMessage = async () => {
-  scrollToBottom();
   await chatStore.sendMessage();
 };
 const handleInputDevice = () => {
@@ -175,24 +199,9 @@ const handleThumbDown = (index: number) => {
 const copy = (index: number) => {
   chatStore.copy(index);
 };
-watch(
-  () => chatStore.loading,
-  () => {
-    if (!chatStore.loading) {
-      setTimeout(() => {
-        scrollToBottom();
-      }, 50);
-    }
-  }
-);
-const scrollToBottom = () => {
-  const container = document.querySelector('.message-box');
-  if (container) {
-    // 滾動到最底部
-    container.scrollTop = container.scrollHeight;
-    console.log(container!.scrollHeight);
-  }
-};
+// const record = (index: number) => {
+//   chatStore.record();
+// };
 </script>
 <style scoped>
 .container {
@@ -201,8 +210,8 @@ const scrollToBottom = () => {
 .message-box {
   overflow-y: auto;
   width: 100%;
-  padding-left: 20vw;
-  padding-right: 20vw;
+  padding-left: 20%;
+  padding-right: 20%;
 }
 .chat {
   display: flex;
@@ -228,7 +237,7 @@ const scrollToBottom = () => {
   display: none; /* 初始隐藏 */
 }
 .messagebar {
-  position: fixed;
+  position: absolute;
   bottom: 0;
   /* height: 100px; */
   width: 100%;
@@ -242,7 +251,7 @@ const scrollToBottom = () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 60vw;
+  width: 60%;
   border-radius: 10px;
 }
 
@@ -275,6 +284,11 @@ const scrollToBottom = () => {
 .example:hover {
   background-color: rgb(248, 246, 246);
 }
+.fju {
+  opacity: 0.1;
+  width: 250px;
+  margin-top: -50px;
+}
 /* 在手機時留下10vw的空間 */
 @media (max-width: 768px) {
   .message-box {
@@ -283,6 +297,9 @@ const scrollToBottom = () => {
   }
   .messagebar .bar-input {
     width: 90vw;
+  }
+  .fju {
+    width: 200px;
   }
 }
 </style>

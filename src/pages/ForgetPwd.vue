@@ -11,6 +11,7 @@
       ref="emailRef"
       lazy-rules="ondemand"
       :rules="[notEmpty]"
+      @keyup.enter.exact.prevent="forget"
     />
   </AuthContainer>
 </template>
