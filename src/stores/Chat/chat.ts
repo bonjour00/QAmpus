@@ -5,10 +5,12 @@ import { useUserStore } from '../Auth/user';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 import { useUserDislikeDialogStore } from '../Dialog/userDislikeDialog';
+import useTableAction from 'src/composables/Table/useTableAction';
 
 export const useChatStore = defineStore('chat', () => {
   const userStore = useUserStore();
   const userDislikeDialogStore = useUserDislikeDialogStore();
+  const { downloadResource, loading: isLoading } = useTableAction();
   const router = useRouter();
   const $q = useQuasar();
   type MessageQA = {
@@ -19,6 +21,7 @@ export const useChatStore = defineStore('chat', () => {
     copyIcon: string;
     officeId: number;
     officeName: string | null;
+    fileName: string | null;
   };
   const question = ref('');
   const qaList: Ref<MessageQA[]> = ref([]);
@@ -80,6 +83,7 @@ export const useChatStore = defineStore('chat', () => {
       officeId: 0,
       officeName: null,
       loadingFinish: false,
+      fileName: null,
     });
     try {
       loading.value = true;
@@ -109,6 +113,7 @@ export const useChatStore = defineStore('chat', () => {
       qaList.value[qaList.value.length - 1].loading = false;
       qaList.value[qaList.value.length - 1].officeId = result.data.officeId;
       qaList.value[qaList.value.length - 1].officeName = result.data.officeName;
+      // qaList.value[qaList.value.length - 1].fileName = result.data.fileName;
       loading.value = false;
     } catch (e) {
       console.log('error', e);
@@ -180,6 +185,13 @@ export const useChatStore = defineStore('chat', () => {
       console.log(e);
     }
   };
+  const downloadFile = (index: number) => {
+    const QA = qaList.value[index];
+    const dataFilename = QA.fileName;
+    downloadResource({
+      dataFilename,
+    });
+  };
   // const record = () => {
   //   recording.value = !recording.value;
   //   if (recording.value) {
@@ -198,12 +210,14 @@ export const useChatStore = defineStore('chat', () => {
     barRef,
     barHeight,
     recordIcon,
+    isLoading,
     copy,
     sendMessage,
     handleInputDevice,
     handleThumbDown,
     confirm,
     sendExample,
+    downloadFile,
     // record,
   };
 });
