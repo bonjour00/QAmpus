@@ -48,6 +48,7 @@ export const useEditDialogStore = defineStore('editDialog', () => {
     row.value = data;
     url.value = tableUrl;
     status.value = tableStatus;
+    getOfficeRecord(data);
     setOfficeSelect(data);
   };
   const $reset = () => {

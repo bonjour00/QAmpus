@@ -13,7 +13,6 @@
           swipeable
           animated
           navigation
-          arrows
           padding
           class="bg-primary text-white shadow-1 rounded-borders"
         >
@@ -22,10 +21,11 @@
             :key="index"
             :name="index"
             class="column no-wrap flex-center"
+            style="padding-left: 0px; padding-right: 0px"
             ><div class="q-mb-lg text-center text-h6 text-weight-bold">
               {{ guide.title }}
             </div>
-            <q-img class="rounded-borders overflow-auto" :src="guide.src" />
+            <q-img :src="guide.src" />
           </q-carousel-slide>
           <template v-slot:control>
             <q-carousel-control position="bottom-right" :offset="[18, 18]">
@@ -71,10 +71,13 @@ import guide1 from '../../assets/onBoarding/1.gif';
 import guide2 from '../../assets/onBoarding/2.gif';
 import guide3 from '../../assets/onBoarding/3.gif';
 import guide4 from '../../assets/onBoarding/4.gif';
+import { useQuasar } from 'quasar';
+const $q = useQuasar();
 
 import { computed, ref } from 'vue';
 const open = ref(localStorage.getItem('hasBoarding') != 'true');
 const slide = ref(0);
+
 const fullscreen = ref(false);
 const props = {
   outline: true,

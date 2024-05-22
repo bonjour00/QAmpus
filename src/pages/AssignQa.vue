@@ -75,7 +75,6 @@ tableStore.setAssignSelect();
 //actionBtn clicked (openEditDialog)
 const openEditDialog = (row: QA) => {
   editDialogStore.openEditDialog(row, QA_ASSIGN_TABLE_API, ASSIGN_TABLE_STATUS);
-  editDialogStore.getOfficeRecord(row);
 };
 //actionBtn clicked (openTestingDialog)
 const openTestingDialog = () => {
