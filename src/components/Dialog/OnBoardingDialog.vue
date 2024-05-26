@@ -56,7 +56,7 @@
           :props="props"
         />
         <ConfirmBtn
-          :props="underStandProp"
+          v-show="slide == guides.length - 1"
           btnName="我了解了!"
           @clicked="underStand"
         />
@@ -82,11 +82,11 @@ const fullscreen = ref(false);
 const props = {
   outline: true,
 };
-const underStandProp = computed(() => {
-  return {
-    disable: slide.value !== guides.length - 1,
-  };
-});
+// const underStandProp = computed(() => {
+//   return {
+//     disable: slide.value !== guides.length - 1,
+//   };
+// });
 const guides = [
   {
     src: guide1,
