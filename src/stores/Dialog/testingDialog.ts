@@ -91,8 +91,8 @@ export const useTestingDialogStore = defineStore('testingDialog', () => {
         loading.value = false;
         successs('已確認，並送信');
         tableStore.selected = [];
-        closeTestingDialog();
         tableStore.fetchRows(url.value, status.value);
+        closeTestingDialog();
       } else {
         notifyWarning('尚未選取測試內容');
       }
@@ -103,6 +103,8 @@ export const useTestingDialogStore = defineStore('testingDialog', () => {
   };
 
   return {
+    url,
+    status,
     open,
     rows,
     questionIds,
