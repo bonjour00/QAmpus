@@ -33,10 +33,10 @@ export const useChatStore = defineStore('chat', () => {
   const barHeight = ref(87);
   const recording = ref(false);
   const examples = [
-    { label: 'QAmpus回答範圍', subTitle: '我可以問QAmpus什麼問題?' },
+    { label: 'QAmpus回答範圍', subTitle: 'QAmpus有什麼功能?' },
     { label: '問科系教授', subTitle: '資管系師資?' },
     { label: '問科系畢業門檻', subTitle: '資管系畢業門檻?' },
-    { label: '問科系資訊', subTitle: '資管系課程大綱' },
+    { label: '問科系資訊', subTitle: '資管系課程規劃' },
   ];
   // const recognition: any =
   //   window.SpeechRecognition || window.webkitSpeechRecognition;
