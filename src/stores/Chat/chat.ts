@@ -140,6 +140,9 @@ export const useChatStore = defineStore('chat', () => {
     }
   };
   const sendExample = async (q: string) => {
+    setTimeout(() => {
+      scrollToBottom();
+    }, 10);
     await submitQuestion(q);
   };
   const handleInputDevice = async () => {
