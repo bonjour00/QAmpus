@@ -71,6 +71,7 @@ import guide1 from '../../assets/onBoarding/1.gif';
 import guide2 from '../../assets/onBoarding/2.gif';
 import guide3 from '../../assets/onBoarding/3.gif';
 import guide4 from '../../assets/onBoarding/4.gif';
+import guide5 from '../../assets/onBoarding/5.gif';
 import { useQuasar } from 'quasar';
 const $q = useQuasar();
 
@@ -92,6 +93,7 @@ const guides = [
     src: guide1,
     title: '您可以直接點選推薦(範例)問題來詢問',
   },
+  { src: guide5, title: '更多的範例問題' },
   { src: guide2, title: '或在下方輸入框輸入您的問題' },
   { src: guide3, title: '您需要先「登入」才能享有不滿意功能' },
   { src: guide4, title: '登入後的不滿意功能流程示意圖' },
