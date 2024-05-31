@@ -11,7 +11,7 @@ export const useExamplesDialogStore = defineStore('examplesDialog', () => {
 
   const tab = ref('師資');
   const open = ref(false);
-  const tabList = ['師資', '課程', '專題', '實習'];
+  const tabList = ['師資', '課程', '面試', '未來出路', '專題', '實習'];
   const panelsList = [
     {
       panelName: '師資',
@@ -28,6 +28,14 @@ export const useExamplesDialogStore = defineStore('examplesDialog', () => {
         '資管系輔系要修哪些課',
         '資管系雙主修要上哪些課',
       ],
+    },
+    {
+      panelName: '面試',
+      examples: ['資管系面試要用英文嗎？'],
+    },
+    {
+      panelName: '未來出路',
+      examples: ['資管系學生未來適合從事哪些工作'],
     },
     {
       panelName: '專題',
