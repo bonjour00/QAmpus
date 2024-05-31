@@ -4,6 +4,18 @@
     <q-header class="q-pa-sm" style="background-color: rgb(245, 247, 252)">
       <q-toolbar class="text-primary">
         <q-space />
+        <q-btn
+          round
+          color="primary"
+          icon="question_mark"
+          class="q-mr-xs"
+          v-if="!userStore.userName"
+          @click="openExamplesDialog"
+        >
+          <q-tooltip class="bg-grey-3 text-grey-8 text-subtitle2"
+            >範例問題
+          </q-tooltip>
+        </q-btn>
         <LoginButton
           v-if="!userStore.userName"
           @clicked="router.push({ path: '/login' })"
@@ -25,6 +37,15 @@
               color="secondary"
               :icon="fab.icon"
               @click="linkTo(fab.path)"
+            />
+            <q-fab-action
+              color="secondary"
+              icon="question_mark"
+              @click="openExamplesDialog"
+              label-class="bg-grey-3 text-grey-8 text-subtitle2"
+              external-label
+              label-position="left"
+              label="範例問題"
             />
             <q-fab-action
               color="secondary"
@@ -51,15 +72,20 @@ import { useUserStore } from 'src/stores/Auth/user';
 import MainLayout from './MainLayout.vue';
 import LoginButton from 'src/components/Button/Auth/LoginButton.vue';
 import { useRouter } from 'vue-router';
+import { useExamplesDialogStore } from 'src/stores/Dialog/examplesDialog';
 
 const userStore = useUserStore();
+const examplesDialog = useExamplesDialogStore();
+
 const router = useRouter();
 const logout = async () => {
-  console.log(123);
   userStore.logout();
 };
 const linkTo = (path: string) => {
   router.push({ path });
+};
+const openExamplesDialog = () => {
+  examplesDialog.openExamplesDialog();
 };
 const fabs = [
   {

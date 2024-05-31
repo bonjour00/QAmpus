@@ -161,6 +161,7 @@
   />
   <UserDislikeDialog />
   <HourglassLoading :showing="chatStore.isLoading" />
+  <ExamplesDialog />
 </template>
 
 <script setup lang="ts">
@@ -171,6 +172,7 @@ import { useChatStore } from 'src/stores/Chat/chat';
 import WarningDialog from 'src/components/Dialog/WarningDialog.vue';
 import UserDislikeDialog from 'src/components/Dialog/UserDislikeDialog.vue';
 import OnBoardingDialog from 'src/components/Dialog/OnBoardingDialog.vue';
+import ExamplesDialog from 'src/components/Dialog/ExamplesDialog.vue';
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
 import { useQuasar } from 'quasar';
