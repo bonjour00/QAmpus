@@ -7,7 +7,7 @@ import useNotify from 'src/composables/Notify/useNotify';
 
 export const useUserStore = defineStore('user', () => {
   const router = useRouter();
-  const { notifyFail } = useNotify();
+  const { notifyWarning } = useNotify();
 
   const userPermission: Ref<string> = ref('');
   const userName: Ref<string | null> = ref(null);
@@ -49,7 +49,7 @@ export const useUserStore = defineStore('user', () => {
         : null;
     } catch (error: any) {
       console.log('errorAuth:', error);
-      notifyFail(error);
+      notifyWarning('token過期，請您再重新登入');
       $reset();
       localStorage.removeItem('token');
       router.push({ path: '/chat' });
