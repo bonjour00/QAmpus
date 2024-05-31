@@ -45,7 +45,7 @@
       <q-card-section v-if="canDirectAssign()" class="q-py-none">
         <q-checkbox
           v-model="editDialogStore.needDirectAssign"
-          label="不確定所屬單位，需轉移給分配者以負責指派"
+          label="不確定所屬單位，需轉移給系統管理者以負責指派"
         />
       </q-card-section>
       <q-card-section v-if="canTrans()" class="q-py-none">

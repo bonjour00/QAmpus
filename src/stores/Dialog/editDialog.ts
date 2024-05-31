@@ -19,7 +19,7 @@ export const useEditDialogStore = defineStore('editDialog', () => {
   const needDirectAssign = ref(false);
   const url = ref('');
   const status = ref('');
-  const text = '您已被分配者指派回覆';
+  const text = '您已被系統管理者指派回覆';
   // const needAssigntext = '將請分配者負責指派單位';
 
   // const text = computed(() => {
